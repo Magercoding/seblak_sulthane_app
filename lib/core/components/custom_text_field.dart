@@ -8,6 +8,8 @@ class CustomTextField extends StatelessWidget {
   final Function(String value)? onChanged;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization? textCapitalization;
   final bool showLabel;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -20,6 +22,8 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.obscureText = false,
     this.keyboardType,
+    this.textInputAction,
+    this.textCapitalization,
     this.showLabel = true,
     this.prefixIcon,
     this.suffixIcon,
@@ -46,6 +50,8 @@ class CustomTextField extends StatelessWidget {
           onChanged: onChanged,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          textCapitalization: textCapitalization ?? TextCapitalization.none,
           readOnly: readOnly,
           decoration: InputDecoration(
             prefixIcon: prefixIcon,

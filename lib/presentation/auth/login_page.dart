@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 
 import '../../core/assets/assets.gen.dart';
 import '../../core/components/buttons.dart';
@@ -22,6 +22,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -34,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 124.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 260.0, vertical: 20.0),
         children: [
           const SpaceHeight(80.0),
           Padding(
@@ -48,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(24.0),
           const Center(
             child: Text(
-              'RESTO WITH BAHRI',
+              'Seblak Sulthane',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(8.0),
           const Center(
             child: Text(
-              'Akses Login Kasir',
+              'Akses Login Kasir Resto',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -71,12 +72,27 @@ class _LoginPageState extends State<LoginPage> {
           CustomTextField(
             controller: emailController,
             label: 'Email',
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
           ),
           const SpaceHeight(12.0),
           CustomTextField(
             controller: passwordController,
             label: 'Password',
-            obscureText: true,
+            obscureText: !isPasswordVisible,
+            textInputAction: TextInputAction.done,
+            suffixIcon: InkWell(
+              onTap: () => setState(() {
+                isPasswordVisible = !isPasswordVisible;
+              }),
+              child: Icon(
+                isPasswordVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: Colors.grey,
+                size: 20,
+              ),
+            ),
           ),
           const SpaceHeight(24.0),
           BlocListener<LoginBloc, LoginState>(

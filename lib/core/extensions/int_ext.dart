@@ -6,4 +6,10 @@ extension IntegerExt on int {
         symbol: 'Rp. ',
         decimalDigits: 0,
       ).format(this);
+
+  String get currencyFormatRpV2 => NumberFormat.currency(
+        locale: 'id',
+        symbol: 'Rp ',
+        decimalDigits: 0,
+      ).format(this);
 }

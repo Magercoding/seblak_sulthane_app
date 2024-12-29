@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
+import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
 
 import '../../../core/constants/colors.dart';
-
-
 
 class ServiceDialog extends StatelessWidget {
   const ServiceDialog({super.key});
@@ -44,9 +44,24 @@ class ServiceDialog extends StatelessWidget {
             subtitle: const Text('Biaya layanan'),
             contentPadding: EdgeInsets.zero,
             textColor: AppColors.primary,
-            trailing: Checkbox(
-              value: true,
-              onChanged: (value) {},
+            trailing: BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () => Checkbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                  loading: () => const CircularProgressIndicator(),
+                  loaded: (data, a, b, c, d, service, e, f, g) => Checkbox(
+                    value: service > 0,
+                    onChanged: (value) {
+                      context.read<CheckoutBloc>().add(
+                            CheckoutEvent.addServiceCharge(service > 0 ? 0 : 5),
+                          );
+                    },
+                  ),
+                );
+              },
             ),
             onTap: () {
               context.pop();

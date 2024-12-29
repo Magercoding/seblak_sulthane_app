@@ -8,8 +8,6 @@ import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.da
 
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
-import '../models/order_item.dart';
-import '../models/product_model.dart';
 
 class OrderMenu extends StatelessWidget {
   final ProductQuantity data;
@@ -17,8 +15,6 @@ class OrderMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final qtyController = TextEditingController(text: '3');
-
     return Column(
       children: [
         Row(
@@ -26,57 +22,32 @@ class OrderMenu extends StatelessWidget {
             Flexible(
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const ClipRRect(
+                leading: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                  child: Icon(Icons.food_bank_outlined),
-                  // child: Image.network(
-                  //   data.product.image!.contains('http')
-                  //       ? data.product.image!
-                  //       : '${Variables.baseUrl}/${data.product.image}',
-                  //   width: 40.0,
-                  //   height: 40.0,
-                  //   fit: BoxFit.cover,
-                  // ),
+                  child: Image.network(
+                    data.product.image!.contains('http')
+                        ? data.product.image!
+                        : '${Variables.baseUrl}/${data.product.image}',
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                title: FittedBox(
-                  child: Text(data.product.name!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      )),
-                ),
+                title: Text(data.product.name ?? "-",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    )),
                 subtitle: Text(
                     data.product.price!.toIntegerFromText.currencyFormatRp),
               ),
             ),
-            // SizedBox(
-            //   width: 50.0,
-            //   child: TextFormField(
-            //     controller: qtyController,
-            //     keyboardType: TextInputType.number,
-            //     textAlign: TextAlign.center,
-            //     decoration: InputDecoration(
-            //       border: OutlineInputBorder(
-            //         borderRadius: BorderRadius.circular(8.0),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Row(
               children: [
                 GestureDetector(
                   onTap: () {
-                    // if (data.quantity > 1) {
-                    // context
-                    //     .read<CheckoutBloc>()
-                    //     .add(CheckoutEvent.removeProduct(data.product));
-                    //       onDeleteTap();
-                    //   // data.quantity--;
-                    //   // setState(() {});
-                    // }
-
                     context
                         .read<CheckoutBloc>()
                         .add(CheckoutEvent.removeItem(data.product));
@@ -100,12 +71,6 @@ class OrderMenu extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // context
-                    //     .read<CheckoutBloc>()
-                    //     .add(CheckoutEvent.addProduct(data.product));
-                    //     onDeleteTap();
-                    // data.quantity++;
-                    // setState(() {});
                     context
                         .read<CheckoutBloc>()
                         .add(CheckoutEvent.addItem(data.product));
@@ -131,45 +96,12 @@ class OrderMenu extends StatelessWidget {
                 textAlign: TextAlign.right,
                 style: const TextStyle(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ],
         ),
-        const SpaceHeight(16),
-        // Row(
-        //   children: [
-        //     Flexible(
-        //       child: TextFormField(
-        //         controller: noteController,
-        //         decoration: InputDecoration(
-        //           border: OutlineInputBorder(
-        //             borderRadius: BorderRadius.circular(8.0),
-        //           ),
-        //           hintText: 'Catatan pesanan',
-        //         ),
-        //       ),
-        //     ),
-        //     const SpaceWidth(12),
-        //     GestureDetector(
-        //       onTap: () {},
-        //       child: Container(
-        //         padding: const EdgeInsets.all(16.0),
-        //         height: 60.0,
-        //         width: 60.0,
-        //         decoration: const BoxDecoration(
-        //           color: AppColors.primary,
-        //           borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        //         ),
-        //         child: Assets.icons.delete.svg(
-        //           colorFilter:
-        //               const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }

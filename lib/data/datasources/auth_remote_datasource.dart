@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:http/http.dart' as http;
 import 'package:seblak_sulthane_app/core/constants/variables.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/auth_response_model.dart';
+import 'package:http/http.dart' as http;
 
 class AuthRemoteDatasource {
   Future<Either<String, AuthResponseModel>> login(

@@ -17,7 +17,7 @@ class TaxPage extends StatefulWidget {
 class _TaxPageState extends State<TaxPage> {
   final List<TaxModel> items = [
     TaxModel(name: 'Biaya Layanan', type: TaxType.layanan, value: 5),
-    TaxModel(name: 'Pajak', type: TaxType.pajak, value: 11),
+    TaxModel(name: 'Pajak PB1', type: TaxType.pajak, value: 10),
   ];
 
   void onEditTap(TaxModel item) {

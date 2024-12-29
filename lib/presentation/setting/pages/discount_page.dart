@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/discount/discount_bloc.dart';
 
-import '../../home/models/product_category.dart';
 import '../../home/widgets/custom_tab_bar.dart';
 import '../dialogs/form_discount_dialog.dart';
 import '../models/discount_model.dart';
@@ -90,7 +89,7 @@ class _DiscountPageState extends State<DiscountPage> {
                           final item = discounts[index - 1];
                           return ManageDiscountCard(
                             data: item,
-                            onEditTap: (){},
+                            onEditTap: () {},
                           );
                         },
                       );

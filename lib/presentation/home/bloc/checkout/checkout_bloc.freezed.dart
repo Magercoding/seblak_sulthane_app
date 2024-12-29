@@ -25,6 +25,12 @@ mixin _$CheckoutEvent {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,6 +42,11 @@ mixin _$CheckoutEvent {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -47,6 +58,11 @@ mixin _$CheckoutEvent {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -59,6 +75,10 @@ mixin _$CheckoutEvent {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -70,6 +90,10 @@ mixin _$CheckoutEvent {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -81,6 +105,10 @@ mixin _$CheckoutEvent {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -102,6 +130,9 @@ class _$CheckoutEventCopyWithImpl<$Res, $Val extends CheckoutEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -118,6 +149,9 @@ class __$$StartedImplCopyWithImpl<$Res>
   __$$StartedImplCopyWithImpl(
       _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -149,6 +183,12 @@ class _$StartedImpl implements _Started {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return started();
   }
@@ -163,6 +203,11 @@ class _$StartedImpl implements _Started {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return started?.call();
   }
@@ -177,6 +222,11 @@ class _$StartedImpl implements _Started {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -195,6 +245,10 @@ class _$StartedImpl implements _Started {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return started(this);
   }
@@ -209,6 +263,10 @@ class _$StartedImpl implements _Started {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return started?.call(this);
   }
@@ -223,6 +281,10 @@ class _$StartedImpl implements _Started {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -253,6 +315,8 @@ class __$$AddItemImplCopyWithImpl<$Res>
       _$AddItemImpl _value, $Res Function(_$AddItemImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -291,7 +355,9 @@ class _$AddItemImpl implements _AddItem {
   @override
   int get hashCode => Object.hash(runtimeType, product);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddItemImplCopyWith<_$AddItemImpl> get copyWith =>
@@ -307,6 +373,12 @@ class _$AddItemImpl implements _AddItem {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return addItem(product);
   }
@@ -321,6 +393,11 @@ class _$AddItemImpl implements _AddItem {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return addItem?.call(product);
   }
@@ -335,6 +412,11 @@ class _$AddItemImpl implements _AddItem {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addItem != null) {
@@ -353,6 +435,10 @@ class _$AddItemImpl implements _AddItem {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return addItem(this);
   }
@@ -367,6 +453,10 @@ class _$AddItemImpl implements _AddItem {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return addItem?.call(this);
   }
@@ -381,6 +471,10 @@ class _$AddItemImpl implements _AddItem {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addItem != null) {
@@ -394,7 +488,10 @@ abstract class _AddItem implements CheckoutEvent {
   const factory _AddItem(final Product product) = _$AddItemImpl;
 
   Product get product;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddItemImplCopyWith<_$AddItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -416,6 +513,8 @@ class __$$RemoveItemImplCopyWithImpl<$Res>
       _$RemoveItemImpl _value, $Res Function(_$RemoveItemImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -454,7 +553,9 @@ class _$RemoveItemImpl implements _RemoveItem {
   @override
   int get hashCode => Object.hash(runtimeType, product);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RemoveItemImplCopyWith<_$RemoveItemImpl> get copyWith =>
@@ -470,6 +571,12 @@ class _$RemoveItemImpl implements _RemoveItem {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return removeItem(product);
   }
@@ -484,6 +591,11 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return removeItem?.call(product);
   }
@@ -498,6 +610,11 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (removeItem != null) {
@@ -516,6 +633,10 @@ class _$RemoveItemImpl implements _RemoveItem {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return removeItem(this);
   }
@@ -530,6 +651,10 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return removeItem?.call(this);
   }
@@ -544,6 +669,10 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (removeItem != null) {
@@ -557,7 +686,10 @@ abstract class _RemoveItem implements CheckoutEvent {
   const factory _RemoveItem(final Product product) = _$RemoveItemImpl;
 
   Product get product;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RemoveItemImplCopyWith<_$RemoveItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -579,6 +711,8 @@ class __$$AddDiscountImplCopyWithImpl<$Res>
       _$AddDiscountImpl _value, $Res Function(_$AddDiscountImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -618,7 +752,9 @@ class _$AddDiscountImpl implements _AddDiscount {
   @override
   int get hashCode => Object.hash(runtimeType, discount);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
@@ -634,6 +770,12 @@ class _$AddDiscountImpl implements _AddDiscount {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return addDiscount(discount);
   }
@@ -648,6 +790,11 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return addDiscount?.call(discount);
   }
@@ -662,6 +809,11 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addDiscount != null) {
@@ -680,6 +832,10 @@ class _$AddDiscountImpl implements _AddDiscount {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return addDiscount(this);
   }
@@ -694,6 +850,10 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return addDiscount?.call(this);
   }
@@ -708,6 +868,10 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addDiscount != null) {
@@ -721,7 +885,10 @@ abstract class _AddDiscount implements CheckoutEvent {
   const factory _AddDiscount(final Discount discount) = _$AddDiscountImpl;
 
   Discount get discount;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -740,6 +907,9 @@ class __$$RemoveDiscountImplCopyWithImpl<$Res>
   __$$RemoveDiscountImplCopyWithImpl(
       _$RemoveDiscountImpl _value, $Res Function(_$RemoveDiscountImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -771,6 +941,12 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return removeDiscount();
   }
@@ -785,6 +961,11 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return removeDiscount?.call();
   }
@@ -799,6 +980,11 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (removeDiscount != null) {
@@ -817,6 +1003,10 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return removeDiscount(this);
   }
@@ -831,6 +1021,10 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return removeDiscount?.call(this);
   }
@@ -845,6 +1039,10 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (removeDiscount != null) {
@@ -875,6 +1073,8 @@ class __$$AddTaxImplCopyWithImpl<$Res>
       _$AddTaxImpl _value, $Res Function(_$AddTaxImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -913,7 +1113,9 @@ class _$AddTaxImpl implements _AddTax {
   @override
   int get hashCode => Object.hash(runtimeType, tax);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddTaxImplCopyWith<_$AddTaxImpl> get copyWith =>
@@ -929,6 +1131,12 @@ class _$AddTaxImpl implements _AddTax {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return addTax(tax);
   }
@@ -943,6 +1151,11 @@ class _$AddTaxImpl implements _AddTax {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return addTax?.call(tax);
   }
@@ -957,6 +1170,11 @@ class _$AddTaxImpl implements _AddTax {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addTax != null) {
@@ -975,6 +1193,10 @@ class _$AddTaxImpl implements _AddTax {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return addTax(this);
   }
@@ -989,6 +1211,10 @@ class _$AddTaxImpl implements _AddTax {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return addTax?.call(this);
   }
@@ -1003,6 +1229,10 @@ class _$AddTaxImpl implements _AddTax {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addTax != null) {
@@ -1016,7 +1246,10 @@ abstract class _AddTax implements CheckoutEvent {
   const factory _AddTax(final int tax) = _$AddTaxImpl;
 
   int get tax;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddTaxImplCopyWith<_$AddTaxImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1038,6 +1271,8 @@ class __$$AddServiceChargeImplCopyWithImpl<$Res>
       $Res Function(_$AddServiceChargeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1077,7 +1312,9 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
   @override
   int get hashCode => Object.hash(runtimeType, serviceCharge);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddServiceChargeImplCopyWith<_$AddServiceChargeImpl> get copyWith =>
@@ -1094,6 +1331,12 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     required TResult Function() removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
     return addServiceCharge(serviceCharge);
   }
@@ -1108,6 +1351,11 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult? Function()? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
     return addServiceCharge?.call(serviceCharge);
   }
@@ -1122,6 +1370,11 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult Function()? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addServiceCharge != null) {
@@ -1140,6 +1393,10 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     required TResult Function(_RemoveDiscount value) removeDiscount,
     required TResult Function(_AddTax value) addTax,
     required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
   }) {
     return addServiceCharge(this);
   }
@@ -1154,6 +1411,10 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult? Function(_RemoveDiscount value)? removeDiscount,
     TResult? Function(_AddTax value)? addTax,
     TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
   }) {
     return addServiceCharge?.call(this);
   }
@@ -1168,6 +1429,10 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult Function(_RemoveDiscount value)? removeDiscount,
     TResult Function(_AddTax value)? addTax,
     TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
     required TResult orElse(),
   }) {
     if (addServiceCharge != null) {
@@ -1182,8 +1447,761 @@ abstract class _AddServiceCharge implements CheckoutEvent {
       _$AddServiceChargeImpl;
 
   int get serviceCharge;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddServiceChargeImplCopyWith<_$AddServiceChargeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RemoveTaxImplCopyWith<$Res> {
+  factory _$$RemoveTaxImplCopyWith(
+          _$RemoveTaxImpl value, $Res Function(_$RemoveTaxImpl) then) =
+      __$$RemoveTaxImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RemoveTaxImplCopyWithImpl<$Res>
+    extends _$CheckoutEventCopyWithImpl<$Res, _$RemoveTaxImpl>
+    implements _$$RemoveTaxImplCopyWith<$Res> {
+  __$$RemoveTaxImplCopyWithImpl(
+      _$RemoveTaxImpl _value, $Res Function(_$RemoveTaxImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$RemoveTaxImpl implements _RemoveTax {
+  const _$RemoveTaxImpl();
+
+  @override
+  String toString() {
+    return 'CheckoutEvent.removeTax()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$RemoveTaxImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(Product product) addItem,
+    required TResult Function(Product product) removeItem,
+    required TResult Function(Discount discount) addDiscount,
+    required TResult Function() removeDiscount,
+    required TResult Function(int tax) addTax,
+    required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
+  }) {
+    return removeTax();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(Product product)? addItem,
+    TResult? Function(Product product)? removeItem,
+    TResult? Function(Discount discount)? addDiscount,
+    TResult? Function()? removeDiscount,
+    TResult? Function(int tax)? addTax,
+    TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
+  }) {
+    return removeTax?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(Product product)? addItem,
+    TResult Function(Product product)? removeItem,
+    TResult Function(Discount discount)? addDiscount,
+    TResult Function()? removeDiscount,
+    TResult Function(int tax)? addTax,
+    TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (removeTax != null) {
+      return removeTax();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_AddItem value) addItem,
+    required TResult Function(_RemoveItem value) removeItem,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_RemoveDiscount value) removeDiscount,
+    required TResult Function(_AddTax value) addTax,
+    required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
+  }) {
+    return removeTax(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_AddItem value)? addItem,
+    TResult? Function(_RemoveItem value)? removeItem,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_RemoveDiscount value)? removeDiscount,
+    TResult? Function(_AddTax value)? addTax,
+    TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
+  }) {
+    return removeTax?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddItem value)? addItem,
+    TResult Function(_RemoveItem value)? removeItem,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_RemoveDiscount value)? removeDiscount,
+    TResult Function(_AddTax value)? addTax,
+    TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (removeTax != null) {
+      return removeTax(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _RemoveTax implements CheckoutEvent {
+  const factory _RemoveTax() = _$RemoveTaxImpl;
+}
+
+/// @nodoc
+abstract class _$$RemoveServiceChargeImplCopyWith<$Res> {
+  factory _$$RemoveServiceChargeImplCopyWith(_$RemoveServiceChargeImpl value,
+          $Res Function(_$RemoveServiceChargeImpl) then) =
+      __$$RemoveServiceChargeImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RemoveServiceChargeImplCopyWithImpl<$Res>
+    extends _$CheckoutEventCopyWithImpl<$Res, _$RemoveServiceChargeImpl>
+    implements _$$RemoveServiceChargeImplCopyWith<$Res> {
+  __$$RemoveServiceChargeImplCopyWithImpl(_$RemoveServiceChargeImpl _value,
+      $Res Function(_$RemoveServiceChargeImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$RemoveServiceChargeImpl implements _RemoveServiceCharge {
+  const _$RemoveServiceChargeImpl();
+
+  @override
+  String toString() {
+    return 'CheckoutEvent.removeServiceCharge()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RemoveServiceChargeImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(Product product) addItem,
+    required TResult Function(Product product) removeItem,
+    required TResult Function(Discount discount) addDiscount,
+    required TResult Function() removeDiscount,
+    required TResult Function(int tax) addTax,
+    required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
+  }) {
+    return removeServiceCharge();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(Product product)? addItem,
+    TResult? Function(Product product)? removeItem,
+    TResult? Function(Discount discount)? addDiscount,
+    TResult? Function()? removeDiscount,
+    TResult? Function(int tax)? addTax,
+    TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
+  }) {
+    return removeServiceCharge?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(Product product)? addItem,
+    TResult Function(Product product)? removeItem,
+    TResult Function(Discount discount)? addDiscount,
+    TResult Function()? removeDiscount,
+    TResult Function(int tax)? addTax,
+    TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (removeServiceCharge != null) {
+      return removeServiceCharge();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_AddItem value) addItem,
+    required TResult Function(_RemoveItem value) removeItem,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_RemoveDiscount value) removeDiscount,
+    required TResult Function(_AddTax value) addTax,
+    required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
+  }) {
+    return removeServiceCharge(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_AddItem value)? addItem,
+    TResult? Function(_RemoveItem value)? removeItem,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_RemoveDiscount value)? removeDiscount,
+    TResult? Function(_AddTax value)? addTax,
+    TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
+  }) {
+    return removeServiceCharge?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddItem value)? addItem,
+    TResult Function(_RemoveItem value)? removeItem,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_RemoveDiscount value)? removeDiscount,
+    TResult Function(_AddTax value)? addTax,
+    TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (removeServiceCharge != null) {
+      return removeServiceCharge(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _RemoveServiceCharge implements CheckoutEvent {
+  const factory _RemoveServiceCharge() = _$RemoveServiceChargeImpl;
+}
+
+/// @nodoc
+abstract class _$$SaveDraftOrderImplCopyWith<$Res> {
+  factory _$$SaveDraftOrderImplCopyWith(_$SaveDraftOrderImpl value,
+          $Res Function(_$SaveDraftOrderImpl) then) =
+      __$$SaveDraftOrderImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int tableNumber, String draftName, int discountAmount});
+}
+
+/// @nodoc
+class __$$SaveDraftOrderImplCopyWithImpl<$Res>
+    extends _$CheckoutEventCopyWithImpl<$Res, _$SaveDraftOrderImpl>
+    implements _$$SaveDraftOrderImplCopyWith<$Res> {
+  __$$SaveDraftOrderImplCopyWithImpl(
+      _$SaveDraftOrderImpl _value, $Res Function(_$SaveDraftOrderImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tableNumber = null,
+    Object? draftName = null,
+    Object? discountAmount = null,
+  }) {
+    return _then(_$SaveDraftOrderImpl(
+      null == tableNumber
+          ? _value.tableNumber
+          : tableNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == draftName
+          ? _value.draftName
+          : draftName // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SaveDraftOrderImpl implements _SaveDraftOrder {
+  const _$SaveDraftOrderImpl(
+      this.tableNumber, this.draftName, this.discountAmount);
+
+  @override
+  final int tableNumber;
+  @override
+  final String draftName;
+  @override
+  final int discountAmount;
+
+  @override
+  String toString() {
+    return 'CheckoutEvent.saveDraftOrder(tableNumber: $tableNumber, draftName: $draftName, discountAmount: $discountAmount)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SaveDraftOrderImpl &&
+            (identical(other.tableNumber, tableNumber) ||
+                other.tableNumber == tableNumber) &&
+            (identical(other.draftName, draftName) ||
+                other.draftName == draftName) &&
+            (identical(other.discountAmount, discountAmount) ||
+                other.discountAmount == discountAmount));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, tableNumber, draftName, discountAmount);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SaveDraftOrderImplCopyWith<_$SaveDraftOrderImpl> get copyWith =>
+      __$$SaveDraftOrderImplCopyWithImpl<_$SaveDraftOrderImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(Product product) addItem,
+    required TResult Function(Product product) removeItem,
+    required TResult Function(Discount discount) addDiscount,
+    required TResult Function() removeDiscount,
+    required TResult Function(int tax) addTax,
+    required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
+  }) {
+    return saveDraftOrder(tableNumber, draftName, discountAmount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(Product product)? addItem,
+    TResult? Function(Product product)? removeItem,
+    TResult? Function(Discount discount)? addDiscount,
+    TResult? Function()? removeDiscount,
+    TResult? Function(int tax)? addTax,
+    TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
+  }) {
+    return saveDraftOrder?.call(tableNumber, draftName, discountAmount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(Product product)? addItem,
+    TResult Function(Product product)? removeItem,
+    TResult Function(Discount discount)? addDiscount,
+    TResult Function()? removeDiscount,
+    TResult Function(int tax)? addTax,
+    TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (saveDraftOrder != null) {
+      return saveDraftOrder(tableNumber, draftName, discountAmount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_AddItem value) addItem,
+    required TResult Function(_RemoveItem value) removeItem,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_RemoveDiscount value) removeDiscount,
+    required TResult Function(_AddTax value) addTax,
+    required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
+  }) {
+    return saveDraftOrder(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_AddItem value)? addItem,
+    TResult? Function(_RemoveItem value)? removeItem,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_RemoveDiscount value)? removeDiscount,
+    TResult? Function(_AddTax value)? addTax,
+    TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
+  }) {
+    return saveDraftOrder?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddItem value)? addItem,
+    TResult Function(_RemoveItem value)? removeItem,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_RemoveDiscount value)? removeDiscount,
+    TResult Function(_AddTax value)? addTax,
+    TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (saveDraftOrder != null) {
+      return saveDraftOrder(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SaveDraftOrder implements CheckoutEvent {
+  const factory _SaveDraftOrder(final int tableNumber, final String draftName,
+      final int discountAmount) = _$SaveDraftOrderImpl;
+
+  int get tableNumber;
+  String get draftName;
+  int get discountAmount;
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SaveDraftOrderImplCopyWith<_$SaveDraftOrderImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadDraftOrderImplCopyWith<$Res> {
+  factory _$$LoadDraftOrderImplCopyWith(_$LoadDraftOrderImpl value,
+          $Res Function(_$LoadDraftOrderImpl) then) =
+      __$$LoadDraftOrderImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({DraftOrderModel data});
+}
+
+/// @nodoc
+class __$$LoadDraftOrderImplCopyWithImpl<$Res>
+    extends _$CheckoutEventCopyWithImpl<$Res, _$LoadDraftOrderImpl>
+    implements _$$LoadDraftOrderImplCopyWith<$Res> {
+  __$$LoadDraftOrderImplCopyWithImpl(
+      _$LoadDraftOrderImpl _value, $Res Function(_$LoadDraftOrderImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$LoadDraftOrderImpl(
+      null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as DraftOrderModel,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadDraftOrderImpl implements _LoadDraftOrder {
+  const _$LoadDraftOrderImpl(this.data);
+
+  @override
+  final DraftOrderModel data;
+
+  @override
+  String toString() {
+    return 'CheckoutEvent.loadDraftOrder(data: $data)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadDraftOrderImpl &&
+            (identical(other.data, data) || other.data == data));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, data);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadDraftOrderImplCopyWith<_$LoadDraftOrderImpl> get copyWith =>
+      __$$LoadDraftOrderImplCopyWithImpl<_$LoadDraftOrderImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(Product product) addItem,
+    required TResult Function(Product product) removeItem,
+    required TResult Function(Discount discount) addDiscount,
+    required TResult Function() removeDiscount,
+    required TResult Function(int tax) addTax,
+    required TResult Function(int serviceCharge) addServiceCharge,
+    required TResult Function() removeTax,
+    required TResult Function() removeServiceCharge,
+    required TResult Function(
+            int tableNumber, String draftName, int discountAmount)
+        saveDraftOrder,
+    required TResult Function(DraftOrderModel data) loadDraftOrder,
+  }) {
+    return loadDraftOrder(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(Product product)? addItem,
+    TResult? Function(Product product)? removeItem,
+    TResult? Function(Discount discount)? addDiscount,
+    TResult? Function()? removeDiscount,
+    TResult? Function(int tax)? addTax,
+    TResult? Function(int serviceCharge)? addServiceCharge,
+    TResult? Function()? removeTax,
+    TResult? Function()? removeServiceCharge,
+    TResult? Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult? Function(DraftOrderModel data)? loadDraftOrder,
+  }) {
+    return loadDraftOrder?.call(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(Product product)? addItem,
+    TResult Function(Product product)? removeItem,
+    TResult Function(Discount discount)? addDiscount,
+    TResult Function()? removeDiscount,
+    TResult Function(int tax)? addTax,
+    TResult Function(int serviceCharge)? addServiceCharge,
+    TResult Function()? removeTax,
+    TResult Function()? removeServiceCharge,
+    TResult Function(int tableNumber, String draftName, int discountAmount)?
+        saveDraftOrder,
+    TResult Function(DraftOrderModel data)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (loadDraftOrder != null) {
+      return loadDraftOrder(data);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_AddItem value) addItem,
+    required TResult Function(_RemoveItem value) removeItem,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_RemoveDiscount value) removeDiscount,
+    required TResult Function(_AddTax value) addTax,
+    required TResult Function(_AddServiceCharge value) addServiceCharge,
+    required TResult Function(_RemoveTax value) removeTax,
+    required TResult Function(_RemoveServiceCharge value) removeServiceCharge,
+    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
+    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
+  }) {
+    return loadDraftOrder(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_AddItem value)? addItem,
+    TResult? Function(_RemoveItem value)? removeItem,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_RemoveDiscount value)? removeDiscount,
+    TResult? Function(_AddTax value)? addTax,
+    TResult? Function(_AddServiceCharge value)? addServiceCharge,
+    TResult? Function(_RemoveTax value)? removeTax,
+    TResult? Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
+  }) {
+    return loadDraftOrder?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddItem value)? addItem,
+    TResult Function(_RemoveItem value)? removeItem,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_RemoveDiscount value)? removeDiscount,
+    TResult Function(_AddTax value)? addTax,
+    TResult Function(_AddServiceCharge value)? addServiceCharge,
+    TResult Function(_RemoveTax value)? removeTax,
+    TResult Function(_RemoveServiceCharge value)? removeServiceCharge,
+    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
+    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (loadDraftOrder != null) {
+      return loadDraftOrder(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoadDraftOrder implements CheckoutEvent {
+  const factory _LoadDraftOrder(final DraftOrderModel data) =
+      _$LoadDraftOrderImpl;
+
+  DraftOrderModel get data;
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadDraftOrderImplCopyWith<_$LoadDraftOrderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1193,30 +2211,57 @@ mixin _$CheckoutState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<ProductQuantity> items, Discount? discount,
-            int tax, int serviceCharge)
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
         loaded,
     required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1226,6 +2271,7 @@ mixin _$CheckoutState {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1234,6 +2280,7 @@ mixin _$CheckoutState {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1242,6 +2289,7 @@ mixin _$CheckoutState {
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1263,6 +2311,9 @@ class _$CheckoutStateCopyWithImpl<$Res, $Val extends CheckoutState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1279,6 +2330,9 @@ class __$$InitialImplCopyWithImpl<$Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1305,10 +2359,19 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<ProductQuantity> items, Discount? discount,
-            int tax, int serviceCharge)
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
         loaded,
     required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
   }) {
     return initial();
   }
@@ -1318,10 +2381,19 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
   }) {
     return initial?.call();
   }
@@ -1331,10 +2403,19 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -1350,6 +2431,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
   }) {
     return initial(this);
   }
@@ -1361,6 +2443,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
   }) {
     return initial?.call(this);
   }
@@ -1372,6 +2455,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -1399,6 +2483,9 @@ class __$$LoadingImplCopyWithImpl<$Res>
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1425,10 +2512,19 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<ProductQuantity> items, Discount? discount,
-            int tax, int serviceCharge)
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
         loaded,
     required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
   }) {
     return loading();
   }
@@ -1438,10 +2534,19 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
   }) {
     return loading?.call();
   }
@@ -1451,10 +2556,19 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -1470,6 +2584,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
   }) {
     return loading(this);
   }
@@ -1481,6 +2596,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
   }) {
     return loading?.call(this);
   }
@@ -1492,6 +2608,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -1513,9 +2630,14 @@ abstract class _$$LoadedImplCopyWith<$Res> {
   @useResult
   $Res call(
       {List<ProductQuantity> items,
-      Discount? discount,
+      Discount? discountModel,
+      int discount,
+      int discountAmount,
       int tax,
-      int serviceCharge});
+      int serviceCharge,
+      int totalQuantity,
+      int totalPrice,
+      String draftName});
 }
 
 /// @nodoc
@@ -1526,23 +2648,38 @@ class __$$LoadedImplCopyWithImpl<$Res>
       _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? items = null,
-    Object? discount = freezed,
+    Object? discountModel = freezed,
+    Object? discount = null,
+    Object? discountAmount = null,
     Object? tax = null,
     Object? serviceCharge = null,
+    Object? totalQuantity = null,
+    Object? totalPrice = null,
+    Object? draftName = null,
   }) {
     return _then(_$LoadedImpl(
       null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
               as List<ProductQuantity>,
-      freezed == discount
+      freezed == discountModel
+          ? _value.discountModel
+          : discountModel // ignore: cast_nullable_to_non_nullable
+              as Discount?,
+      null == discount
           ? _value.discount
           : discount // ignore: cast_nullable_to_non_nullable
-              as Discount?,
+              as int,
+      null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
       null == tax
           ? _value.tax
           : tax // ignore: cast_nullable_to_non_nullable
@@ -1551,6 +2688,18 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value.serviceCharge
           : serviceCharge // ignore: cast_nullable_to_non_nullable
               as int,
+      null == totalQuantity
+          ? _value.totalQuantity
+          : totalQuantity // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == totalPrice
+          ? _value.totalPrice
+          : totalPrice // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == draftName
+          ? _value.draftName
+          : draftName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -1558,8 +2707,16 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(final List<ProductQuantity> items, this.discount, this.tax,
-      this.serviceCharge)
+  const _$LoadedImpl(
+      final List<ProductQuantity> items,
+      this.discountModel,
+      this.discount,
+      this.discountAmount,
+      this.tax,
+      this.serviceCharge,
+      this.totalQuantity,
+      this.totalPrice,
+      this.draftName)
       : _items = items;
 
   final List<ProductQuantity> _items;
@@ -1571,15 +2728,25 @@ class _$LoadedImpl implements _Loaded {
   }
 
   @override
-  final Discount? discount;
+  final Discount? discountModel;
+  @override
+  final int discount;
+  @override
+  final int discountAmount;
   @override
   final int tax;
   @override
   final int serviceCharge;
+  @override
+  final int totalQuantity;
+  @override
+  final int totalPrice;
+  @override
+  final String draftName;
 
   @override
   String toString() {
-    return 'CheckoutState.loaded(items: $items, discount: $discount, tax: $tax, serviceCharge: $serviceCharge)';
+    return 'CheckoutState.loaded(items: $items, discountModel: $discountModel, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, totalQuantity: $totalQuantity, totalPrice: $totalPrice, draftName: $draftName)';
   }
 
   @override
@@ -1588,22 +2755,39 @@ class _$LoadedImpl implements _Loaded {
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
             const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.discountModel, discountModel) ||
+                other.discountModel == discountModel) &&
             (identical(other.discount, discount) ||
                 other.discount == discount) &&
+            (identical(other.discountAmount, discountAmount) ||
+                other.discountAmount == discountAmount) &&
             (identical(other.tax, tax) || other.tax == tax) &&
             (identical(other.serviceCharge, serviceCharge) ||
-                other.serviceCharge == serviceCharge));
+                other.serviceCharge == serviceCharge) &&
+            (identical(other.totalQuantity, totalQuantity) ||
+                other.totalQuantity == totalQuantity) &&
+            (identical(other.totalPrice, totalPrice) ||
+                other.totalPrice == totalPrice) &&
+            (identical(other.draftName, draftName) ||
+                other.draftName == draftName));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_items),
+      discountModel,
       discount,
+      discountAmount,
       tax,
-      serviceCharge);
+      serviceCharge,
+      totalQuantity,
+      totalPrice,
+      draftName);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
@@ -1614,12 +2798,22 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<ProductQuantity> items, Discount? discount,
-            int tax, int serviceCharge)
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
         loaded,
     required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
   }) {
-    return loaded(items, discount, tax, serviceCharge);
+    return loaded(items, discountModel, discount, discountAmount, tax,
+        serviceCharge, totalQuantity, totalPrice, draftName);
   }
 
   @override
@@ -1627,12 +2821,22 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
   }) {
-    return loaded?.call(items, discount, tax, serviceCharge);
+    return loaded?.call(items, discountModel, discount, discountAmount, tax,
+        serviceCharge, totalQuantity, totalPrice, draftName);
   }
 
   @override
@@ -1640,14 +2844,24 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(items, discount, tax, serviceCharge);
+      return loaded(items, discountModel, discount, discountAmount, tax,
+          serviceCharge, totalQuantity, totalPrice, draftName);
     }
     return orElse();
   }
@@ -1659,6 +2873,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
   }) {
     return loaded(this);
   }
@@ -1670,6 +2885,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
   }) {
     return loaded?.call(this);
   }
@@ -1681,6 +2897,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -1693,15 +2910,28 @@ class _$LoadedImpl implements _Loaded {
 abstract class _Loaded implements CheckoutState {
   const factory _Loaded(
       final List<ProductQuantity> items,
-      final Discount? discount,
+      final Discount? discountModel,
+      final int discount,
+      final int discountAmount,
       final int tax,
-      final int serviceCharge) = _$LoadedImpl;
+      final int serviceCharge,
+      final int totalQuantity,
+      final int totalPrice,
+      final String draftName) = _$LoadedImpl;
 
   List<ProductQuantity> get items;
-  Discount? get discount;
+  Discount? get discountModel;
+  int get discount;
+  int get discountAmount;
   int get tax;
   int get serviceCharge;
-  @JsonKey(ignore: true)
+  int get totalQuantity;
+  int get totalPrice;
+  String get draftName;
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1723,6 +2953,8 @@ class __$$ErrorImplCopyWithImpl<$Res>
       _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1761,7 +2993,9 @@ class _$ErrorImpl implements _Error {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
@@ -1772,10 +3006,19 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<ProductQuantity> items, Discount? discount,
-            int tax, int serviceCharge)
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
         loaded,
     required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
   }) {
     return error(message);
   }
@@ -1785,10 +3028,19 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
   }) {
     return error?.call(message);
   }
@@ -1798,10 +3050,19 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<ProductQuantity> items, Discount? discount, int tax,
-            int serviceCharge)?
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
         loaded,
     TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1817,6 +3078,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
   }) {
     return error(this);
   }
@@ -1828,6 +3090,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
   }) {
     return error?.call(this);
   }
@@ -1839,6 +3102,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1852,7 +3116,199 @@ abstract class _Error implements CheckoutState {
   const factory _Error(final String message) = _$ErrorImpl;
 
   String get message;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SavedDraftOrderImplCopyWith<$Res> {
+  factory _$$SavedDraftOrderImplCopyWith(_$SavedDraftOrderImpl value,
+          $Res Function(_$SavedDraftOrderImpl) then) =
+      __$$SavedDraftOrderImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int orderId});
+}
+
+/// @nodoc
+class __$$SavedDraftOrderImplCopyWithImpl<$Res>
+    extends _$CheckoutStateCopyWithImpl<$Res, _$SavedDraftOrderImpl>
+    implements _$$SavedDraftOrderImplCopyWith<$Res> {
+  __$$SavedDraftOrderImplCopyWithImpl(
+      _$SavedDraftOrderImpl _value, $Res Function(_$SavedDraftOrderImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? orderId = null,
+  }) {
+    return _then(_$SavedDraftOrderImpl(
+      null == orderId
+          ? _value.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SavedDraftOrderImpl implements _SavedDraftOrder {
+  const _$SavedDraftOrderImpl(this.orderId);
+
+  @override
+  final int orderId;
+
+  @override
+  String toString() {
+    return 'CheckoutState.savedDraftOrder(orderId: $orderId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SavedDraftOrderImpl &&
+            (identical(other.orderId, orderId) || other.orderId == orderId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, orderId);
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SavedDraftOrderImplCopyWith<_$SavedDraftOrderImpl> get copyWith =>
+      __$$SavedDraftOrderImplCopyWithImpl<_$SavedDraftOrderImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)
+        loaded,
+    required TResult Function(String message) error,
+    required TResult Function(int orderId) savedDraftOrder,
+  }) {
+    return savedDraftOrder(orderId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
+        loaded,
+    TResult? Function(String message)? error,
+    TResult? Function(int orderId)? savedDraftOrder,
+  }) {
+    return savedDraftOrder?.call(orderId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(
+            List<ProductQuantity> items,
+            Discount? discountModel,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int totalQuantity,
+            int totalPrice,
+            String draftName)?
+        loaded,
+    TResult Function(String message)? error,
+    TResult Function(int orderId)? savedDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (savedDraftOrder != null) {
+      return savedDraftOrder(orderId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_Error value) error,
+    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
+  }) {
+    return savedDraftOrder(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
+  }) {
+    return savedDraftOrder?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
+    TResult Function(_Error value)? error,
+    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
+    required TResult orElse(),
+  }) {
+    if (savedDraftOrder != null) {
+      return savedDraftOrder(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SavedDraftOrder implements CheckoutState {
+  const factory _SavedDraftOrder(final int orderId) = _$SavedDraftOrderImpl;
+
+  int get orderId;
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SavedDraftOrderImplCopyWith<_$SavedDraftOrderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 
 import '../../../core/constants/colors.dart';
-
-
+import '../bloc/checkout/checkout_bloc.dart';
 
 class TaxDialog extends StatelessWidget {
   const TaxDialog({super.key});
@@ -15,7 +15,7 @@ class TaxDialog extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           const Text(
-            'PAJAK',
+            'PAJAK PB1',
             style: TextStyle(
               color: AppColors.primary,
               fontSize: 28,
@@ -40,13 +40,33 @@ class TaxDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            title: const Text('Pajak Pertambahan Nilai'),
-            subtitle: const Text('tarif pajak (11%)'),
+            title: const Text('PB1'),
+            subtitle: const Text('tarif pajak (10%)'),
             contentPadding: EdgeInsets.zero,
             textColor: AppColors.primary,
-            trailing: Checkbox(
-              value: true,
-              onChanged: (value) {},
+            trailing: BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                  initial: () => Checkbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                  loading: () => const CircularProgressIndicator(),
+                  loaded: (data, a, b, c, tax, d, e, f, g) => Checkbox(
+                    value: tax > 0,
+                    onChanged: (value) {
+                      context.read<CheckoutBloc>().add(
+                            CheckoutEvent.addTax(tax > 0 ? 0 : 10),
+                          );
+                    },
+                  ),
+                  orElse: () => const SizedBox(),
+                );
+                // return Checkbox(
+                //   value: true,
+                //   onChanged: (value) {},
+                // );
+              },
             ),
             onTap: () {
               context.pop();

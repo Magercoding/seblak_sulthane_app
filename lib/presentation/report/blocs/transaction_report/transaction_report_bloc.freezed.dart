@@ -19,19 +19,19 @@ mixin _$TransactionReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(DateTime startDate, DateTime endDate) getReport,
+    required TResult Function(String startDate, String endDate) getReport,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult? Function(String startDate, String endDate)? getReport,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult Function(String startDate, String endDate)? getReport,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -73,6 +73,9 @@ class _$TransactionReportEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of TransactionReportEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -89,6 +92,9 @@ class __$$StartedImplCopyWithImpl<$Res>
   __$$StartedImplCopyWithImpl(
       _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of TransactionReportEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -114,7 +120,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(DateTime startDate, DateTime endDate) getReport,
+    required TResult Function(String startDate, String endDate) getReport,
   }) {
     return started();
   }
@@ -123,7 +129,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult? Function(String startDate, String endDate)? getReport,
   }) {
     return started?.call();
   }
@@ -132,7 +138,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult Function(String startDate, String endDate)? getReport,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -183,7 +189,7 @@ abstract class _$$GetReportImplCopyWith<$Res> {
           _$GetReportImpl value, $Res Function(_$GetReportImpl) then) =
       __$$GetReportImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({DateTime startDate, DateTime endDate});
+  $Res call({String startDate, String endDate});
 }
 
 /// @nodoc
@@ -194,6 +200,8 @@ class __$$GetReportImplCopyWithImpl<$Res>
       _$GetReportImpl _value, $Res Function(_$GetReportImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionReportEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -204,11 +212,11 @@ class __$$GetReportImplCopyWithImpl<$Res>
       startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
       endDate: null == endDate
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
     ));
   }
 }
@@ -219,9 +227,9 @@ class _$GetReportImpl implements _GetReport {
   const _$GetReportImpl({required this.startDate, required this.endDate});
 
   @override
-  final DateTime startDate;
+  final String startDate;
   @override
-  final DateTime endDate;
+  final String endDate;
 
   @override
   String toString() {
@@ -241,7 +249,9 @@ class _$GetReportImpl implements _GetReport {
   @override
   int get hashCode => Object.hash(runtimeType, startDate, endDate);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionReportEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GetReportImplCopyWith<_$GetReportImpl> get copyWith =>
@@ -251,7 +261,7 @@ class _$GetReportImpl implements _GetReport {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(DateTime startDate, DateTime endDate) getReport,
+    required TResult Function(String startDate, String endDate) getReport,
   }) {
     return getReport(startDate, endDate);
   }
@@ -260,7 +270,7 @@ class _$GetReportImpl implements _GetReport {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult? Function(String startDate, String endDate)? getReport,
   }) {
     return getReport?.call(startDate, endDate);
   }
@@ -269,7 +279,7 @@ class _$GetReportImpl implements _GetReport {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(DateTime startDate, DateTime endDate)? getReport,
+    TResult Function(String startDate, String endDate)? getReport,
     required TResult orElse(),
   }) {
     if (getReport != null) {
@@ -312,12 +322,15 @@ class _$GetReportImpl implements _GetReport {
 
 abstract class _GetReport implements TransactionReportEvent {
   const factory _GetReport(
-      {required final DateTime startDate,
-      required final DateTime endDate}) = _$GetReportImpl;
+      {required final String startDate,
+      required final String endDate}) = _$GetReportImpl;
 
-  DateTime get startDate;
-  DateTime get endDate;
-  @JsonKey(ignore: true)
+  String get startDate;
+  String get endDate;
+
+  /// Create a copy of TransactionReportEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GetReportImplCopyWith<_$GetReportImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -329,7 +342,7 @@ mixin _$TransactionReportState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<OrderModel> transactionReport) loaded,
+    required TResult Function(List<ItemOrder> transactionReport) loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -337,7 +350,7 @@ mixin _$TransactionReportState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<OrderModel> transactionReport)? loaded,
+    TResult? Function(List<ItemOrder> transactionReport)? loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -345,7 +358,7 @@ mixin _$TransactionReportState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<OrderModel> transactionReport)? loaded,
+    TResult Function(List<ItemOrder> transactionReport)? loaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -393,6 +406,9 @@ class _$TransactionReportStateCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -409,6 +425,9 @@ class __$$InitialImplCopyWithImpl<$Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -436,7 +455,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<OrderModel> transactionReport) loaded,
+    required TResult Function(List<ItemOrder> transactionReport) loaded,
   }) {
     return initial();
   }
@@ -447,7 +466,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<OrderModel> transactionReport)? loaded,
+    TResult? Function(List<ItemOrder> transactionReport)? loaded,
   }) {
     return initial?.call();
   }
@@ -458,7 +477,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<OrderModel> transactionReport)? loaded,
+    TResult Function(List<ItemOrder> transactionReport)? loaded,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -523,6 +542,9 @@ class __$$LoadingImplCopyWithImpl<$Res>
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -550,7 +572,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<OrderModel> transactionReport) loaded,
+    required TResult Function(List<ItemOrder> transactionReport) loaded,
   }) {
     return loading();
   }
@@ -561,7 +583,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<OrderModel> transactionReport)? loaded,
+    TResult? Function(List<ItemOrder> transactionReport)? loaded,
   }) {
     return loading?.call();
   }
@@ -572,7 +594,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<OrderModel> transactionReport)? loaded,
+    TResult Function(List<ItemOrder> transactionReport)? loaded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -640,6 +662,8 @@ class __$$ErrorImplCopyWithImpl<$Res>
       _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -678,7 +702,9 @@ class _$ErrorImpl implements _Error {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
@@ -690,7 +716,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<OrderModel> transactionReport) loaded,
+    required TResult Function(List<ItemOrder> transactionReport) loaded,
   }) {
     return error(message);
   }
@@ -701,7 +727,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<OrderModel> transactionReport)? loaded,
+    TResult? Function(List<ItemOrder> transactionReport)? loaded,
   }) {
     return error?.call(message);
   }
@@ -712,7 +738,7 @@ class _$ErrorImpl implements _Error {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<OrderModel> transactionReport)? loaded,
+    TResult Function(List<ItemOrder> transactionReport)? loaded,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -763,7 +789,10 @@ abstract class _Error implements TransactionReportState {
   const factory _Error(final String message) = _$ErrorImpl;
 
   String get message;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -774,7 +803,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<OrderModel> transactionReport});
+  $Res call({List<ItemOrder> transactionReport});
 }
 
 /// @nodoc
@@ -785,6 +814,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
       _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -794,7 +825,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
       null == transactionReport
           ? _value._transactionReport
           : transactionReport // ignore: cast_nullable_to_non_nullable
-              as List<OrderModel>,
+              as List<ItemOrder>,
     ));
   }
 }
@@ -802,12 +833,12 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(final List<OrderModel> transactionReport)
+  const _$LoadedImpl(final List<ItemOrder> transactionReport)
       : _transactionReport = transactionReport;
 
-  final List<OrderModel> _transactionReport;
+  final List<ItemOrder> _transactionReport;
   @override
-  List<OrderModel> get transactionReport {
+  List<ItemOrder> get transactionReport {
     if (_transactionReport is EqualUnmodifiableListView)
       return _transactionReport;
     // ignore: implicit_dynamic_type
@@ -832,7 +863,9 @@ class _$LoadedImpl implements _Loaded {
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_transactionReport));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
@@ -844,7 +877,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<OrderModel> transactionReport) loaded,
+    required TResult Function(List<ItemOrder> transactionReport) loaded,
   }) {
     return loaded(transactionReport);
   }
@@ -855,7 +888,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<OrderModel> transactionReport)? loaded,
+    TResult? Function(List<ItemOrder> transactionReport)? loaded,
   }) {
     return loaded?.call(transactionReport);
   }
@@ -866,7 +899,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<OrderModel> transactionReport)? loaded,
+    TResult Function(List<ItemOrder> transactionReport)? loaded,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -914,11 +947,13 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements TransactionReportState {
-  const factory _Loaded(final List<OrderModel> transactionReport) =
-      _$LoadedImpl;
+  const factory _Loaded(final List<ItemOrder> transactionReport) = _$LoadedImpl;
 
-  List<OrderModel> get transactionReport;
-  @JsonKey(ignore: true)
+  List<ItemOrder> get transactionReport;
+
+  /// Create a copy of TransactionReportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -15,5 +15,18 @@ class CheckoutEvent with _$CheckoutEvent {
   //add tax
   const factory CheckoutEvent.addTax(int tax) = _AddTax;
   //add service charge
-  const factory CheckoutEvent.addServiceCharge(int serviceCharge) = _AddServiceCharge;
+  const factory CheckoutEvent.addServiceCharge(int serviceCharge) =
+      _AddServiceCharge;
+  //remove tax
+  const factory CheckoutEvent.removeTax() = _RemoveTax;
+  //remove service charge
+  const factory CheckoutEvent.removeServiceCharge() = _RemoveServiceCharge;    
+
+  //save draft order
+  const factory CheckoutEvent.saveDraftOrder(
+      int tableNumber, String draftName, int discountAmount) = _SaveDraftOrder;
+
+  //load draft order
+  const factory CheckoutEvent.loadDraftOrder(DraftOrderModel data) =
+      _LoadDraftOrder;
 }

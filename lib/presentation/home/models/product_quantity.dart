@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 
@@ -30,8 +31,21 @@ class ProductQuantity {
   }
 
   Map<String, dynamic> toLocalMap(int orderId) {
+    log("OrderProductId: ${product.id}");
+
     return {
       'id_order': orderId,
+      'id_product': product.productId,
+      'quantity': quantity,
+      'price': product.price,
+    };
+  }
+
+  Map<String, dynamic> toServerMap(int? orderId) {
+    log("toServerMap: ${product.id}");
+
+    return {
+      'id_order': orderId ?? 0,
       'id_product': product.id,
       'quantity': quantity,
       'price': product.price,
@@ -46,6 +60,7 @@ class ProductQuantity {
   }
 
   factory ProductQuantity.fromLocalMap(Map<String, dynamic> map) {
+    log("ProductQuantity: $map");
     return ProductQuantity(
       product: Product.fromOrderMap(map),
       quantity: map['quantity']?.toInt() ?? 0,

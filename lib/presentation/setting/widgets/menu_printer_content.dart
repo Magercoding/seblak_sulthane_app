@@ -3,16 +3,15 @@ import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 
 import '../../../../core/constants/colors.dart';
-import '../models/printer_model.dart';
 
 class MenuPrinterContent extends StatelessWidget {
   final BluetoothInfo data;
   final bool isSelected;
   const MenuPrinterContent({
-    Key? key,
+    super.key,
     required this.data,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class MenuPrinterContent extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
             width: isSelected ? 4.0 : 1.0,
-            color: isSelected ? AppColors.blueLight : AppColors.card),
+            color: isSelected ? AppColors.primary : AppColors.card),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -47,7 +47,7 @@ class FormTaxDialog extends StatelessWidget {
               const SpaceHeight(24.0),
               CustomTextField(
                 controller: taxFeeController,
-                label: 'Pajak',
+                label: 'Pajak PB1',
                 onChanged: (value) {},
                 keyboardType: TextInputType.number,
                 suffixIcon: const Icon(Icons.percent),

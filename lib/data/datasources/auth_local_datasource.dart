@@ -23,4 +23,29 @@ class AuthLocalDataSource {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('auth_data');
   }
+
+  Future<void> saveMidtransServerKey(String serverKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('server_key', serverKey);
+  }
+
+  //get midtrans server key
+  Future<String> getMitransServerKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    final serverKey = prefs.getString('server_key');
+    return serverKey ?? '';
+  }
+
+  // save size receipt
+  Future<void> saveSizeReceipt(String sizeReceipt) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('size_receipt', sizeReceipt);
+  }
+
+  // get size receipt
+  Future<String> getSizeReceipt() async {
+    final prefs = await SharedPreferences.getInstance();
+    final sizeReceipt = prefs.getString('size_receipt');
+    return sizeReceipt ?? '';
+  }
 }

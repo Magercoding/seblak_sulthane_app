@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../core/constants/colors.dart';
@@ -18,6 +20,7 @@ class ManagePrinterPage extends StatefulWidget {
 
 class _ManagePrinterPageState extends State<ManagePrinterPage> {
   int selectedIndex = 0;
+  int? selectedSize;
   // final List<PrinterModel> datas = [
   //   PrinterModel(
   //     name: 'Galaxy A30',
@@ -46,7 +49,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     "update info"
   ];
 
-  String _selectSize = "2";
+  final String _selectSize = "2";
   final _txtText = TextEditingController(text: "Hello developer");
   bool _progress = false;
   String _msjprogress = "";
@@ -58,6 +61,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
   void initState() {
     super.initState();
     initPlatformState();
+    loadData();
   }
 
   Future<void> initPlatformState() async {
@@ -96,6 +100,14 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
       _msjprogress = "Wait";
       items = [];
     });
+    var status2 = await Permission.bluetoothScan.status;
+    if (status2.isDenied) {
+      await Permission.bluetoothScan.request();
+    }
+    var status = await Permission.bluetoothConnect.status;
+    if (status.isDenied) {
+      await Permission.bluetoothConnect.request();
+    }
     final List<BluetoothInfo> listResult =
         await PrintBluetoothThermal.pairedBluetooths;
 
@@ -159,8 +171,8 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     //bytes += generator.setGlobalFont(PosFontType.fontA);
     bytes += generator.reset();
 
-    bytes +=
-        generator.text('Code with Bahri', styles: const PosStyles(bold: true));
+    bytes += generator.text('Code with Seblak Sulthane',
+        styles: const PosStyles(bold: true));
     bytes +=
         generator.text('Reverse text', styles: const PosStyles(reverse: true));
     bytes += generator.text('Underlined text',
@@ -224,6 +236,15 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     }
   }
 
+  Future<void> loadData() async {
+    final savedSize = await AuthLocalDataSource().getSizeReceipt();
+    if (savedSize.isNotEmpty) {
+      setState(() {
+        selectedSize = int.parse(savedSize);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,9 +252,97 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
         title: const Text('Kelola Printer'),
         centerTitle: true,
       ),
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: Button.filled(
+            onPressed: () async {
+              // Periksa apakah ukuran dan printer telah dipilih
+              if (selectedSize != null && macName.isNotEmpty) {
+                // Simpan ukuran dan alamat MAC printer
+                AuthLocalDataSource().saveSizeReceipt(selectedSize.toString());
+                await connect(macName);
+
+                // Tampilkan pesan berhasil
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Pengaturan berhasil disimpan')),
+                );
+              } else {
+                // Tampilkan pesan error jika belum dipilih
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('Pilih ukuran dan printer terlebih dahulu')),
+                );
+              }
+            },
+            label: 'Simpan'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
+          Text(
+            "Pilih Ukuran",
+            style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary),
+          ),
+          SpaceHeight(16),
+          Container(
+            width: context.deviceWidth / 2,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                // Radio button untuk ukuran 58
+                Expanded(
+                  child: Row(
+                    children: [
+                      Radio<int>(
+                        value: 58,
+                        groupValue: selectedSize,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSize = value;
+                          });
+                        },
+                      ),
+                      const Text('58 mm'),
+                    ],
+                  ),
+                ),
+                // Radio button untuk ukuran 80
+                Expanded(
+                  child: Row(
+                    children: [
+                      Radio<int>(
+                        value: 80,
+                        groupValue: selectedSize,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSize = value;
+                          });
+                        },
+                      ),
+                      const Text('80 mm'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SpaceHeight(24),
+          Text(
+            "Pilih Printer",
+            style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary),
+          ),
+          SpaceHeight(16),
           Container(
             width: context.deviceWidth / 2,
             padding: const EdgeInsets.all(8.0),
@@ -253,22 +362,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
                   },
                   isActive: selectedIndex == 0,
                 ),
-                MenuPrinterButton(
-                  label: 'Disconnect',
-                  onPressed: () {
-                    selectedIndex = 1;
-                    setState(() {});
-                  },
-                  isActive: selectedIndex == 1,
-                ),
-                MenuPrinterButton(
-                  label: 'Test',
-                  onPressed: () {
-                    selectedIndex = 2;
-                    setState(() {});
-                  },
-                  isActive: selectedIndex == 2,
-                ),
               ],
             ),
           ),
@@ -279,10 +372,11 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
             datas: items,
             clickHandler: (mac) async {
               macName = mac;
-              await connect(mac);
+
               setState(() {});
             },
           ),
+          SpaceHeight(24),
         ],
       ),
     );
@@ -298,11 +392,10 @@ class _Body extends StatelessWidget {
   final Function(String) clickHandler;
 
   const _Body({
-    Key? key,
     required this.macName,
     required this.datas,
     required this.clickHandler,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

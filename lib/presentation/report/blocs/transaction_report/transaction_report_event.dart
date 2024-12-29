@@ -4,7 +4,7 @@ part of 'transaction_report_bloc.dart';
 class TransactionReportEvent with _$TransactionReportEvent {
   const factory TransactionReportEvent.started() = _Started;
   const factory TransactionReportEvent.getReport({
-    required DateTime startDate,
-    required DateTime endDate,
+    required String startDate,
+    required String endDate,
   }) = _GetReport;
 }

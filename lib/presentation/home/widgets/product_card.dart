@@ -5,11 +5,9 @@ import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
-
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
-import '../models/product_model.dart';
 
 class ProductCard extends StatelessWidget {
   final Product data;
@@ -25,166 +23,147 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // context.read<CheckoutBloc>().add(CheckoutEvent.addProduct(data));
         context.read<CheckoutBloc>().add(CheckoutEvent.addItem(data));
       },
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
             side: const BorderSide(width: 1, color: AppColors.card),
-            borderRadius: BorderRadius.circular(19),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(12.0),
-                  margin: const EdgeInsets.only(top: 20.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.disabled.withOpacity(0.4),
-                  ),
-                  child: const ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                    child: Icon(Icons.food_bank_outlined),
-                    // child: Image.network(
-                    //   data.image!.contains('http')
-                    //       ? data.image!
-                    //       : '${Variables.baseUrl}/${data.image}',
-                    //   width: 50,
-                    //   height: 50,
-                    //   fit: BoxFit.cover,
-                    // ),
-                  ),
-                ),
-                const Spacer(),
-                FittedBox(
-                  child: Text(
-                    data.name ?? '-',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+            SizedBox(
+              height: 160, // Fixed height for the card
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image Section
+                  Center(
+                    child: SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: Container(
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.disabled.withOpacity(0.4),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: Image.network(
+                            data.image!.contains('http')
+                                ? data.image!
+                                : '${Variables.baseUrl}/${data.image}',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const SpaceHeight(8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: FittedBox(
+                  const SizedBox(height: 8),
+
+                  // Product Name
+                  Expanded(
+                    child: Text(
+                      data.name ?? 'No Name',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  // Category and Price
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
                         child: Text(
                           data.category?.name ?? '-',
                           style: const TextStyle(
                             color: AppColors.grey,
-                            fontSize: 12,
+                            fontSize: 11,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                    Flexible(
-                      child: FittedBox(
-                        child: Text(
-                          data.price!.toIntegerFromText.currencyFormatRp,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                          ),
+                      const SizedBox(width: 4),
+                      Text(
+                        data.price!.toIntegerFromText.currencyFormatRp,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          color: AppColors.primary,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
+
+            // Cart Indicator
             BlocBuilder<CheckoutBloc, CheckoutState>(
               builder: (context, state) {
                 return state.maybeWhen(
                   orElse: () => const SizedBox(),
-                  loaded: (products, discount, tax, service) {
-                    // if (qty == 0) {
-                    //   return Align(
-                    //     alignment: Alignment.topRight,
-                    //     child: Container(
-                    //       width: 36,
-                    //       height: 36,
-                    //       padding: const EdgeInsets.all(6),
-                    //       decoration: const BoxDecoration(
-                    //         borderRadius:
-                    //             BorderRadius.all(Radius.circular(9.0)),
-                    //         color: AppColors.primary,
-                    //       ),
-                    //       child: Assets.icons.shoppingBasket.svg(),
-                    //     ),
-                    //   );
-                    // }
-                    return products.any((element) => element.product == data)
-                        ? products
-                                    .firstWhere(
-                                        (element) => element.product == data)
-                                    .quantity >
-                                0
-                            ? Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9.0)),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      products
-                                          .firstWhere((element) =>
-                                              element.product == data)
-                                          .quantity
-                                          .toString(),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                  loaded: (products,
+                      discountModel,
+                      discount,
+                      discountAmount,
+                      tax,
+                      serviceCharge,
+                      totalQuantity,
+                      totalPrice,
+                      draftName) {
+                    final inCart =
+                        products.any((element) => element.product == data);
+                    if (!inCart) {
+                      return const SizedBox();
+                    }
+
+                    final cartItem = products
+                        .firstWhere((element) => element.product == data);
+                    final quantity = cartItem.quantity;
+
+                    return Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: quantity > 0
+                            ? Center(
+                                child: Text(
+                                  quantity.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               )
-                            : Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  width: 36,
-                                  height: 36,
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9.0)),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Assets.icons.shoppingBasket.svg(),
+                            : Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Assets.icons.shoppingBasket.svg(
+                                  color: Colors.white,
                                 ),
-                              )
-                        : Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              width: 36,
-                              height: 36,
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(9.0)),
-                                color: AppColors.primary,
                               ),
-                              child: Assets.icons.shoppingBasket.svg(),
-                            ),
-                          );
+                      ),
+                    );
                   },
                 );
               },

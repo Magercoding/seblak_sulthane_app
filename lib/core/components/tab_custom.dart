@@ -3,8 +3,6 @@ import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 
 import '../constants/colors.dart';
 
-
-
 class TabCustom extends StatelessWidget {
   final List<TabMenu> children;
   final EdgeInsetsGeometry? padding;

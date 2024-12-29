@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
 
-
 enum ButtonStyle { filled, outlined }
 
 class Button extends StatelessWidget {
@@ -86,6 +85,7 @@ class Button extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius),
                 ),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

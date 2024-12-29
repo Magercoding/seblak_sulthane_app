@@ -1,6 +1,5 @@
 class Variables {
-  static const String appName = 'Resto App';
+  static const String appName = 'POS Kasir Resto App';
   static const String apiVersion = 'v1';
-  static const String baseUrl = 'http://192.168.28.238:8000';
-  // static const String baseUrl = 'https://resto.jagofullstack.com';
+  static const String baseUrl = 'http://192.168.1.14:8000';
 }

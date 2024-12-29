@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,14 +15,16 @@ class SyncOrderBloc extends Bloc<SyncOrderEvent, SyncOrderState> {
   SyncOrderBloc(
     this.orderRemoteDatasource,
   ) : super(const _Initial()) {
-    on<SyncOrderEvent>((event, emit) async {
+    on<_SyncOrder>((event, emit) async {
       emit(const _Loading());
       final dataOrderNotSynced =
           await ProductLocalDatasource.instance.getOrderByIsNotSync();
       for (var order in dataOrderNotSynced) {
         final orderItem = await ProductLocalDatasource.instance
             .getOrderItemByOrderId(order.id!);
+
         final newOrder = order.copyWith(orderItems: orderItem);
+        log("Order: ${newOrder.toMap()}");
         final result = await orderRemoteDatasource.saveOrder(newOrder);
         if (result) {
           await ProductLocalDatasource.instance.updateOrderIsSync(order.id!);

@@ -13,7 +13,7 @@ class SyncProductBloc extends Bloc<SyncProductEvent, SyncProductState> {
   SyncProductBloc(
     this.productRemoteDatasource,
   ) : super(const _Initial()) {
-    on<_SyncProduct>((event, emit) async{
+    on<_SyncProduct>((event, emit) async {
       emit(const _Loading());
       final result = await productRemoteDatasource.getProducts();
       result.fold(

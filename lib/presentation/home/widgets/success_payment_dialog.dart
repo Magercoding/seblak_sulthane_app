@@ -1,24 +1,26 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:intl/intl.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
-import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
 import 'package:seblak_sulthane_app/data/dataoutputs/print_dataoutputs.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
+import '../../table/blocs/get_table/get_table_bloc.dart';
 import '../bloc/checkout/checkout_bloc.dart';
 import '../bloc/order/order_bloc.dart';
-import '../models/order_item.dart';
 
 class SuccessPaymentDialog extends StatefulWidget {
   const SuccessPaymentDialog({
-    Key? key,
+    super.key,
     required this.data,
     required this.totalQty,
     required this.totalPrice,
@@ -26,7 +28,9 @@ class SuccessPaymentDialog extends StatefulWidget {
     required this.totalDiscount,
     required this.subTotal,
     required this.normalPrice,
-  }) : super(key: key);
+    required this.totalService,
+    required this.draftName,
+  });
   final List<ProductQuantity> data;
   final int totalQty;
   final int totalPrice;
@@ -34,6 +38,8 @@ class SuccessPaymentDialog extends StatefulWidget {
   final int totalDiscount;
   final int subTotal;
   final int normalPrice;
+  final int totalService;
+  final String draftName;
 
   @override
   State<SuccessPaymentDialog> createState() => _SuccessPaymentDialogState();
@@ -69,7 +75,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               builder: (context, state) {
                 final paymentMethod = state.maybeWhen(
                   orElse: () => 'Cash',
-                  loaded: (model) => model.paymentMethod,
+                  loaded: (model, orderId) => model.paymentMethod,
                 );
                 return Text(
                   paymentMethod,
@@ -88,7 +94,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               builder: (context, state) {
                 final total = state.maybeWhen(
                   orElse: () => 0,
-                  loaded: (model) => model.total,
+                  loaded: (model, orderId) => model.total,
                 );
                 return Text(
                   widget.totalPrice.currencyFormatRp,
@@ -107,7 +113,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               builder: (context, state) {
                 final paymentAmount = state.maybeWhen(
                   orElse: () => 0,
-                  loaded: (model) => model.paymentAmount,
+                  loaded: (model, orderId) => model.paymentAmount,
                 );
                 return Text(
                   paymentAmount.ceil().currencyFormatRp,
@@ -125,13 +131,14 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               builder: (context, state) {
                 final paymentAmount = state.maybeWhen(
                   orElse: () => 0,
-                  loaded: (model) => model.paymentAmount,
+                  loaded: (model, orderId) => model.paymentAmount,
                 );
                 final total = state.maybeWhen(
                   orElse: () => 0,
-                  loaded: (model) => model.total,
+                  loaded: (model, orderId) => model.total,
                 );
-                final diff = paymentAmount - widget.totalPrice;
+                final diff = paymentAmount - total;
+                log("DIFF: $diff  paymentAmount: $paymentAmount  total: $total");
                 return Text(
                   diff.ceil().currencyFormatRp,
                   style: const TextStyle(
@@ -160,6 +167,9 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                       context
                           .read<CheckoutBloc>()
                           .add(const CheckoutEvent.started());
+                      context
+                          .read<GetTableBloc>()
+                          .add(const GetTableEvent.getTables());
                       context.popToRoot();
                     },
                     label: 'Kembali',
@@ -167,24 +177,39 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                 ),
                 const SpaceWidth(8.0),
                 Flexible(
-                  child: Button.filled(
-                    onPressed: () async {
-                      final printValue =
-                          await PrintDataoutputs.instance.printOrder(
-                        widget.data,
-                        widget.totalQty,
-                        widget.totalPrice,
-                        'Tunai',
-                        widget.totalPrice,
-                        'Bahri',
-                        widget.totalDiscount,
-                        widget.totalTax,
-                        widget.subTotal,
-                        widget.normalPrice,
+                  child: BlocBuilder<OrderBloc, OrderState>(
+                    builder: (context, state) {
+                      final paymentAmount = state.maybeWhen(
+                        orElse: () => 0,
+                        loaded: (model, orderId) => model.paymentAmount,
                       );
-                      await PrintBluetoothThermal.writeBytes(printValue);
+
+                      final kembalian = paymentAmount - widget.totalPrice;
+                      return Button.filled(
+                        onPressed: () async {
+                          final sizeReceipt =
+                              await AuthLocalDataSource().getSizeReceipt();
+                          final printValue =
+                              await PrintDataoutputs.instance.printOrderV3(
+                            widget.data,
+                            widget.totalQty,
+                            widget.totalPrice,
+                            'Cash',
+                            paymentAmount,
+                            kembalian,
+                            widget.totalTax,
+                            widget.totalDiscount,
+                            widget.subTotal,
+                            1,
+                            'Cashier Ali',
+                            widget.draftName,
+                            int.parse(sizeReceipt),
+                          );
+                          await PrintBluetoothThermal.writeBytes(printValue);
+                        },
+                        label: 'Print',
+                      );
                     },
-                    label: 'Print',
                   ),
                 ),
               ],

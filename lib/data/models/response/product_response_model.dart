@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:seblak_sulthane_app/presentation/home/pages/confirm_payment_page.dart';
 
 class ProductResponseModel {
   final String? status;
@@ -33,8 +33,8 @@ class ProductResponseModel {
 
 class Product {
   final int? id;
+  final int? productId;
   final int? categoryId;
-
   final String? name;
   final String? description;
   final String? image;
@@ -48,6 +48,7 @@ class Product {
 
   Product({
     this.id,
+    this.productId,
     this.categoryId,
     this.name,
     this.description,
@@ -67,11 +68,15 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> json) => Product(
         id: json["id"],
-        categoryId: json["category_id"],
+        productId: json["product_id"],
+        categoryId: json["category_id"] is String
+            ? int.parse(json["category_id"])
+            : json["category_id"],
         name: json["name"],
         description: json["description"],
         image: json["image"],
-        price: json["price"],
+        // price: json["price"].substring(0, json["price"].length - 3),
+        price: json["price"].toString().replaceAll('.00', ''),
         stock: json["stock"],
         status: json["status"],
         isFavorite: json["is_favorite"],
@@ -92,7 +97,8 @@ class Product {
       );
 
   factory Product.fromLocalMap(Map<String, dynamic> json) => Product(
-        id: json["productId"],
+        id: json["id"],
+        productId: json["product_id"],
         categoryId: json["categoryId"],
         category: Category(
           id: json["categoryId"],
@@ -114,13 +120,13 @@ class Product {
       );
 
   Map<String, dynamic> toLocalMap() => {
-        "productId": id,
+        "product_id": id,
         "categoryId": categoryId,
         "categoryName": category?.name,
         "name": name,
         "description": description,
         "image": image,
-        "price": price,
+        "price": price?.replaceAll(RegExp(r'\.0+$'), ''),
         "stock": stock,
         "status": status,
         "isFavorite": isFavorite,
@@ -130,6 +136,7 @@ class Product {
 
   Map<String, dynamic> toMap() => {
         "id": id,
+        "product_id": productId,
         "category_id": categoryId,
         "name": name,
         "description": description,
@@ -149,6 +156,7 @@ class Product {
 
     return other is Product &&
         other.id == id &&
+        other.productId == productId &&
         other.categoryId == categoryId &&
         other.name == name &&
         other.description == description &&
@@ -165,6 +173,7 @@ class Product {
   @override
   int get hashCode {
     return id.hashCode ^
+        productId.hashCode ^
         categoryId.hashCode ^
         name.hashCode ^
         description.hashCode ^

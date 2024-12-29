@@ -1,14 +1,21 @@
-
+import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 
 import 'product_model.dart';
 
 class OrderItem {
-  final ProductModel product;
+  final Product product;
   int quantity;
   OrderItem({
     required this.product,
     required this.quantity,
   });
+
+  factory OrderItem.fromMap(Map<String, dynamic> map) {
+    return OrderItem(
+      product: Product.fromMap(map['product']),
+      quantity: map['quantity']?.toInt() ?? 0,
+    );
+  }
 
   @override
   bool operator ==(Object other) {

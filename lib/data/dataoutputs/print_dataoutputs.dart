@@ -35,7 +35,7 @@ class PrintDataoutputs {
     final total = totalPrice + pajak;
 
     bytes += generator.reset();
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text('Resto Code With Bahri',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -202,7 +202,7 @@ class PrintDataoutputs {
     //   bytes += generator.feed(3);
     // }
 
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text('Resto Code With Bahri',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -214,7 +214,7 @@ class PrintDataoutputs {
         styles: const PosStyles(bold: false, align: PosAlign.center));
     // bytes += generator.text('Kab. Sleman, DI Yogyakarta',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.text('coffeewithSeblak Sulthane@gmail.com',
+    // bytes += generator.text('coffeewithbahri@gmail.com',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
     // bytes += generator.text('085640899224',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
@@ -457,7 +457,7 @@ class PrintDataoutputs {
     // bytes += generator.text('Password: fic11jilid2',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
     // bytes += generator.feed(1);
-    // bytes += generator.text('instagram: @codewithSeblak Sulthane',
+    // bytes += generator.text('instagram: @codewithbahri',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
     bytes += generator.feed(1);
     bytes += generator.text(
@@ -507,7 +507,7 @@ class PrintDataoutputs {
       bytes += generator.feed(3);
     }
 
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text('Resto Code With Bahri',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,

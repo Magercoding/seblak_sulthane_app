@@ -32,7 +32,7 @@ class _SalesPageState extends State<SalesPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Seblak Sulthane POS ',
+                'Resto Code With Bahri POS ',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 22,

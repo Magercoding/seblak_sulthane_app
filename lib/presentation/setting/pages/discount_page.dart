@@ -89,7 +89,7 @@ class _DiscountPageState extends State<DiscountPage> {
                           final item = discounts[index - 1];
                           return ManageDiscountCard(
                             data: item,
-                            onEditTap: () {},
+                            onEditTap: (){},
                           );
                         },
                       );

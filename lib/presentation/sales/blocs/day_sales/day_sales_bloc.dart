@@ -1,3 +1,4 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/order_model.dart';
@@ -12,7 +13,8 @@ class DaySalesBloc extends Bloc<DaySalesEvent, DaySalesState> {
   DaySalesBloc(this.datasource) : super(const _Initial()) {
     on<_GetDaySales>((event, emit) async {
       emit(const _Loading());
-      final result = await datasource.getAllOrder(event.date);
+      final result =
+          await datasource.getAllOrder(event.date);
       emit(_Loaded(result));
     });
   }

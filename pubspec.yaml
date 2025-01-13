@@ -60,6 +60,7 @@ dev_dependencies:
   build_runner: ^2.4.6
   flutter_gen_runner: ^5.3.2
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: "^0.14.2"
   flutter_test:
     sdk: flutter
 # For information on the generic Dart part of this file, see the
@@ -70,6 +71,13 @@ flutter_gen:
   integrations:
     flutter_svg: true
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/seblak_sulthane_app.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logo/seblak_sulthane_app.png"
+  
 flutter:
 
   # The following line ensures that the Material Icons font is

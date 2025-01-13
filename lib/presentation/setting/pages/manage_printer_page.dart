@@ -171,8 +171,8 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     //bytes += generator.setGlobalFont(PosFontType.fontA);
     bytes += generator.reset();
 
-    bytes += generator.text('Code with Seblak Sulthane',
-        styles: const PosStyles(bold: true));
+    bytes +=
+        generator.text('Code with Bahri', styles: const PosStyles(bold: true));
     bytes +=
         generator.text('Reverse text', styles: const PosStyles(reverse: true));
     bytes += generator.text('Underlined text',

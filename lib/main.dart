@@ -23,6 +23,7 @@ import 'package:seblak_sulthane_app/presentation/sales/blocs/day_sales/day_sales
 import 'package:seblak_sulthane_app/presentation/setting/bloc/add_product/add_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/splash/splash_screen.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/generate_table/generate_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/get_table/get_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
@@ -41,6 +42,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'presentation/home/pages/dashboard_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // Tambahkan ini
   runApp(const MyApp());
 }
 
@@ -129,7 +131,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'POS Resto App',
+        title: 'Seblak Sulthane',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
           useMaterial3: true,
@@ -149,29 +151,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: FutureBuilder<bool>(
-            future: AuthLocalDataSource().isAuthDataExists(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              if (snapshot.hasData) {
-                if (snapshot.data!) {
-                  return const DashboardPage();
-                } else {
-                  return const LoginPage();
-                }
-              }
-              return const Scaffold(
-                body: Center(
-                  child: Text('Error'),
-                ),
-              );
-            }),
+        home: const SplashScreen(), // Mulai dengan SplashScreen
       ),
     );
   }

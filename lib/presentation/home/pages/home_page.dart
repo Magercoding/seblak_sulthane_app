@@ -6,6 +6,7 @@ import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/discount_dialog.dart';
+import 'package:seblak_sulthane_app/presentation/home/dialog/member_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/tax_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/pages/confirm_payment_page.dart';
 
@@ -327,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 100.0,
                                 height: 40,
                                 onPressed: () {},
-                                label: 'To Go',
+                                label: 'Delivery',
                               ),
                             ],
                           ),
@@ -433,6 +434,14 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () => showDialog(
                                   context: context,
                                   builder: (context) => const ServiceDialog(),
+                                ),
+                              ),
+                              ColumnButton(
+                                label: 'Member',
+                                svgGenImage: Assets.icons.member,
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) => const MemberDialog(),
                                 ),
                               ),
                             ],

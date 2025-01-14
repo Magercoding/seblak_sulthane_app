@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(24.0),
           const Center(
             child: Text(
-              'Seblak Sulthane POS APP',
+              'Welcome',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(8.0),
           const Center(
             child: Text(
-              'Akses Login Kasir Resto',
+              'Silahkan Login Terlebih Dahulu',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -109,10 +109,52 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 error: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: AppColors.red,
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      contentPadding: const EdgeInsets.all(24.0),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.close,
+                            color: Colors.red,
+                            size: 48,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Email atau Password Salah',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Kembali',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

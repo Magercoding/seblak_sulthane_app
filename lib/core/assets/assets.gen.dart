@@ -98,6 +98,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pajak.svg
   SvgGenImage get pajak => const SvgGenImage('assets/icons/pajak.svg');
 
+  /// File path: assets/icons/member.svg
+  SvgGenImage get member => const SvgGenImage('assets/icons/member.svg');
+
   /// File path: assets/icons/payments.svg
   SvgGenImage get payments => const SvgGenImage('assets/icons/payments.svg');
 

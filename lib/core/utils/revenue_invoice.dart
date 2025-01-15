@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:excel/excel.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +14,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 class RevenueInvoice {
   static late Font ttf;
-  static Future<File> generate(
+  static Future<File> generatePdf(
     SummaryModel summaryModel,
     String searchDateFormatted,
   ) async {
@@ -190,6 +192,130 @@ class RevenueInvoice {
           Text(value, style: style2),
         ],
       ),
+    );
+  }
+
+  // Excel Generation
+  static Future<File> generateExcel(
+    SummaryModel summaryModel,
+    String searchDateFormatted,
+  ) async {
+    final excel = Excel.createExcel();
+    final Sheet sheet = excel['Summary Sales Report'];
+
+    // Add Header with company info
+    sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("B1"));
+    final headerCell = sheet.cell(CellIndex.indexByString("A1"));
+    headerCell.value = TextCellValue('Seblak Sulthane | Summary Sales Report');
+    headerCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 16,
+      horizontalAlign: HorizontalAlign.Center,
+    );
+
+    // Add date information
+    sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("B2"));
+    final dateCell = sheet.cell(CellIndex.indexByString("A2"));
+    dateCell.value = TextCellValue('Data: $searchDateFormatted');
+    dateCell.cellStyle = CellStyle(
+      horizontalAlign: HorizontalAlign.Center,
+    );
+
+    sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("B3"));
+    final createdCell = sheet.cell(CellIndex.indexByString("A3"));
+    createdCell.value =
+        TextCellValue('Created At: ${DateTime.now().toFormattedDate3()}');
+    createdCell.cellStyle = CellStyle(
+      horizontalAlign: HorizontalAlign.Center,
+    );
+
+    // Add empty row for spacing
+    final startRow = 5;
+
+    // Add Revenue
+    final revenueCell = sheet.cell(CellIndex.indexByString("A$startRow"));
+    revenueCell.value = TextCellValue('Revenue');
+    revenueCell.cellStyle = CellStyle(bold: true);
+
+    final revenueTotalCell = sheet.cell(CellIndex.indexByString("B$startRow"));
+    revenueTotalCell.value =
+        TextCellValue(int.parse(summaryModel.totalRevenue!).currencyFormatRp);
+    revenueTotalCell.cellStyle = CellStyle(bold: true);
+
+    // Add separator line
+    sheet.merge(CellIndex.indexByString("A${startRow + 1}"),
+        CellIndex.indexByString("B${startRow + 1}"));
+
+    // Add Subtotal
+    final subtotalCell =
+        sheet.cell(CellIndex.indexByString("A${startRow + 2}"));
+    subtotalCell.value = TextCellValue('Subtotal');
+
+    final subtotalValueCell =
+        sheet.cell(CellIndex.indexByString("B${startRow + 2}"));
+    subtotalValueCell.value =
+        TextCellValue(int.parse(summaryModel.totalSubtotal!).currencyFormatRp);
+
+    // Add Discount
+    final discountCell =
+        sheet.cell(CellIndex.indexByString("A${startRow + 3}"));
+    discountCell.value = TextCellValue('Discount');
+
+    final discountValueCell =
+        sheet.cell(CellIndex.indexByString("B${startRow + 3}"));
+    discountValueCell.value = TextCellValue(
+        "- ${int.parse(summaryModel.totalDiscount!.replaceAll('.00', '')).currencyFormatRp}");
+
+    // Add Tax
+    final taxCell = sheet.cell(CellIndex.indexByString("A${startRow + 4}"));
+    taxCell.value = TextCellValue('Tax');
+
+    final taxValueCell =
+        sheet.cell(CellIndex.indexByString("B${startRow + 4}"));
+    taxValueCell.value = TextCellValue(
+        "- ${int.parse(summaryModel.totalTax!).currencyFormatRp}");
+
+    // Add Service Charge
+    final serviceCell = sheet.cell(CellIndex.indexByString("A${startRow + 5}"));
+    serviceCell.value = TextCellValue('Service Charge');
+
+    final serviceValueCell =
+        sheet.cell(CellIndex.indexByString("B${startRow + 5}"));
+    serviceValueCell.value = TextCellValue(
+        int.parse(summaryModel.totalServiceCharge!).currencyFormatRp);
+
+    // Add separator line
+    sheet.merge(CellIndex.indexByString("A${startRow + 6}"),
+        CellIndex.indexByString("B${startRow + 6}"));
+
+    // Add Total
+    final totalCell = sheet.cell(CellIndex.indexByString("A${startRow + 7}"));
+    totalCell.value = TextCellValue('TOTAL');
+    totalCell.cellStyle = CellStyle(bold: true);
+
+    final totalValueCell =
+        sheet.cell(CellIndex.indexByString("B${startRow + 7}"));
+    totalValueCell.value = TextCellValue(summaryModel.total!.currencyFormatRp);
+    totalValueCell.cellStyle = CellStyle(bold: true);
+
+    // Add Footer
+    final footerRow = startRow + 9;
+    sheet.merge(
+      CellIndex.indexByString("A$footerRow"),
+      CellIndex.indexByString("B$footerRow"),
+    );
+    final footerCell = sheet.cell(CellIndex.indexByString("A$footerRow"));
+    footerCell.value = TextCellValue(
+        'Address: Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568');
+
+    // Set column widths
+    sheet.setColumnWidth(0, 25.0); // Description column
+    sheet.setColumnWidth(1, 25.0); // Amount column
+
+    return HelperExcelService.saveExcel(
+      name:
+          'seblak_sulthane_summary_report_${DateTime.now().millisecondsSinceEpoch}.xlsx',
+      excel: excel,
     );
   }
 }

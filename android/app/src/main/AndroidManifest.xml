@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:enableOnBackInvokedCallback="true"
         android:label="seblak_sulthane_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -45,5 +46,14 @@
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
+            <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="market" />
+    </intent>
+    <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https" />
+    </intent>
+
     </queries>
 </manifest>

@@ -58,6 +58,25 @@ class SummaryReportWidget extends StatelessWidget {
                             summary, searchDateFormatted);
                         log("pdfFile: $pdfFile");
                         HelperPdfService.openFile(pdfFile);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Izin Dibutuhkan'),
+                            content: const Text(
+                                'Aplikasi membutuhkan izin untuk menyimpan dan mengakses file. Harap aktifkan izin di pengaturan.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Tutup'),
+                              ),
+                              TextButton(
+                                onPressed: () => openAppSettings(),
+                                child: const Text('Pengaturan'),
+                              ),
+                            ],
+                          ),
+                        );
                       }
                     },
                     child: const Row(

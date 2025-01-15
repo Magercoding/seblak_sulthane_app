@@ -35,7 +35,7 @@ class PrintDataoutputs {
     final total = totalPrice + pajak;
 
     bytes += generator.reset();
-    bytes += generator.text('Resto Code With Bahri',
+    bytes += generator.text('Seblak Sulthane',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -202,7 +202,7 @@ class PrintDataoutputs {
     //   bytes += generator.feed(3);
     // }
 
-    bytes += generator.text('Resto Code With Bahri',
+    bytes += generator.text('Seblak Sulthane',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -507,7 +507,7 @@ class PrintDataoutputs {
       bytes += generator.feed(3);
     }
 
-    bytes += generator.text('Resto Code With Bahri',
+    bytes += generator.text('Seblak Sulthane',
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,

@@ -38,7 +38,7 @@ class ItemSalesInvoice {
 
     return HelperPdfService.saveDocument(
         name:
-            'Resto Code With Bahri | Item Sales Report | ${DateTime.now().millisecondsSinceEpoch}.pdf',
+            'Seblak Sulthane | Item Sales Report | ${DateTime.now().millisecondsSinceEpoch}.pdf',
         pdf: pdf);
   }
 
@@ -48,7 +48,7 @@ class ItemSalesInvoice {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 1 * PdfPageFormat.cm),
-            Text('Resto Code With Bahri | Item Sales Report',
+            Text('Seblak Sulthane | Item Sales Report',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

@@ -758,12 +758,10 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                               totalQuantity,
                                               totalPrice,
                                               draftName) {
-                                            if (discountModel == null) {
+                                            if (discountModel.isEmpty) {
                                               return 0;
                                             }
-                                            return discountModel!.value!
-                                                .replaceAll('.00', '')
-                                                .toIntegerFromText;
+                                            return discount;
                                           });
 
                                       final price = state.maybeWhen(

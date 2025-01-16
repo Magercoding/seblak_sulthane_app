@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:seblak_sulthane_app/core/core.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/order_item.dart';
@@ -17,7 +18,7 @@ part 'checkout_state.dart';
 part 'checkout_bloc.freezed.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
-  CheckoutBloc() : super(const _Loaded([], null, 0, 0, 10, 5, 0, 0, '')) {
+  CheckoutBloc() : super(const _Loaded([], [], 0, 0, 10, 5, 0, 0, '')) {
     on<_AddItem>((event, emit) {
       var currentState = state as _Loaded;
       List<ProductQuantity> items = [...currentState.items];
@@ -32,7 +33,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       }
       emit(_Loaded(
           items,
-          currentState.discountModel,
+          currentState.discounts,
           currentState.discount,
           currentState.discountAmount,
           currentState.tax,
@@ -58,7 +59,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       }
       emit(_Loaded(
           items,
-          currentState.discountModel,
+          currentState.discounts,
           currentState.discount,
           currentState.discountAmount,
           currentState.tax,
@@ -69,43 +70,98 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     });
 
     on<_Started>((event, emit) {
-      emit(const _Loaded([], null, 11, 0, 0, 0, 0, 0, ''));
+      emit(const _Loaded([], [], 11, 0, 0, 0, 0, 0, ''));
     });
 
     on<_AddDiscount>((event, emit) {
       var currentState = state as _Loaded;
+      List<Discount> currentDiscounts = [...currentState.discounts];
+
+      // Check if discount of same category exists
+      int index = currentDiscounts
+          .indexWhere((d) => d.category == event.discount.category);
+
+      if (index != -1) {
+        // Replace existing discount of same category
+        currentDiscounts[index] = event.discount;
+      } else {
+        // Add new discount
+        currentDiscounts.add(event.discount);
+      }
+
+      // Calculate total discount percentage
+      int totalDiscountPercentage = currentDiscounts.fold(
+        0,
+        (sum, discount) =>
+            sum + int.parse(discount.value!.replaceAll('.00', '')),
+      );
+
+      // Calculate the total price before discount
+      final totalPrice = currentState.items.fold(
+        0,
+        (sum, item) =>
+            sum + (item.product.price!.toIntegerFromText * item.quantity),
+      );
+
+      // Calculate discount amount
+      final discountAmount =
+          (totalPrice * totalDiscountPercentage / 100).round();
+
       emit(_Loaded(
         currentState.items,
-        event.discount,
-        currentState.discount,
-        currentState.discountAmount,
+        currentDiscounts,
+        totalDiscountPercentage,
+        discountAmount,
         currentState.tax,
         currentState.serviceCharge,
         currentState.totalQuantity,
-        currentState.totalPrice,
+        totalPrice - discountAmount,
         currentState.draftName,
       ));
     });
-
     on<_RemoveDiscount>((event, emit) {
       var currentState = state as _Loaded;
+      List<Discount> currentDiscounts = [...currentState.discounts];
+
+      // Remove discount by category
+      currentDiscounts.removeWhere((d) => d.category == event.category);
+
+      // Recalculate total discount percentage
+      int totalDiscountPercentage = currentDiscounts.fold(
+        0,
+        (sum, discount) =>
+            sum + int.parse(discount.value!.replaceAll('.00', '')),
+      );
+
+      // Calculate the total price before discount
+      final totalPrice = currentState.items.fold(
+        0,
+        (sum, item) =>
+            sum + (item.product.price!.toIntegerFromText * item.quantity),
+      );
+
+      // Calculate new discount amount
+      final discountAmount =
+          (totalPrice * totalDiscountPercentage / 100).round();
+
       emit(_Loaded(
-          currentState.items,
-          null,
-          currentState.discount,
-          currentState.discountAmount,
-          currentState.tax,
-          currentState.serviceCharge,
-          currentState.totalQuantity,
-          currentState.totalPrice,
-          currentState.draftName));
+        currentState.items,
+        currentDiscounts,
+        totalDiscountPercentage,
+        discountAmount,
+        currentState.tax,
+        currentState.serviceCharge,
+        currentState.totalQuantity,
+        totalPrice - discountAmount, // Update total price after discount
+        currentState.draftName,
+      ));
     });
 
     on<_AddTax>((event, emit) {
       var currentState = state as _Loaded;
       emit(_Loaded(
           currentState.items,
-          currentState.discountModel,
+          currentState.discounts,
           currentState.discount,
           currentState.discountAmount,
           event.tax,
@@ -119,7 +175,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var currentState = state as _Loaded;
       emit(_Loaded(
         currentState.items,
-        currentState.discountModel,
+        currentState.discounts,
         currentState.discount,
         currentState.discountAmount,
         currentState.tax,
@@ -134,7 +190,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var currentState = state as _Loaded;
       emit(_Loaded(
           currentState.items,
-          currentState.discountModel,
+          currentState.discounts,
           currentState.discount,
           currentState.discountAmount,
           0,
@@ -148,7 +204,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var currentState = state as _Loaded;
       emit(_Loaded(
           currentState.items,
-          currentState.discountModel,
+          currentState.discounts,
           currentState.discount,
           currentState.discountAmount,
           currentState.tax,
@@ -187,7 +243,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       emit(_SavedDraftOrder(orderDraftId));
     });
 
-    //load draft order
     on<_LoadDraftOrder>((event, emit) async {
       emit(const _Loading());
       final draftOrder = event.data;
@@ -197,7 +252,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
               .map((e) =>
                   ProductQuantity(product: e.product, quantity: e.quantity))
               .toList(),
-          null,
+          [], // Use empty list instead of null
           draftOrder.discount,
           draftOrder.discountAmount,
           draftOrder.tax,

@@ -6,8 +6,6 @@ import '../../../data/datasources/auth_local_datasource.dart';
 import '../../auth/bloc/logout/logout_bloc.dart';
 import '../../auth/login_page.dart';
 
-
-
 class LogoutPage extends StatefulWidget {
   const LogoutPage({super.key});
 
@@ -16,6 +14,9 @@ class LogoutPage extends StatefulWidget {
 }
 
 class _LogoutPageState extends State<LogoutPage> {
+  final AuthLocalDataSource _authLocalDataSource = AuthLocalDataSource();
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,45 +25,78 @@ class _LogoutPageState extends State<LogoutPage> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('Welcome to Dashboard'),
-            
-            const SizedBox(
-              height: 100,
-            ),
-            BlocListener<LogoutBloc, LogoutState>(
-              listener: (context, state) {
+            const SizedBox(height: 100),
+            BlocConsumer<LogoutBloc, LogoutState>(
+              listener: (context, state) async {
                 state.maybeMap(
                   orElse: () {},
-                  error: (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(e.message),
-                        backgroundColor: AppColors.red,
-                      ),
-                    );
+                  loading: (_) {
+                    setState(() => _isLoading = true);
                   },
-                  success: (value) {
-                    AuthLocalDataSource().removeAuthData();
+                  error: (e) async {
+                    setState(() => _isLoading = false);
+
+                    if (e.message == 'UNAUTHORIZED') {
+                      print('Handling unauthorized - navigating to login');
+                      await _authLocalDataSource.removeAuthData();
+                      if (!mounted) return;
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => const LoginPage()),
+                          (route) => false);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.message),
+                          backgroundColor: AppColors.red,
+                        ),
+                      );
+                    }
+                  },
+                  success: (_) async {
+                    print('Logout success - cleaning up and navigating');
+                    setState(() => _isLoading = false);
+                    await _authLocalDataSource.removeAuthData();
+                    if (!mounted) return;
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Logout success'),
                         backgroundColor: AppColors.primary,
                       ),
                     );
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const LoginPage();
-                    }));
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                        (route) => false);
                   },
                 );
               },
-              child: ElevatedButton(
-                onPressed: () {
-                  context.read<LogoutBloc>().add(const LogoutEvent.logout());
-                },
-                child: const Text('Logout'),
-              ),
+              builder: (context, state) {
+                return ElevatedButton(
+                  onPressed: _isLoading
+                      ? null
+                      : () {
+                          print('Triggering logout');
+                          context
+                              .read<LogoutBloc>()
+                              .add(const LogoutEvent.logout());
+                        },
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Logout'),
+                );
+              },
             ),
           ],
         ),

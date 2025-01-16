@@ -9,24 +9,34 @@ class DiscountResponseModel {
     this.data,
   });
 
-  factory DiscountResponseModel.fromJson(String str) =>
-      DiscountResponseModel.fromMap(json.decode(str));
+  factory DiscountResponseModel.fromRawJson(String str) =>
+      DiscountResponseModel.fromJson(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  String toRawJson() => json.encode(toJson());
 
-  factory DiscountResponseModel.fromMap(Map<String, dynamic> json) =>
-      DiscountResponseModel(
-        status: json["status"],
-        data: json["data"] == null
-            ? []
-            : List<Discount>.from(
-                json["data"]!.map((x) => Discount.fromMap(x))),
-      );
+  factory DiscountResponseModel.fromJson(Map<String, dynamic> json) {
+    // Handle the case where data might be a single object or a list
+    var rawData = json["data"];
+    List<Discount> discountList = [];
 
-  Map<String, dynamic> toMap() => {
+    if (rawData != null) {
+      if (rawData is List) {
+        discountList = rawData.map((x) => Discount.fromJson(x)).toList();
+      } else if (rawData is Map<String, dynamic>) {
+        // If it's a single object, wrap it in a list
+        discountList = [Discount.fromJson(rawData)];
+      }
+    }
+
+    return DiscountResponseModel(
+      status: json["status"],
+      data: discountList,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
         "status": status,
-        "data":
-            data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
+        "data": data?.map((x) => x.toJson()).toList() ?? [],
       };
 }
 
@@ -37,9 +47,10 @@ class Discount {
   final String? type;
   final String? value;
   final String? status;
-  final DateTime? expiredDate;
+  final dynamic expiredDate;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? category;
 
   Discount({
     this.id,
@@ -51,40 +62,36 @@ class Discount {
     this.expiredDate,
     this.createdAt,
     this.updatedAt,
+    this.category,
   });
 
-  factory Discount.fromJson(String str) => Discount.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory Discount.fromMap(Map<String, dynamic> json) => Discount(
+  factory Discount.fromJson(Map<String, dynamic> json) => Discount(
         id: json["id"],
         name: json["name"],
         description: json["description"],
         type: json["type"],
         value: json["value"],
         status: json["status"],
-        expiredDate: json["expired_date"] == null
-            ? null
-            : DateTime.parse(json["expired_date"]),
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
+        expiredDate: json["expired_date"],
+        createdAt: json["created_at"] != null
+            ? DateTime.parse(json["created_at"].toString())
+            : null,
+        updatedAt: json["updated_at"] != null
+            ? DateTime.parse(json["updated_at"].toString())
+            : null,
+        category: json["category"],
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "description": description,
         "type": type,
         "value": value,
         "status": status,
-        "expired_date":
-            "${expiredDate!.year.toString().padLeft(4, '0')}-${expiredDate!.month.toString().padLeft(2, '0')}-${expiredDate!.day.toString().padLeft(2, '0')}",
+        "expired_date": expiredDate,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
+        "category": category,
       };
 }

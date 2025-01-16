@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'add_discount_bloc.dart';
+part of 'tax_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,71 +15,70 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$AddDiscountEvent {
+mixin _$TaxEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(
-            String name, String description, int value, String category)
-        addDiscount,
+    required TResult Function(TaxModel tax) add,
+    required TResult Function(TaxModel tax) update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult? Function(TaxModel tax)? add,
+    TResult? Function(TaxModel tax)? update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult Function(TaxModel tax)? add,
+    TResult Function(TaxModel tax)? update,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_Add value) add,
+    required TResult Function(_Update value) update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_Add value)? add,
+    TResult? Function(_Update value)? update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_Add value)? add,
+    TResult Function(_Update value)? update,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AddDiscountEventCopyWith<$Res> {
-  factory $AddDiscountEventCopyWith(
-          AddDiscountEvent value, $Res Function(AddDiscountEvent) then) =
-      _$AddDiscountEventCopyWithImpl<$Res, AddDiscountEvent>;
+abstract class $TaxEventCopyWith<$Res> {
+  factory $TaxEventCopyWith(TaxEvent value, $Res Function(TaxEvent) then) =
+      _$TaxEventCopyWithImpl<$Res, TaxEvent>;
 }
 
 /// @nodoc
-class _$AddDiscountEventCopyWithImpl<$Res, $Val extends AddDiscountEvent>
-    implements $AddDiscountEventCopyWith<$Res> {
-  _$AddDiscountEventCopyWithImpl(this._value, this._then);
+class _$TaxEventCopyWithImpl<$Res, $Val extends TaxEvent>
+    implements $TaxEventCopyWith<$Res> {
+  _$TaxEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AddDiscountEvent
+  /// Create a copy of TaxEvent
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -92,13 +91,13 @@ abstract class _$$StartedImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$StartedImplCopyWithImpl<$Res>
-    extends _$AddDiscountEventCopyWithImpl<$Res, _$StartedImpl>
+    extends _$TaxEventCopyWithImpl<$Res, _$StartedImpl>
     implements _$$StartedImplCopyWith<$Res> {
   __$$StartedImplCopyWithImpl(
       _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddDiscountEvent
+  /// Create a copy of TaxEvent
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -109,7 +108,7 @@ class _$StartedImpl implements _Started {
 
   @override
   String toString() {
-    return 'AddDiscountEvent.started()';
+    return 'TaxEvent.started()';
   }
 
   @override
@@ -125,9 +124,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(
-            String name, String description, int value, String category)
-        addDiscount,
+    required TResult Function(TaxModel tax) add,
+    required TResult Function(TaxModel tax) update,
   }) {
     return started();
   }
@@ -136,9 +134,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult? Function(TaxModel tax)? add,
+    TResult? Function(TaxModel tax)? update,
   }) {
     return started?.call();
   }
@@ -147,9 +144,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult Function(TaxModel tax)? add,
+    TResult Function(TaxModel tax)? update,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -162,7 +158,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_Add value) add,
+    required TResult Function(_Update value) update,
   }) {
     return started(this);
   }
@@ -171,7 +168,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_Add value)? add,
+    TResult? Function(_Update value)? update,
   }) {
     return started?.call(this);
   }
@@ -180,7 +178,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_Add value)? add,
+    TResult Function(_Update value)? update,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -190,139 +189,103 @@ class _$StartedImpl implements _Started {
   }
 }
 
-abstract class _Started implements AddDiscountEvent {
+abstract class _Started implements TaxEvent {
   const factory _Started() = _$StartedImpl;
 }
 
 /// @nodoc
-abstract class _$$AddDiscountImplCopyWith<$Res> {
-  factory _$$AddDiscountImplCopyWith(
-          _$AddDiscountImpl value, $Res Function(_$AddDiscountImpl) then) =
-      __$$AddDiscountImplCopyWithImpl<$Res>;
+abstract class _$$AddImplCopyWith<$Res> {
+  factory _$$AddImplCopyWith(_$AddImpl value, $Res Function(_$AddImpl) then) =
+      __$$AddImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String name, String description, int value, String category});
+  $Res call({TaxModel tax});
 }
 
 /// @nodoc
-class __$$AddDiscountImplCopyWithImpl<$Res>
-    extends _$AddDiscountEventCopyWithImpl<$Res, _$AddDiscountImpl>
-    implements _$$AddDiscountImplCopyWith<$Res> {
-  __$$AddDiscountImplCopyWithImpl(
-      _$AddDiscountImpl _value, $Res Function(_$AddDiscountImpl) _then)
+class __$$AddImplCopyWithImpl<$Res>
+    extends _$TaxEventCopyWithImpl<$Res, _$AddImpl>
+    implements _$$AddImplCopyWith<$Res> {
+  __$$AddImplCopyWithImpl(_$AddImpl _value, $Res Function(_$AddImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddDiscountEvent
+  /// Create a copy of TaxEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? description = null,
-    Object? value = null,
-    Object? category = null,
+    Object? tax = null,
   }) {
-    return _then(_$AddDiscountImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String,
+    return _then(_$AddImpl(
+      null == tax
+          ? _value.tax
+          : tax // ignore: cast_nullable_to_non_nullable
+              as TaxModel,
     ));
   }
 }
 
 /// @nodoc
 
-class _$AddDiscountImpl implements _AddDiscount {
-  const _$AddDiscountImpl(
-      {required this.name,
-      required this.description,
-      required this.value,
-      required this.category});
+class _$AddImpl implements _Add {
+  const _$AddImpl(this.tax);
 
   @override
-  final String name;
-  @override
-  final String description;
-  @override
-  final int value;
-  @override
-  final String category;
+  final TaxModel tax;
 
   @override
   String toString() {
-    return 'AddDiscountEvent.addDiscount(name: $name, description: $description, value: $value, category: $category)';
+    return 'TaxEvent.add(tax: $tax)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AddDiscountImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.category, category) ||
-                other.category == category));
+            other is _$AddImpl &&
+            (identical(other.tax, tax) || other.tax == tax));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, name, description, value, category);
+  int get hashCode => Object.hash(runtimeType, tax);
 
-  /// Create a copy of AddDiscountEvent
+  /// Create a copy of TaxEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
-      __$$AddDiscountImplCopyWithImpl<_$AddDiscountImpl>(this, _$identity);
+  _$$AddImplCopyWith<_$AddImpl> get copyWith =>
+      __$$AddImplCopyWithImpl<_$AddImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(
-            String name, String description, int value, String category)
-        addDiscount,
+    required TResult Function(TaxModel tax) add,
+    required TResult Function(TaxModel tax) update,
   }) {
-    return addDiscount(name, description, value, category);
+    return add(tax);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult? Function(TaxModel tax)? add,
+    TResult? Function(TaxModel tax)? update,
   }) {
-    return addDiscount?.call(name, description, value, category);
+    return add?.call(tax);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(
-            String name, String description, int value, String category)?
-        addDiscount,
+    TResult Function(TaxModel tax)? add,
+    TResult Function(TaxModel tax)? update,
     required TResult orElse(),
   }) {
-    if (addDiscount != null) {
-      return addDiscount(name, description, value, category);
+    if (add != null) {
+      return add(tax);
     }
     return orElse();
   }
@@ -331,77 +294,219 @@ class _$AddDiscountImpl implements _AddDiscount {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_Add value) add,
+    required TResult Function(_Update value) update,
   }) {
-    return addDiscount(this);
+    return add(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_Add value)? add,
+    TResult? Function(_Update value)? update,
   }) {
-    return addDiscount?.call(this);
+    return add?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_Add value)? add,
+    TResult Function(_Update value)? update,
     required TResult orElse(),
   }) {
-    if (addDiscount != null) {
-      return addDiscount(this);
+    if (add != null) {
+      return add(this);
     }
     return orElse();
   }
 }
 
-abstract class _AddDiscount implements AddDiscountEvent {
-  const factory _AddDiscount(
-      {required final String name,
-      required final String description,
-      required final int value,
-      required final String category}) = _$AddDiscountImpl;
+abstract class _Add implements TaxEvent {
+  const factory _Add(final TaxModel tax) = _$AddImpl;
 
-  String get name;
-  String get description;
-  int get value;
-  String get category;
+  TaxModel get tax;
 
-  /// Create a copy of AddDiscountEvent
+  /// Create a copy of TaxEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
+  _$$AddImplCopyWith<_$AddImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-mixin _$AddDiscountState {
+abstract class _$$UpdateImplCopyWith<$Res> {
+  factory _$$UpdateImplCopyWith(
+          _$UpdateImpl value, $Res Function(_$UpdateImpl) then) =
+      __$$UpdateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({TaxModel tax});
+}
+
+/// @nodoc
+class __$$UpdateImplCopyWithImpl<$Res>
+    extends _$TaxEventCopyWithImpl<$Res, _$UpdateImpl>
+    implements _$$UpdateImplCopyWith<$Res> {
+  __$$UpdateImplCopyWithImpl(
+      _$UpdateImpl _value, $Res Function(_$UpdateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaxEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tax = null,
+  }) {
+    return _then(_$UpdateImpl(
+      null == tax
+          ? _value.tax
+          : tax // ignore: cast_nullable_to_non_nullable
+              as TaxModel,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateImpl implements _Update {
+  const _$UpdateImpl(this.tax);
+
+  @override
+  final TaxModel tax;
+
+  @override
+  String toString() {
+    return 'TaxEvent.update(tax: $tax)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateImpl &&
+            (identical(other.tax, tax) || other.tax == tax));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tax);
+
+  /// Create a copy of TaxEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateImplCopyWith<_$UpdateImpl> get copyWith =>
+      __$$UpdateImplCopyWithImpl<_$UpdateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(TaxModel tax) add,
+    required TResult Function(TaxModel tax) update,
+  }) {
+    return update(tax);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(TaxModel tax)? add,
+    TResult? Function(TaxModel tax)? update,
+  }) {
+    return update?.call(tax);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(TaxModel tax)? add,
+    TResult Function(TaxModel tax)? update,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(tax);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Add value) add,
+    required TResult Function(_Update value) update,
+  }) {
+    return update(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Add value)? add,
+    TResult? Function(_Update value)? update,
+  }) {
+    return update?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Add value)? add,
+    TResult Function(_Update value)? update,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Update implements TaxEvent {
+  const factory _Update(final TaxModel tax) = _$UpdateImpl;
+
+  TaxModel get tax;
+
+  /// Create a copy of TaxEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateImplCopyWith<_$UpdateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$TaxState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function(List<TaxModel> taxes) loaded,
     required TResult Function(String message) error,
-    required TResult Function() success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
+    TResult? Function(List<TaxModel> taxes)? loaded,
     TResult? Function(String message)? error,
-    TResult? Function()? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function(List<TaxModel> taxes)? loaded,
     TResult Function(String message)? error,
-    TResult Function()? success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -409,47 +514,46 @@ mixin _$AddDiscountState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AddDiscountStateCopyWith<$Res> {
-  factory $AddDiscountStateCopyWith(
-          AddDiscountState value, $Res Function(AddDiscountState) then) =
-      _$AddDiscountStateCopyWithImpl<$Res, AddDiscountState>;
+abstract class $TaxStateCopyWith<$Res> {
+  factory $TaxStateCopyWith(TaxState value, $Res Function(TaxState) then) =
+      _$TaxStateCopyWithImpl<$Res, TaxState>;
 }
 
 /// @nodoc
-class _$AddDiscountStateCopyWithImpl<$Res, $Val extends AddDiscountState>
-    implements $AddDiscountStateCopyWith<$Res> {
-  _$AddDiscountStateCopyWithImpl(this._value, this._then);
+class _$TaxStateCopyWithImpl<$Res, $Val extends TaxState>
+    implements $TaxStateCopyWith<$Res> {
+  _$TaxStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -462,13 +566,13 @@ abstract class _$$InitialImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$InitialImplCopyWithImpl<$Res>
-    extends _$AddDiscountStateCopyWithImpl<$Res, _$InitialImpl>
+    extends _$TaxStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -479,7 +583,7 @@ class _$InitialImpl implements _Initial {
 
   @override
   String toString() {
-    return 'AddDiscountState.initial()';
+    return 'TaxState.initial()';
   }
 
   @override
@@ -496,8 +600,8 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function(List<TaxModel> taxes) loaded,
     required TResult Function(String message) error,
-    required TResult Function() success,
   }) {
     return initial();
   }
@@ -507,8 +611,8 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
+    TResult? Function(List<TaxModel> taxes)? loaded,
     TResult? Function(String message)? error,
-    TResult? Function()? success,
   }) {
     return initial?.call();
   }
@@ -518,8 +622,8 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function(List<TaxModel> taxes)? loaded,
     TResult Function(String message)? error,
-    TResult Function()? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -533,8 +637,8 @@ class _$InitialImpl implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
   }) {
     return initial(this);
   }
@@ -544,8 +648,8 @@ class _$InitialImpl implements _Initial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
   }) {
     return initial?.call(this);
   }
@@ -555,8 +659,8 @@ class _$InitialImpl implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -566,7 +670,7 @@ class _$InitialImpl implements _Initial {
   }
 }
 
-abstract class _Initial implements AddDiscountState {
+abstract class _Initial implements TaxState {
   const factory _Initial() = _$InitialImpl;
 }
 
@@ -579,13 +683,13 @@ abstract class _$$LoadingImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$AddDiscountStateCopyWithImpl<$Res, _$LoadingImpl>
+    extends _$TaxStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -596,7 +700,7 @@ class _$LoadingImpl implements _Loading {
 
   @override
   String toString() {
-    return 'AddDiscountState.loading()';
+    return 'TaxState.loading()';
   }
 
   @override
@@ -613,8 +717,8 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function(List<TaxModel> taxes) loaded,
     required TResult Function(String message) error,
-    required TResult Function() success,
   }) {
     return loading();
   }
@@ -624,8 +728,8 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
+    TResult? Function(List<TaxModel> taxes)? loaded,
     TResult? Function(String message)? error,
-    TResult? Function()? success,
   }) {
     return loading?.call();
   }
@@ -635,8 +739,8 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function(List<TaxModel> taxes)? loaded,
     TResult Function(String message)? error,
-    TResult Function()? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -650,8 +754,8 @@ class _$LoadingImpl implements _Loading {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
   }) {
     return loading(this);
   }
@@ -661,8 +765,8 @@ class _$LoadingImpl implements _Loading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
   }) {
     return loading?.call(this);
   }
@@ -672,8 +776,8 @@ class _$LoadingImpl implements _Loading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -683,8 +787,166 @@ class _$LoadingImpl implements _Loading {
   }
 }
 
-abstract class _Loading implements AddDiscountState {
+abstract class _Loading implements TaxState {
   const factory _Loading() = _$LoadingImpl;
+}
+
+/// @nodoc
+abstract class _$$LoadedImplCopyWith<$Res> {
+  factory _$$LoadedImplCopyWith(
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<TaxModel> taxes});
+}
+
+/// @nodoc
+class __$$LoadedImplCopyWithImpl<$Res>
+    extends _$TaxStateCopyWithImpl<$Res, _$LoadedImpl>
+    implements _$$LoadedImplCopyWith<$Res> {
+  __$$LoadedImplCopyWithImpl(
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaxState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? taxes = null,
+  }) {
+    return _then(_$LoadedImpl(
+      null == taxes
+          ? _value._taxes
+          : taxes // ignore: cast_nullable_to_non_nullable
+              as List<TaxModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadedImpl implements _Loaded {
+  const _$LoadedImpl(final List<TaxModel> taxes) : _taxes = taxes;
+
+  final List<TaxModel> _taxes;
+  @override
+  List<TaxModel> get taxes {
+    if (_taxes is EqualUnmodifiableListView) return _taxes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_taxes);
+  }
+
+  @override
+  String toString() {
+    return 'TaxState.loaded(taxes: $taxes)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadedImpl &&
+            const DeepCollectionEquality().equals(other._taxes, _taxes));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_taxes));
+
+  /// Create a copy of TaxState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
+      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaxModel> taxes) loaded,
+    required TResult Function(String message) error,
+  }) {
+    return loaded(taxes);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaxModel> taxes)? loaded,
+    TResult? Function(String message)? error,
+  }) {
+    return loaded?.call(taxes);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaxModel> taxes)? loaded,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (loaded != null) {
+      return loaded(taxes);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_Error value) error,
+  }) {
+    return loaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_Error value)? error,
+  }) {
+    return loaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
+    TResult Function(_Error value)? error,
+    required TResult orElse(),
+  }) {
+    if (loaded != null) {
+      return loaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Loaded implements TaxState {
+  const factory _Loaded(final List<TaxModel> taxes) = _$LoadedImpl;
+
+  List<TaxModel> get taxes;
+
+  /// Create a copy of TaxState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -698,13 +960,13 @@ abstract class _$$ErrorImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$AddDiscountStateCopyWithImpl<$Res, _$ErrorImpl>
+    extends _$TaxStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
       _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -730,7 +992,7 @@ class _$ErrorImpl implements _Error {
 
   @override
   String toString() {
-    return 'AddDiscountState.error(message: $message)';
+    return 'TaxState.error(message: $message)';
   }
 
   @override
@@ -744,7 +1006,7 @@ class _$ErrorImpl implements _Error {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -757,8 +1019,8 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function(List<TaxModel> taxes) loaded,
     required TResult Function(String message) error,
-    required TResult Function() success,
   }) {
     return error(message);
   }
@@ -768,8 +1030,8 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
+    TResult? Function(List<TaxModel> taxes)? loaded,
     TResult? Function(String message)? error,
-    TResult? Function()? success,
   }) {
     return error?.call(message);
   }
@@ -779,8 +1041,8 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function(List<TaxModel> taxes)? loaded,
     TResult Function(String message)? error,
-    TResult Function()? success,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -794,8 +1056,8 @@ class _$ErrorImpl implements _Error {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
   }) {
     return error(this);
   }
@@ -805,8 +1067,8 @@ class _$ErrorImpl implements _Error {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
   }) {
     return error?.call(this);
   }
@@ -816,8 +1078,8 @@ class _$ErrorImpl implements _Error {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -827,131 +1089,14 @@ class _$ErrorImpl implements _Error {
   }
 }
 
-abstract class _Error implements AddDiscountState {
+abstract class _Error implements TaxState {
   const factory _Error(final String message) = _$ErrorImpl;
 
   String get message;
 
-  /// Create a copy of AddDiscountState
+  /// Create a copy of TaxState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$AddDiscountStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AddDiscountState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl();
-
-  @override
-  String toString() {
-    return 'AddDiscountState.success()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SuccessImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String message) error,
-    required TResult Function() success,
-  }) {
-    return success();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String message)? error,
-    TResult? Function()? success,
-  }) {
-    return success?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String message)? error,
-    TResult Function()? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Success implements AddDiscountState {
-  const factory _Success() = _$SuccessImpl;
 }

@@ -23,6 +23,7 @@ import 'package:seblak_sulthane_app/presentation/sales/blocs/day_sales/day_sales
 import 'package:seblak_sulthane_app/presentation/setting/bloc/add_product/add_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/tax/tax_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/splash/splash_screen.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/generate_table/generate_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/get_table/get_table_bloc.dart';
@@ -128,6 +129,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => OnlineCheckerBloc(),
         ),
+BlocProvider(
+  create: (context) => TaxBloc()..add(const TaxEvent.started()),
+),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -14,13 +14,14 @@ class DiscountDialog extends StatefulWidget {
 }
 
 class _DiscountDialogState extends State<DiscountDialog> {
+  int? selectedMemberDiscountId;
+  int? selectedEventDiscountId;
+
   @override
   void initState() {
-    context.read<DiscountBloc>().add(const DiscountEvent.getDiscounts());
     super.initState();
+    context.read<DiscountBloc>().add(const DiscountEvent.getDiscounts());
   }
-
-  int discountIdSelected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +40,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              onPressed: () {
-                context.pop();
-              },
+              onPressed: () => context.pop(),
               icon: const Icon(
                 Icons.cancel,
                 color: AppColors.primary,
@@ -59,40 +58,107 @@ class _DiscountDialogState extends State<DiscountDialog> {
               child: CircularProgressIndicator(),
             ),
             loaded: (discounts) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: discounts
-                    .map(
-                      (discount) => ListTile(
-                        title: Text('Nama Diskon: ${discount.name}'),
-                        subtitle: Text('Potongan harga (${discount.value}%)'),
-                        contentPadding: EdgeInsets.zero,
-                        textColor: AppColors.primary,
-                        trailing: Checkbox(
-                          value: discount.id == discountIdSelected,
-                          onChanged: (value) {
-                            setState(() {
-                              discountIdSelected = discount.id!;
-                              context.read<CheckoutBloc>().add(
-                                    CheckoutEvent.addDiscount(
-                                      discount,
-                                    ),
-                                  );
-                            });
-                          },
-                        ),
-                        onTap: () {
-                          // context.pop();
-                        },
-                      ),
-                    )
-                    .toList(),
+              final memberDiscounts =
+                  discounts.where((d) => d.category == 'member').toList();
+              final eventDiscounts =
+                  discounts.where((d) => d.category == 'event').toList();
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildDiscountSection(
+                      title: 'Diskon Member',
+                      discounts: memberDiscounts,
+                      selectedDiscountId: selectedMemberDiscountId,
+                      onSelect: (discount) {
+                        setState(() {
+                          selectedMemberDiscountId = discount.id;
+                        });
+                        context.read<CheckoutBloc>().add(
+                              CheckoutEvent.addDiscount(discount),
+                            );
+                      },
+                      onDeselect: () {
+                        setState(() {
+                          selectedMemberDiscountId = null;
+                        });
+                        context.read<CheckoutBloc>().add(
+                              CheckoutEvent.removeDiscount('member'),
+                            );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildDiscountSection(
+                      title: 'Diskon Event',
+                      discounts: eventDiscounts,
+                      selectedDiscountId: selectedEventDiscountId,
+                      onSelect: (discount) {
+                        setState(() {
+                          selectedEventDiscountId = discount.id;
+                        });
+                        context.read<CheckoutBloc>().add(
+                              CheckoutEvent.addDiscount(discount),
+                            );
+                      },
+                      onDeselect: () {
+                        setState(() {
+                          selectedEventDiscountId = null;
+                        });
+                        context.read<CheckoutBloc>().add(
+                              CheckoutEvent.removeDiscount('event'),
+                            );
+                      },
+                    ),
+                  ],
+                ),
               );
             },
           );
         },
       ),
+    );
+  }
+
+  Widget _buildDiscountSection({
+    required String title,
+    required List<dynamic> discounts,
+    required int? selectedDiscountId,
+    required void Function(dynamic discount) onSelect,
+    required VoidCallback onDeselect,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.primary,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...discounts.map(
+          (discount) => ListTile(
+            title: Text('Nama Diskon: ${discount.name}'),
+            subtitle: Text('Potongan harga (${discount.value}%)'),
+            contentPadding: EdgeInsets.zero,
+            textColor: AppColors.primary,
+            trailing: Checkbox(
+              value: selectedDiscountId == discount.id,
+              onChanged: (value) {
+                if (value == true) {
+                  onSelect(discount);
+                } else {
+                  onDeselect();
+                }
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

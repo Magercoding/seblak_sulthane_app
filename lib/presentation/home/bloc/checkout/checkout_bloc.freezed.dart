@@ -22,7 +22,7 @@ mixin _$CheckoutEvent {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -39,7 +39,7 @@ mixin _$CheckoutEvent {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -55,7 +55,7 @@ mixin _$CheckoutEvent {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -180,7 +180,7 @@ class _$StartedImpl implements _Started {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -200,7 +200,7 @@ class _$StartedImpl implements _Started {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -219,7 +219,7 @@ class _$StartedImpl implements _Started {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -370,7 +370,7 @@ class _$AddItemImpl implements _AddItem {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -390,7 +390,7 @@ class _$AddItemImpl implements _AddItem {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -409,7 +409,7 @@ class _$AddItemImpl implements _AddItem {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -568,7 +568,7 @@ class _$RemoveItemImpl implements _RemoveItem {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -588,7 +588,7 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -607,7 +607,7 @@ class _$RemoveItemImpl implements _RemoveItem {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -767,7 +767,7 @@ class _$AddDiscountImpl implements _AddDiscount {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -787,7 +787,7 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -806,7 +806,7 @@ class _$AddDiscountImpl implements _AddDiscount {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -898,6 +898,8 @@ abstract class _$$RemoveDiscountImplCopyWith<$Res> {
   factory _$$RemoveDiscountImplCopyWith(_$RemoveDiscountImpl value,
           $Res Function(_$RemoveDiscountImpl) then) =
       __$$RemoveDiscountImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String category});
 }
 
 /// @nodoc
@@ -910,26 +912,53 @@ class __$$RemoveDiscountImplCopyWithImpl<$Res>
 
   /// Create a copy of CheckoutEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? category = null,
+  }) {
+    return _then(_$RemoveDiscountImpl(
+      null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$RemoveDiscountImpl implements _RemoveDiscount {
-  const _$RemoveDiscountImpl();
+  const _$RemoveDiscountImpl(this.category);
+
+  @override
+  final String category;
 
   @override
   String toString() {
-    return 'CheckoutEvent.removeDiscount()';
+    return 'CheckoutEvent.removeDiscount(category: $category)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$RemoveDiscountImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$RemoveDiscountImpl &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, category);
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RemoveDiscountImplCopyWith<_$RemoveDiscountImpl> get copyWith =>
+      __$$RemoveDiscountImplCopyWithImpl<_$RemoveDiscountImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -938,7 +967,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -948,7 +977,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
         saveDraftOrder,
     required TResult Function(DraftOrderModel data) loadDraftOrder,
   }) {
-    return removeDiscount();
+    return removeDiscount(category);
   }
 
   @override
@@ -958,7 +987,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -967,7 +996,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
         saveDraftOrder,
     TResult? Function(DraftOrderModel data)? loadDraftOrder,
   }) {
-    return removeDiscount?.call();
+    return removeDiscount?.call(category);
   }
 
   @override
@@ -977,7 +1006,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -988,7 +1017,7 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
     required TResult orElse(),
   }) {
     if (removeDiscount != null) {
-      return removeDiscount();
+      return removeDiscount(category);
     }
     return orElse();
   }
@@ -1053,7 +1082,15 @@ class _$RemoveDiscountImpl implements _RemoveDiscount {
 }
 
 abstract class _RemoveDiscount implements CheckoutEvent {
-  const factory _RemoveDiscount() = _$RemoveDiscountImpl;
+  const factory _RemoveDiscount(final String category) = _$RemoveDiscountImpl;
+
+  String get category;
+
+  /// Create a copy of CheckoutEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RemoveDiscountImplCopyWith<_$RemoveDiscountImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1128,7 +1165,7 @@ class _$AddTaxImpl implements _AddTax {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -1148,7 +1185,7 @@ class _$AddTaxImpl implements _AddTax {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -1167,7 +1204,7 @@ class _$AddTaxImpl implements _AddTax {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -1328,7 +1365,7 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -1348,7 +1385,7 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -1367,7 +1404,7 @@ class _$AddServiceChargeImpl implements _AddServiceCharge {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -1500,7 +1537,7 @@ class _$RemoveTaxImpl implements _RemoveTax {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -1520,7 +1557,7 @@ class _$RemoveTaxImpl implements _RemoveTax {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -1539,7 +1576,7 @@ class _$RemoveTaxImpl implements _RemoveTax {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -1664,7 +1701,7 @@ class _$RemoveServiceChargeImpl implements _RemoveServiceCharge {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -1684,7 +1721,7 @@ class _$RemoveServiceChargeImpl implements _RemoveServiceCharge {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -1703,7 +1740,7 @@ class _$RemoveServiceChargeImpl implements _RemoveServiceCharge {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -1876,7 +1913,7 @@ class _$SaveDraftOrderImpl implements _SaveDraftOrder {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -1896,7 +1933,7 @@ class _$SaveDraftOrderImpl implements _SaveDraftOrder {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -1915,7 +1952,7 @@ class _$SaveDraftOrderImpl implements _SaveDraftOrder {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -2078,7 +2115,7 @@ class _$LoadDraftOrderImpl implements _LoadDraftOrder {
     required TResult Function(Product product) addItem,
     required TResult Function(Product product) removeItem,
     required TResult Function(Discount discount) addDiscount,
-    required TResult Function() removeDiscount,
+    required TResult Function(String category) removeDiscount,
     required TResult Function(int tax) addTax,
     required TResult Function(int serviceCharge) addServiceCharge,
     required TResult Function() removeTax,
@@ -2098,7 +2135,7 @@ class _$LoadDraftOrderImpl implements _LoadDraftOrder {
     TResult? Function(Product product)? addItem,
     TResult? Function(Product product)? removeItem,
     TResult? Function(Discount discount)? addDiscount,
-    TResult? Function()? removeDiscount,
+    TResult? Function(String category)? removeDiscount,
     TResult? Function(int tax)? addTax,
     TResult? Function(int serviceCharge)? addServiceCharge,
     TResult? Function()? removeTax,
@@ -2117,7 +2154,7 @@ class _$LoadDraftOrderImpl implements _LoadDraftOrder {
     TResult Function(Product product)? addItem,
     TResult Function(Product product)? removeItem,
     TResult Function(Discount discount)? addDiscount,
-    TResult Function()? removeDiscount,
+    TResult Function(String category)? removeDiscount,
     TResult Function(int tax)? addTax,
     TResult Function(int serviceCharge)? addServiceCharge,
     TResult Function()? removeTax,
@@ -2213,7 +2250,7 @@ mixin _$CheckoutState {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2232,7 +2269,7 @@ mixin _$CheckoutState {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2251,7 +2288,7 @@ mixin _$CheckoutState {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2361,7 +2398,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2383,7 +2420,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2405,7 +2442,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2514,7 +2551,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2536,7 +2573,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2558,7 +2595,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2630,7 +2667,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
   @useResult
   $Res call(
       {List<ProductQuantity> items,
-      Discount? discountModel,
+      List<Discount> discounts,
       int discount,
       int discountAmount,
       int tax,
@@ -2654,7 +2691,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? items = null,
-    Object? discountModel = freezed,
+    Object? discounts = null,
     Object? discount = null,
     Object? discountAmount = null,
     Object? tax = null,
@@ -2668,10 +2705,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
               as List<ProductQuantity>,
-      freezed == discountModel
-          ? _value.discountModel
-          : discountModel // ignore: cast_nullable_to_non_nullable
-              as Discount?,
+      null == discounts
+          ? _value._discounts
+          : discounts // ignore: cast_nullable_to_non_nullable
+              as List<Discount>,
       null == discount
           ? _value.discount
           : discount // ignore: cast_nullable_to_non_nullable
@@ -2709,7 +2746,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
 class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
       final List<ProductQuantity> items,
-      this.discountModel,
+      final List<Discount> discounts,
       this.discount,
       this.discountAmount,
       this.tax,
@@ -2717,7 +2754,8 @@ class _$LoadedImpl implements _Loaded {
       this.totalQuantity,
       this.totalPrice,
       this.draftName)
-      : _items = items;
+      : _items = items,
+        _discounts = discounts;
 
   final List<ProductQuantity> _items;
   @override
@@ -2727,8 +2765,15 @@ class _$LoadedImpl implements _Loaded {
     return EqualUnmodifiableListView(_items);
   }
 
+  final List<Discount> _discounts;
   @override
-  final Discount? discountModel;
+  List<Discount> get discounts {
+    if (_discounts is EqualUnmodifiableListView) return _discounts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_discounts);
+  }
+
+// Ubah dari Discount? menjadi List<Discount>
   @override
   final int discount;
   @override
@@ -2746,7 +2791,7 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   String toString() {
-    return 'CheckoutState.loaded(items: $items, discountModel: $discountModel, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, totalQuantity: $totalQuantity, totalPrice: $totalPrice, draftName: $draftName)';
+    return 'CheckoutState.loaded(items: $items, discounts: $discounts, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, totalQuantity: $totalQuantity, totalPrice: $totalPrice, draftName: $draftName)';
   }
 
   @override
@@ -2755,8 +2800,8 @@ class _$LoadedImpl implements _Loaded {
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
             const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.discountModel, discountModel) ||
-                other.discountModel == discountModel) &&
+            const DeepCollectionEquality()
+                .equals(other._discounts, _discounts) &&
             (identical(other.discount, discount) ||
                 other.discount == discount) &&
             (identical(other.discountAmount, discountAmount) ||
@@ -2776,7 +2821,7 @@ class _$LoadedImpl implements _Loaded {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_items),
-      discountModel,
+      const DeepCollectionEquality().hash(_discounts),
       discount,
       discountAmount,
       tax,
@@ -2800,7 +2845,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2812,7 +2857,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function(String message) error,
     required TResult Function(int orderId) savedDraftOrder,
   }) {
-    return loaded(items, discountModel, discount, discountAmount, tax,
+    return loaded(items, discounts, discount, discountAmount, tax,
         serviceCharge, totalQuantity, totalPrice, draftName);
   }
 
@@ -2823,7 +2868,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2835,7 +2880,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function(String message)? error,
     TResult? Function(int orderId)? savedDraftOrder,
   }) {
-    return loaded?.call(items, discountModel, discount, discountAmount, tax,
+    return loaded?.call(items, discounts, discount, discountAmount, tax,
         serviceCharge, totalQuantity, totalPrice, draftName);
   }
 
@@ -2846,7 +2891,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -2860,7 +2905,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(items, discountModel, discount, discountAmount, tax,
+      return loaded(items, discounts, discount, discountAmount, tax,
           serviceCharge, totalQuantity, totalPrice, draftName);
     }
     return orElse();
@@ -2910,7 +2955,7 @@ class _$LoadedImpl implements _Loaded {
 abstract class _Loaded implements CheckoutState {
   const factory _Loaded(
       final List<ProductQuantity> items,
-      final Discount? discountModel,
+      final List<Discount> discounts,
       final int discount,
       final int discountAmount,
       final int tax,
@@ -2920,7 +2965,7 @@ abstract class _Loaded implements CheckoutState {
       final String draftName) = _$LoadedImpl;
 
   List<ProductQuantity> get items;
-  Discount? get discountModel;
+  List<Discount> get discounts; // Ubah dari Discount? menjadi List<Discount>
   int get discount;
   int get discountAmount;
   int get tax;
@@ -3008,7 +3053,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -3030,7 +3075,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -3052,7 +3097,7 @@ class _$ErrorImpl implements _Error {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -3197,7 +3242,7 @@ class _$SavedDraftOrderImpl implements _SavedDraftOrder {
     required TResult Function() loading,
     required TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -3219,7 +3264,7 @@ class _$SavedDraftOrderImpl implements _SavedDraftOrder {
     TResult? Function()? loading,
     TResult? Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,
@@ -3241,7 +3286,7 @@ class _$SavedDraftOrderImpl implements _SavedDraftOrder {
     TResult Function()? loading,
     TResult Function(
             List<ProductQuantity> items,
-            Discount? discountModel,
+            List<Discount> discounts,
             int discount,
             int discountAmount,
             int tax,

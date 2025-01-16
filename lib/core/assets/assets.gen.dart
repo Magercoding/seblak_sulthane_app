@@ -86,6 +86,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/logout.svg
   SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');
 
+  /// File path: assets/icons/member.svg
+  SvgGenImage get member => const SvgGenImage('assets/icons/member.svg');
+
   /// File path: assets/icons/no-product.svg
   SvgGenImage get noProduct => const SvgGenImage('assets/icons/no-product.svg');
 
@@ -98,9 +101,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pajak.svg
   SvgGenImage get pajak => const SvgGenImage('assets/icons/pajak.svg');
 
-  /// File path: assets/icons/member.svg
-  SvgGenImage get member => const SvgGenImage('assets/icons/member.svg');
-
   /// File path: assets/icons/payments.svg
   SvgGenImage get payments => const SvgGenImage('assets/icons/payments.svg');
 
@@ -112,6 +112,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/report.svg
   SvgGenImage get report => const SvgGenImage('assets/icons/report.svg');
+
+  /// File path: assets/icons/seblak_sulthane_app.svg
+  SvgGenImage get seblakSulthaneApp =>
+      const SvgGenImage('assets/icons/seblak_sulthane_app.svg');
 
   /// File path: assets/icons/setting.svg
   SvgGenImage get setting => const SvgGenImage('assets/icons/setting.svg');
@@ -150,6 +154,7 @@ class $AssetsIconsGen {
         kelolaProduk,
         layanan,
         logout,
+        member,
         noProduct,
         ongkir,
         orders,
@@ -158,6 +163,7 @@ class $AssetsIconsGen {
         print,
         qrCode,
         report,
+        seblakSulthaneApp,
         setting,
         shoppingBasket,
         snack,
@@ -298,8 +304,12 @@ class $AssetsLogoGen {
   /// File path: assets/logo/mylogo.png
   AssetGenImage get mylogo => const AssetGenImage('assets/logo/mylogo.png');
 
+  /// File path: assets/logo/seblak_sulthane_app.png
+  AssetGenImage get seblakSulthaneApp =>
+      const AssetGenImage('assets/logo/seblak_sulthane_app.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [mylogo];
+  List<AssetGenImage> get values => [mylogo, seblakSulthaneApp];
 }
 
 class Assets {

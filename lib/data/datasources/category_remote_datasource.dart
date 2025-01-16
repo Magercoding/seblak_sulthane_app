@@ -14,7 +14,7 @@ class CategoryRemoteDatasource {
       'Accept': 'application/json',
     };
     final response = await http.get(
-        Uri.parse('${Variables.baseUrl}/api/api-categories'),
+        Uri.parse('${Variables.baseUrl}/api/categories'),
         headers: headers);
     log(response.statusCode.toString());
     log(response.body);

@@ -529,30 +529,70 @@ class _HomePageState extends State<HomePage> {
                               ),
                               BlocBuilder<CheckoutBloc, CheckoutState>(
                                 builder: (context, state) {
-                                  final discount = state.maybeWhen(
-                                      orElse: () => 0,
-                                      loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) {
-                                        if (discountModel == null) {
-                                          return 0;
-                                        }
-                                        return discountModel.value!
-                                            .replaceAll('.00', '')
-                                            .toIntegerFromText;
-                                      });
-                                  return Text(
-                                    '$discount %',
-                                    style: const TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  return state.maybeWhen(
+                                    orElse: () => const Text('0 %'),
+                                    loaded: (products,
+                                        discounts,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) {
+                                      if (discounts.isEmpty) {
+                                        return const Text(
+                                          '0 %',
+                                          style: TextStyle(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                      }
+
+                                      // Show total discount percentage
+                                      return Text(
+                                        '$discount %',
+                                        style: const TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+// Add this row to show discount amount
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Jumlah Diskon',
+                                style: TextStyle(color: AppColors.grey),
+                              ),
+                              BlocBuilder<CheckoutBloc, CheckoutState>(
+                                builder: (context, state) {
+                                  return state.maybeWhen(
+                                    orElse: () => const Text('Rp 0'),
+                                    loaded: (products,
+                                        discounts,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) {
+                                      return Text(
+                                        discountAmount.currencyFormatRp,
+                                        style: const TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               ),

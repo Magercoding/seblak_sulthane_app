@@ -50,7 +50,7 @@ class ManageTaxCard extends StatelessWidget {
               Center(
                 child: RichText(
                   text: TextSpan(
-                    text: 'Nama Promo : ',
+                    text: 'Nama Biaya : ',
                     children: [
                       TextSpan(
                         text: data.type.name,

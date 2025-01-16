@@ -6,7 +6,7 @@ class CheckoutState with _$CheckoutState {
   const factory CheckoutState.loading() = _Loading;
   const factory CheckoutState.loaded(
       List<ProductQuantity> items,
-      Discount? discountModel,
+      List<Discount> discounts, // Ubah dari Discount? menjadi List<Discount>
       int discount,
       int discountAmount,
       int tax,
@@ -15,7 +15,5 @@ class CheckoutState with _$CheckoutState {
       int totalPrice,
       String draftName) = _Loaded;
   const factory CheckoutState.error(String message) = _Error;
-
-  //save draft order
   const factory CheckoutState.savedDraftOrder(int orderId) = _SavedDraftOrder;
 }

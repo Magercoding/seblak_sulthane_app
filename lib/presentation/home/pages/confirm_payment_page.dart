@@ -265,12 +265,10 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         totalQuantity,
                                         totalPrice,
                                         draftName) {
-                                      if (discountModel == null) {
+                                      if (discountModel.isEmpty) {
                                         return 0;
                                       }
-                                      return discountModel.value!
-                                          .replaceAll('.00', '')
-                                          .toIntegerFromText;
+                                      return discount;
                                     });
 
                                 final subTotal = state.maybeWhen(
@@ -361,12 +359,10 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         totalQuantity,
                                         totalPrice,
                                         draftName) {
-                                      if (discountModel == null) {
+                                      if (discountModel.isEmpty) {
                                         return 0;
                                       }
-                                      return discountModel.value!
-                                          .replaceAll('.00', '')
-                                          .toIntegerFromText;
+                                      return discount;
                                     });
 
                                 final subTotal =
@@ -493,12 +489,10 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         totalQuantity,
                                         totalPrice,
                                         draftName) {
-                                      if (discountModel == null) {
+                                      if (discountModel.isEmpty) {
                                         return 0;
                                       }
-                                      return discountModel.value!
-                                          .replaceAll('.00', '')
-                                          .toIntegerFromText;
+                                      return discount;
                                     });
 
                                 final tax = state.maybeWhen(
@@ -904,12 +898,10 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                               totalQuantity,
                                               totalPrice,
                                               draftName) {
-                                            if (discountModel == null) {
+                                            if (discountModel.isEmpty) {
                                               return 0;
                                             }
-                                            return discountModel.value!
-                                                .replaceAll('.00', '')
-                                                .toIntegerFromText;
+                                            return discount;
                                           });
 
                                       final price = state.maybeWhen(

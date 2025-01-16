@@ -21,6 +21,8 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final discountController = TextEditingController();
+  String selectedCategory = 'member';
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -79,37 +81,113 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                 ],
               ),
               const SpaceHeight(24.0),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Kategori',
+                  border: OutlineInputBorder(),
+                ),
+                value: selectedCategory,
+                items: const [
+                  DropdownMenuItem(value: 'member', child: Text('Member')),
+                  DropdownMenuItem(value: 'event', child: Text('Event')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                },
+              ),
+              const SpaceHeight(24.0),
               BlocConsumer<AddDiscountBloc, AddDiscountState>(
                 listener: (context, state) {
                   state.maybeWhen(
                     orElse: () {},
                     success: () {
+                      // Show success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Diskon berhasil ditambahkan!'),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                      // Refresh discount list
                       context
                           .read<DiscountBloc>()
                           .add(const DiscountEvent.getDiscounts());
+                      // Close dialog
                       context.pop();
+                    },
+                    error: (message) {
+                      // Show error message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
                     },
                   );
                 },
                 builder: (context, state) {
-                  return state.maybeWhen(orElse: () {
-                    return Button.filled(
-                      onPressed: () {
-                        context.read<AddDiscountBloc>().add(
-                              AddDiscountEvent.addDiscount(
-                                name: nameController.text,
-                                description: descriptionController.text,
-                                value: int.parse(discountController.text),
+                  return state.maybeWhen(
+                    orElse: () {
+                      return Button.filled(
+                        onPressed: () {
+                          // Validate inputs
+                          if (nameController.text.isEmpty ||
+                              discountController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Nama dan nilai diskon harus diisi'),
+                                backgroundColor: Colors.red,
                               ),
                             );
-                      },
-                      label: 'Simpan Diskon',
-                    );
-                  }, loading: () {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  });
+                            return;
+                          }
+
+                          try {
+                            final value = int.parse(discountController.text);
+                            if (value < 0 || value > 100) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Nilai diskon harus antara 0-100'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            context.read<AddDiscountBloc>().add(
+                                  AddDiscountEvent.addDiscount(
+                                    name: nameController.text,
+                                    description: descriptionController.text,
+                                    value: value,
+                                    category: selectedCategory,
+                                  ),
+                                );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Nilai diskon harus berupa angka'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        label: 'Simpan Diskon',
+                      );
+                    },
+                    loading: () {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
                 },
               )
             ],

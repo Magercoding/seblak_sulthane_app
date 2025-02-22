@@ -30,7 +30,6 @@ import 'package:seblak_sulthane_app/presentation/table/blocs/get_table/get_table
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/order/order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/transaction_report/transaction_report_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/setting/bloc/add_discount/add_discount_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/discount/discount_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_product/sync_product_bloc.dart';
@@ -79,9 +78,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => DiscountBloc(DiscountRemoteDatasource()),
-        ),
-        BlocProvider(
-          create: (context) => AddDiscountBloc(DiscountRemoteDatasource()),
         ),
         BlocProvider(
           create: (context) => TransactionReportBloc(OrderRemoteDatasource()),

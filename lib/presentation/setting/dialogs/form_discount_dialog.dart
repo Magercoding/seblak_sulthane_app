@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/components/custom_text_field.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
-import 'package:seblak_sulthane_app/presentation/setting/bloc/add_discount/add_discount_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/discount/discount_bloc.dart';
+import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
-import '../models/discount_model.dart';
 
 class FormDiscountDialog extends StatefulWidget {
-  final DiscountModel? data;
+  final Discount? data;
   const FormDiscountDialog({super.key, this.data});
 
   @override
@@ -22,6 +21,27 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
   final descriptionController = TextEditingController();
   final discountController = TextEditingController();
   String selectedCategory = 'member';
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.data != null) {
+      isEdit = true;
+      nameController.text = widget.data!.name!;
+      descriptionController.text = widget.data!.description ?? '';
+      discountController.text = widget.data!.value!.replaceAll('.00', '');
+      selectedCategory = widget.data!.category!.toLowerCase();
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    discountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +53,7 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
             onPressed: () => context.pop(),
             icon: const Icon(Icons.close),
           ),
-          const Text('Tambah Diskon'),
+          Text(isEdit ? 'Edit Diskon' : 'Tambah Diskon'),
           const Spacer(),
         ],
       ),
@@ -98,28 +118,24 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                 },
               ),
               const SpaceHeight(24.0),
-              BlocConsumer<AddDiscountBloc, AddDiscountState>(
+              BlocConsumer<DiscountBloc, DiscountState>(
                 listener: (context, state) {
                   state.maybeWhen(
                     orElse: () {},
-                    success: () {
-                      // Show success message
+                    success: (message) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Diskon berhasil ditambahkan!'),
+                        SnackBar(
+                          content: Text(message),
                           backgroundColor: Colors.green,
-                          duration: Duration(seconds: 2),
+                          duration: const Duration(seconds: 2),
                         ),
                       );
-                      // Refresh discount list
                       context
                           .read<DiscountBloc>()
                           .add(const DiscountEvent.getDiscounts());
-                      // Close dialog
                       context.pop();
                     },
                     error: (message) {
-                      // Show error message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(message),
@@ -161,14 +177,26 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                               return;
                             }
 
-                            context.read<AddDiscountBloc>().add(
-                                  AddDiscountEvent.addDiscount(
-                                    name: nameController.text,
-                                    description: descriptionController.text,
-                                    value: value,
-                                    category: selectedCategory,
-                                  ),
-                                );
+                            if (isEdit) {
+                              context.read<DiscountBloc>().add(
+                                    DiscountEvent.updateDiscount(
+                                      id: widget.data!.id!,
+                                      name: nameController.text,
+                                      description: descriptionController.text,
+                                      value: value.toDouble(),
+                                      category: selectedCategory,
+                                    ),
+                                  );
+                            } else {
+                              context.read<DiscountBloc>().add(
+                                    DiscountEvent.addDiscount(
+                                      name: nameController.text,
+                                      description: descriptionController.text,
+                                      value: value.toDouble(),
+                                      category: selectedCategory,
+                                    ),
+                                  );
+                            }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -179,7 +207,7 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                             );
                           }
                         },
-                        label: 'Simpan Diskon',
+                        label: isEdit ? 'Update Diskon' : 'Simpan Diskon',
                       );
                     },
                     loading: () {
@@ -189,7 +217,7 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                     },
                   );
                 },
-              )
+              ),
             ],
           ),
         ),

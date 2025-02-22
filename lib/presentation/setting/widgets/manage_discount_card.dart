@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/discount/discount_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/constants/colors.dart';
@@ -73,16 +75,61 @@ class ManageDiscountCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.topRight,
-            child: GestureDetector(
-              onTap: onEditTap,
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                  color: AppColors.primary,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: onEditTap,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                      color: AppColors.primary,
+                    ),
+                    child: Assets.icons.edit.svg(),
+                  ),
                 ),
-                child: Assets.icons.edit.svg(),
-              ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Hapus Diskon'),
+                        content: const Text(
+                            'Apakah Anda yakin ingin menghapus diskon ini?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Batal'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.read<DiscountBloc>().add(
+                                    DiscountEvent.deleteDiscount(data.id!),
+                                  );
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Hapus'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                      color: Colors.red,
+                    ),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

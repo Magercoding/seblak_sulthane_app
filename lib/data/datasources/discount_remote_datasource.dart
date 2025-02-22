@@ -32,7 +32,7 @@ class DiscountRemoteDatasource {
   Future<Either<String, DiscountResponseModel>> addDiscount({
     required String name,
     required String description,
-    required int value,
+    required double value,
     required String category,
   }) async {
     final url = Uri.parse('${Variables.baseUrl}/api/discounts');
@@ -68,6 +68,69 @@ class DiscountRemoteDatasource {
       } else {
         return Left(
             'Failed to add discount: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      return Left('Error: $e');
+    }
+  }
+
+  Future<Either<String, DiscountResponseModel>> updateDiscount({
+    required int id,
+    required String name,
+    required String description,
+    required double value,
+    required String category,
+  }) async {
+    final url = Uri.parse('${Variables.baseUrl}/api/discounts/$id');
+    final authData = await AuthLocalDataSource().getAuthData();
+
+    try {
+      final Map<String, dynamic> body = {
+        'name': name,
+        'description': description,
+        'value': value,
+        'type': 'percentage',
+        'category': category,
+      };
+
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer ${authData.token}',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return Right(DiscountResponseModel.fromRawJson(response.body));
+      } else {
+        return Left(
+            'Failed to update discount: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      return Left('Error: $e');
+    }
+  }
+
+  Future<Either<String, DiscountResponseModel>> deleteDiscount(int id) async {
+    final url = Uri.parse('${Variables.baseUrl}/api/discounts/$id');
+    final authData = await AuthLocalDataSource().getAuthData();
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer ${authData.token}',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return Right(DiscountResponseModel.fromRawJson(response.body));
+      } else {
+        return Left('Failed to delete discount: ${response.statusCode}');
       }
     } catch (e) {
       return Left('Error: $e');

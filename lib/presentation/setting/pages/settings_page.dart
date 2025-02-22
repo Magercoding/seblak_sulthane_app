@@ -3,7 +3,6 @@ import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart'
 import 'package:seblak_sulthane_app/presentation/setting/pages/discount_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/profile_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/manage_printer_page.dart';
-import 'package:seblak_sulthane_app/presentation/setting/pages/server_key_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/sync_data_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/tax_page.dart';
 
@@ -119,18 +118,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Colors.transparent,
                     onTap: () => indexValue(4),
                   ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.all(12.0),
-                    leading: Image.asset(Assets.images.manageQr.path,
-                        fit: BoxFit.contain),
-                    title: const Text('QR Key Setting'),
-                    subtitle: const Text('QR Key Configuration'),
-                    textColor: AppColors.primary,
-                    tileColor: currentIndex == 6
-                        ? AppColors.blueLight
-                        : Colors.transparent,
-                    onTap: () => indexValue(6),
-                  ),
                 ],
               ),
             ),
@@ -151,7 +138,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     ManagePrinterPage(),
                     TaxPage(),
                     SyncDataPage(),
-                    ServerKeyPage()
                     // Text('tax'),
                     // ManageDiscount(),
                     // ManagePrinterPage(),

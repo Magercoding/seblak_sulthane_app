@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/discount_page.dart';
+import 'package:seblak_sulthane_app/presentation/setting/pages/profile_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/manage_printer_page.dart';
-import 'package:seblak_sulthane_app/presentation/setting/pages/product_page.dart';
-import 'package:seblak_sulthane_app/presentation/setting/pages/server_key_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/sync_data_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/tax_page.dart';
 
@@ -63,19 +62,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   const SpaceHeight(16.0),
-                  role != null && role! != 'admin'
-                      ? const SizedBox()
-                      : ListTile(
-                          contentPadding: const EdgeInsets.all(12.0),
-                          leading: Assets.icons.kelolaProduk.svg(),
-                          title: const Text('Manage Products'),
-                          subtitle: const Text('Manage products in your store'),
-                          textColor: AppColors.primary,
-                          tileColor: currentIndex == 0
-                              ? AppColors.blueLight
-                              : Colors.transparent,
-                          onTap: () => indexValue(0),
-                        ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(12.0),
+                    leading: Assets.icons.kelolaProduk.svg(),
+                    title: const Text('User Profile'),
+                    subtitle: const Text('View and manage your profile'),
+                    textColor: AppColors.primary,
+                    tileColor: currentIndex == 0
+                        ? AppColors.blueLight
+                        : Colors.transparent,
+                    onTap: () => indexValue(0),
+                  ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
                     leading: Assets.icons.kelolaDiskon.svg(),
@@ -121,18 +118,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Colors.transparent,
                     onTap: () => indexValue(4),
                   ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.all(12.0),
-                    leading: Image.asset(Assets.images.manageQr.path,
-                        fit: BoxFit.contain),
-                    title: const Text('QR Key Setting'),
-                    subtitle: const Text('QR Key Configuration'),
-                    textColor: AppColors.primary,
-                    tileColor: currentIndex == 6
-                        ? AppColors.blueLight
-                        : Colors.transparent,
-                    onTap: () => indexValue(6),
-                  ),
                 ],
               ),
             ),
@@ -148,15 +133,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: IndexedStack(
                   index: currentIndex,
                   children: [
-                    role != null && role! != 'admin'
-                        ? SizedBox()
-                        : ProductPage(),
+                    ProfilePage(), // Halaman profil pengguna
                     DiscountPage(),
                     ManagePrinterPage(),
                     TaxPage(),
                     SyncDataPage(),
-                    ProductPage(),
-                    ServerKeyPage()
                     // Text('tax'),
                     // ManageDiscount(),
                     // ManagePrinterPage(),

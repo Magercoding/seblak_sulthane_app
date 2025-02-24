@@ -1,3 +1,5 @@
+// In lib/presentation/splash/splash_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
@@ -19,23 +21,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkAuth() async {
+    // Always navigate to login after splash
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
-    final isAuth = await AuthLocalDataSource().isAuthDataExists();
-    if (!mounted) return;
-
-    if (isAuth) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const DashboardPage()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+    );
   }
 
   @override

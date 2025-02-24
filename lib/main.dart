@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seblak_sulthane_app/core/utils/lifecycle_manager.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
@@ -125,9 +126,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => OnlineCheckerBloc(),
         ),
-BlocProvider(
-  create: (context) => TaxBloc()..add(const TaxEvent.started()),
-),
+        BlocProvider(
+          create: (context) => TaxBloc()..add(const TaxEvent.started()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -151,7 +152,9 @@ BlocProvider(
             ),
           ),
         ),
-        home: const SplashScreen(), // Mulai dengan SplashScreen
+        home: const LifecycleManager(
+          child: SplashScreen(),
+        ),
       ),
     );
   }

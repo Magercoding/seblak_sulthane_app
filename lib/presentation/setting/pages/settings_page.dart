@@ -5,6 +5,7 @@ import 'package:seblak_sulthane_app/presentation/setting/pages/profile_page.dart
 import 'package:seblak_sulthane_app/presentation/setting/pages/manage_printer_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/sync_data_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/tax_page.dart';
+import 'package:seblak_sulthane_app/presentation/setting/pages/member_page.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/spaces.dart';
@@ -64,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SpaceHeight(16.0),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaProduk.svg(),
+                    leading: Assets.icons.profile.svg(),
                     title: const Text('User Profile'),
                     subtitle: const Text('View and manage your profile'),
                     textColor: AppColors.primary,
@@ -86,9 +87,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPrinter.svg(),
-                    title: const Text('Kelola Printer'),
-                    subtitle: const Text('Tambah atau hapus printer'),
+                    leading: Assets.icons.member2.svg(),
+                    title: const Text('Kelola Member'),
+                    subtitle: const Text('Kelola Member Pelanggan'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 2
                         ? AppColors.blueLight
@@ -108,15 +109,26 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPajak.svg(),
-                    title: const Text('Sync Data'),
-                    subtitle:
-                        const Text('Sinkronisasi data dari dan ke server'),
+                    leading: Assets.icons.kelolaPrinter.svg(),
+                    title: const Text('Kelola Printer'),
+                    subtitle: const Text('Tambah atau hapus printer'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 4
                         ? AppColors.blueLight
                         : Colors.transparent,
                     onTap: () => indexValue(4),
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(12.0),
+                    leading: Assets.icons.kelolaPajak.svg(),
+                    title: const Text('Sync Data'),
+                    subtitle:
+                        const Text('Sinkronisasi data dari dan ke server'),
+                    textColor: AppColors.primary,
+                    tileColor: currentIndex == 5
+                        ? AppColors.blueLight
+                        : Colors.transparent,
+                    onTap: () => indexValue(5),
                   ),
                 ],
               ),
@@ -135,8 +147,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     ProfilePage(), // Halaman profil pengguna
                     DiscountPage(),
-                    ManagePrinterPage(),
+                    MemberPage(),
                     TaxPage(),
+
+                    ManagePrinterPage(),
                     SyncDataPage(),
                     // Text('tax'),
                     // ManageDiscount(),

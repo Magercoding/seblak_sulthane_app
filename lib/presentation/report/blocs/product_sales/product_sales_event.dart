@@ -6,5 +6,6 @@ class ProductSalesEvent with _$ProductSalesEvent {
   const factory ProductSalesEvent.getProductSales(
     String startDate,
     String endDate,
+    int outletId,
   ) = _GetProductSales;
 }

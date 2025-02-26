@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seblak_sulthane_app/data/models/response/member_response_model.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
 import '../../../core/constants/colors.dart';
 
 class MemberDialog extends StatefulWidget {
@@ -9,32 +12,20 @@ class MemberDialog extends StatefulWidget {
 }
 
 class _MemberDialogState extends State<MemberDialog> {
-  final phoneController = TextEditingController();
-  final nameController = TextEditingController();
   final searchController = TextEditingController();
-  bool showNewMemberForm = false;
-
-  // Contoh data member
-  final List<Map<String, String>> members = [
-    {"name": "John Doe", "phone": "081234567890"},
-    {"name": "Jane Smith", "phone": "081234567891"},
-    {"name": "Bob Johnson", "phone": "081234567892"},
-    {"name": "Alice Brown", "phone": "081234567893"},
-  ];
-
-  List<Map<String, String>> filteredMembers = [];
+  List<Member> filteredMembers = [];
+  List<Member> allMembers = [];
 
   @override
   void initState() {
     super.initState();
-    filteredMembers = members;
+    // Request member data when the dialog is opened
+    context.read<MemberBloc>().add(const MemberEvent.getMembers());
     searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
-    phoneController.dispose();
-    nameController.dispose();
     searchController.dispose();
     super.dispose();
   }
@@ -42,21 +33,20 @@ class _MemberDialogState extends State<MemberDialog> {
   void _onSearchChanged() {
     String query = searchController.text.toLowerCase();
     setState(() {
-      filteredMembers = members.where((member) {
-        return member["name"]!.toLowerCase().contains(query) ||
-            member["phone"]!.contains(query);
+      filteredMembers = allMembers.where((member) {
+        return member.name.toLowerCase().contains(query) ||
+            member.phone.contains(query);
       }).toList();
     });
   }
 
-  Widget _buildNewMemberForm() {
+  Widget _buildMembersList() {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -65,116 +55,126 @@ class _MemberDialogState extends State<MemberDialog> {
                 bottom: BorderSide(color: Colors.white, width: 0.5),
               ),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Text(
-                  'New Member',
+                Text(
+                  'Members List',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      showNewMemberForm = false;
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
-                ),
+                Spacer(),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(16),
+            constraints: const BoxConstraints(maxHeight: 300),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Nomor HP',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 16,
+            child: BlocConsumer<MemberBloc, MemberState>(
+              listener: (context, state) {
+                state.maybeWhen(
+                  loaded: (membersData) {
+                    // Convert data if it's a List<Map<String, dynamic>> and not already List<Member>
+                    List<Member> members;
+                    if (membersData is List<Member>) {
+                      members = membersData;
+                    } else {
+                      // Assuming membersData is List<Map<String, dynamic>>
+                      members = (membersData as List).map((item) {
+                        if (item is Member) return item;
+                        return Member.fromJson(item as Map<String, dynamic>);
+                      }).toList();
+                    }
+
+                    setState(() {
+                      allMembers = members;
+                      filteredMembers = members;
+                    });
+                  },
+                  orElse: () {},
+                );
+              },
+              builder: (context, state) {
+                return state.maybeWhen(
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.primary),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    controller: phoneController,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                  loaded: (_) {
+                    if (filteredMembers.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No members found',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: filteredMembers.map((member) {
+                          return GestureDetector(
+                            onTap: () {
+                              // Return the selected member when tapped
+                              Navigator.pop(context, member);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.primary),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        member.name,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        member.phone,
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
+                    );
+                  },
+                  error: (message) => Center(
+                    child: Text(
+                      'Error: $message',
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Nama',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 16,
+                  orElse: () => const Center(
+                    child: Text('No members available'),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.primary),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Add member functionality here when backend is ready
-                      setState(() {
-                        showNewMemberForm = false;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(120, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Simpan',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],
@@ -182,120 +182,15 @@ class _MemberDialogState extends State<MemberDialog> {
     );
   }
 
-  Widget _buildMembersList() {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.white, width: 0.5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    const Text(
-                      'Members List',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          showNewMemberForm = true;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        'New Member',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                constraints: const BoxConstraints(
-                    maxHeight: 300), // Membatasi tinggi container
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SingleChildScrollView(
-                  // Menambahkan scroll untuk daftar member
-                  child: Column(
-                    children: filteredMembers.map((member) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.primary),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  member["name"]!,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  member["phone"]!,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
       child: ConstrainedBox(
-        // Menambahkan constraints untuk dialog
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           maxWidth: 400,
         ),
         child: SingleChildScrollView(
-          // Menambahkan scroll untuk seluruh konten dialog
           child: Container(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -353,7 +248,7 @@ class _MemberDialogState extends State<MemberDialog> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                showNewMemberForm ? _buildNewMemberForm() : _buildMembersList(),
+                _buildMembersList(),
               ],
             ),
           ),

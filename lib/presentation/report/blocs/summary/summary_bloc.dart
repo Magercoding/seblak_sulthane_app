@@ -9,14 +9,27 @@ part 'summary_bloc.freezed.dart';
 
 class SummaryBloc extends Bloc<SummaryEvent, SummaryState> {
   final OrderRemoteDatasource datasource;
-  SummaryBloc(
-    this.datasource,
-  ) : super(const _Initial()) {
+
+  SummaryBloc(this.datasource) : super(const _Initial()) {
     on<_GetSummary>((event, emit) async {
       emit(const _Loading());
+
       final result = await datasource.getSummaryByRangeDate(
-          event.startDate, event.endDate);
-      result.fold((l) => emit(_Error(l)), (r) => emit(_Success(r.data!)));
+        event.startDate,
+        event.endDate,
+        event.outletId,
+      );
+
+      result.fold(
+        (l) => emit(_Error(l)),
+        (r) {
+          if (r.data != null) {
+            emit(_Success(r.data!));
+          } else {
+            emit(const _Error("No summary data for this outlet"));
+          }
+        },
+      );
     });
   }
 }

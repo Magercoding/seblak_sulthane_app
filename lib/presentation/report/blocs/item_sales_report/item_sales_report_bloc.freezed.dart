@@ -19,19 +19,22 @@ mixin _$ItemSalesReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getItemSales,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getItemSales,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getItemSales,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getItemSales,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getItemSales,
+    TResult Function(String startDate, String endDate, int outletId)?
+        getItemSales,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,7 +123,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getItemSales,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getItemSales,
   }) {
     return started();
   }
@@ -129,7 +133,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getItemSales,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getItemSales,
   }) {
     return started?.call();
   }
@@ -138,7 +143,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getItemSales,
+    TResult Function(String startDate, String endDate, int outletId)?
+        getItemSales,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -189,7 +195,7 @@ abstract class _$$GetItemSalesImplCopyWith<$Res> {
           _$GetItemSalesImpl value, $Res Function(_$GetItemSalesImpl) then) =
       __$$GetItemSalesImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String startDate, String endDate});
+  $Res call({String startDate, String endDate, int outletId});
 }
 
 /// @nodoc
@@ -207,6 +213,7 @@ class __$$GetItemSalesImplCopyWithImpl<$Res>
   $Res call({
     Object? startDate = null,
     Object? endDate = null,
+    Object? outletId = null,
   }) {
     return _then(_$GetItemSalesImpl(
       startDate: null == startDate
@@ -217,6 +224,10 @@ class __$$GetItemSalesImplCopyWithImpl<$Res>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as String,
+      outletId: null == outletId
+          ? _value.outletId
+          : outletId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -224,16 +235,19 @@ class __$$GetItemSalesImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GetItemSalesImpl implements _GetItemSales {
-  const _$GetItemSalesImpl({required this.startDate, required this.endDate});
+  const _$GetItemSalesImpl(
+      {required this.startDate, required this.endDate, required this.outletId});
 
   @override
   final String startDate;
   @override
   final String endDate;
+  @override
+  final int outletId;
 
   @override
   String toString() {
-    return 'ItemSalesReportEvent.getItemSales(startDate: $startDate, endDate: $endDate)';
+    return 'ItemSalesReportEvent.getItemSales(startDate: $startDate, endDate: $endDate, outletId: $outletId)';
   }
 
   @override
@@ -243,11 +257,13 @@ class _$GetItemSalesImpl implements _GetItemSales {
             other is _$GetItemSalesImpl &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.outletId, outletId) ||
+                other.outletId == outletId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, startDate, endDate);
+  int get hashCode => Object.hash(runtimeType, startDate, endDate, outletId);
 
   /// Create a copy of ItemSalesReportEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -261,29 +277,32 @@ class _$GetItemSalesImpl implements _GetItemSales {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getItemSales,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getItemSales,
   }) {
-    return getItemSales(startDate, endDate);
+    return getItemSales(startDate, endDate, outletId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getItemSales,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getItemSales,
   }) {
-    return getItemSales?.call(startDate, endDate);
+    return getItemSales?.call(startDate, endDate, outletId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getItemSales,
+    TResult Function(String startDate, String endDate, int outletId)?
+        getItemSales,
     required TResult orElse(),
   }) {
     if (getItemSales != null) {
-      return getItemSales(startDate, endDate);
+      return getItemSales(startDate, endDate, outletId);
     }
     return orElse();
   }
@@ -323,10 +342,12 @@ class _$GetItemSalesImpl implements _GetItemSales {
 abstract class _GetItemSales implements ItemSalesReportEvent {
   const factory _GetItemSales(
       {required final String startDate,
-      required final String endDate}) = _$GetItemSalesImpl;
+      required final String endDate,
+      required final int outletId}) = _$GetItemSalesImpl;
 
   String get startDate;
   String get endDate;
+  int get outletId;
 
   /// Create a copy of ItemSalesReportEvent
   /// with the given fields replaced by the non-null parameter values.

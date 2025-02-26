@@ -46,6 +46,7 @@ class ItemOrder {
   DateTime? transactionTime;
   DateTime? createdAt;
   DateTime? updatedAt;
+  int? outletId; // Tambahkan properti outletId
 
   ItemOrder({
     this.id,
@@ -63,6 +64,7 @@ class ItemOrder {
     this.transactionTime,
     this.createdAt,
     this.updatedAt,
+    this.outletId, // Tambahkan properti outletId
   });
 
   factory ItemOrder.fromJson(String str) => ItemOrder.fromMap(json.decode(str));
@@ -78,7 +80,7 @@ class ItemOrder {
         discountAmount: json["discount_amount"],
         serviceCharge: json["service_charge"],
         total: json["total"],
-        paymentMethod: json["payment_method"]!,
+        paymentMethod: json["payment_method"],
         totalItem: json["total_item"],
         idKasir: json["id_kasir"],
         namaKasir: json["nama_kasir"],
@@ -91,6 +93,7 @@ class ItemOrder {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
+        outletId: json["outlet_id"], // Tambahkan properti outletId
       );
 
   Map<String, dynamic> toMap() => {
@@ -109,5 +112,6 @@ class ItemOrder {
         "transaction_time": transactionTime?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
+        "outlet_id": outletId, // Tambahkan properti outletId
       };
 }

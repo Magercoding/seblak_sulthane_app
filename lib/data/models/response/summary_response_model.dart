@@ -1,78 +1,65 @@
 import 'dart:convert';
 
 class SummaryResponseModel {
-  String? status;
-  SummaryModel? data;
+  final String? status;
+  final SummaryData? data;
 
-  SummaryResponseModel({
+  const SummaryResponseModel({
     this.status,
     this.data,
   });
 
-  factory SummaryResponseModel.fromJson(String str) =>
-      SummaryResponseModel.fromMap(json.decode(str));
+  factory SummaryResponseModel.fromJson(Map<String, dynamic> json) {
+    return SummaryResponseModel(
+      status: json['status'],
+      data: json['data'] != null ? SummaryData.fromJson(json['data']) : null,
+    );
+  }
 
-  String toJson() => json.encode(toMap());
-
-  factory SummaryResponseModel.fromMap(Map<String, dynamic> json) =>
-      SummaryResponseModel(
-        status: json["status"],
-        data: json["data"] == null ? null : SummaryModel.fromMap(json["data"]),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "status": status,
-        "data": data?.toMap(),
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'data': data?.toJson(),
       };
 }
 
-class SummaryModel {
-  String? totalRevenue;
-  String? totalDiscount;
-  String? totalTax;
-  String? totalSubtotal;
-  String? totalServiceCharge;
-  int? total;
+class SummaryData {
+  final String totalRevenue;
+  final String totalDiscount;
+  final String totalTax;
+  final String totalSubtotal;
+  final num totalServiceCharge;
+  final num total;
+  final int outletId; // Added outletId field
 
-  SummaryModel({
-    this.totalRevenue,
-    this.totalDiscount,
-    this.totalTax,
-    this.totalSubtotal,
-    this.totalServiceCharge,
-    this.total,
+  const SummaryData({
+    required this.totalRevenue,
+    required this.totalDiscount,
+    required this.totalTax,
+    required this.totalSubtotal,
+    required this.totalServiceCharge,
+    required this.total,
+    required this.outletId, // Required parameter
   });
 
-  factory SummaryModel.fromJson(String str) =>
-      SummaryModel.fromMap(json.decode(str));
+  factory SummaryData.fromJson(Map<String, dynamic> json) {
+    return SummaryData(
+      totalRevenue: json['total_revenue'],
+      totalDiscount: json['total_discount'],
+      totalTax: json['total_tax'],
+      totalSubtotal: json['total_subtotal'],
+      totalServiceCharge: json['total_service_charge'],
+      total: json['total'],
+      outletId: json['outlet_id'] ?? 0,
+    );
+  }
 
-  String toJson() => json.encode(toMap());
-
-  factory SummaryModel.fromMap(Map<String, dynamic> json) => SummaryModel(
-        totalRevenue: json["total_revenue"] is int
-            ? json["total_revenue"].toString()
-            : json["total_revenue"],
-        totalDiscount: json["total_discount"] is int
-            ? json["total_discount"].toString()
-            : json["total_discount"],
-        totalTax: json["total_tax"] is int
-            ? json["total_tax"].toString()
-            : json["total_tax"],
-        totalSubtotal: json["total_subtotal"] is int
-            ? json["total_subtotal"].toString()
-            : json["total_subtotal"],
-        totalServiceCharge: json["total_service_charge"] is int
-            ? json["total_service_charge"].toString()
-            : json["total_service_charge"],
-        total: json["total"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "total_revenue": totalRevenue,
-        "total_discount": totalDiscount,
-        "total_tax": totalTax,
-        "total_subtotal": totalSubtotal,
-        "total_service_charge": totalServiceCharge,
-        "total": total,
+  Map<String, dynamic> toJson() => {
+        'total_revenue': totalRevenue,
+        'total_discount': totalDiscount,
+        'total_tax': totalTax,
+        'total_subtotal': totalSubtotal,
+        'total_service_charge': totalServiceCharge,
+        'total': total,
+        'outlet_id': outletId,
       };
 }

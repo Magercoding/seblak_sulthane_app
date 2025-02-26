@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:excel/excel.dart';
+import 'package:seblak_sulthane_app/core/core.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
@@ -15,16 +16,14 @@ import 'package:pdf/widgets.dart' as pw;
 class RevenueInvoice {
   static late Font ttf;
   static Future<File> generatePdf(
-    SummaryModel summaryModel,
+    SummaryData summaryModel,
     String searchDateFormatted,
   ) async {
     final pdf = Document();
-    // var data = await rootBundle.load("assets/fonts/noto-sans.ttf");
-    // ttf = Font.ttf(data);
+
     final ByteData dataImage = await rootBundle.load('assets/images/logo.png');
     final Uint8List bytes = dataImage.buffer.asUint8List();
 
-    // Membuat objek Image dari gambar
     final image = pw.MemoryImage(bytes);
 
     pdf.addPage(
@@ -46,7 +45,7 @@ class RevenueInvoice {
   }
 
   static Widget buildHeader(
-    SummaryModel invoice,
+    SummaryData invoice,
     MemoryImage image,
     String searchDateFormatted,
   ) =>
@@ -77,7 +76,7 @@ class RevenueInvoice {
         ),
       ]);
 
-  static Widget buildTotal(SummaryModel summaryModel) {
+  static Widget buildTotal(SummaryData summaryModel) {
     return Container(
       width: double.infinity,
       child: Column(
@@ -85,21 +84,21 @@ class RevenueInvoice {
         children: [
           buildText(
             title: 'Revenue',
-            value: int.parse(summaryModel.totalRevenue!).currencyFormatRp,
+            value: int.parse(summaryModel.totalRevenue).currencyFormatRp,
             unite: true,
           ),
           Divider(),
           buildText(
             title: 'Sub Total',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: int.parse(summaryModel.totalSubtotal!).currencyFormatRp,
+            value: int.parse(summaryModel.totalSubtotal).currencyFormatRp,
             unite: true,
           ),
           buildText(
             title: 'Discount',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
             value:
-                "- ${int.parse(summaryModel.totalDiscount!.replaceAll('.00', '')).currencyFormatRp}",
+                "- ${int.parse(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}",
             unite: true,
             textStyle: TextStyle(
               color: PdfColor.fromHex('#FF0000'),
@@ -109,7 +108,7 @@ class RevenueInvoice {
           buildText(
             title: 'Tax',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: "- ${int.parse(summaryModel.totalTax!).currencyFormatRp}",
+            value: "- ${int.parse(summaryModel.totalTax).currencyFormatRp}",
             textStyle: TextStyle(
               color: PdfColor.fromHex('#FF0000'),
               fontWeight: FontWeight.bold,
@@ -121,7 +120,8 @@ class RevenueInvoice {
             titleStyle: TextStyle(
               fontWeight: FontWeight.normal,
             ),
-            value: int.parse(summaryModel.totalServiceCharge!).currencyFormatRp,
+            value:
+                summaryModel.totalServiceCharge.toString().currencyFormatRpV3,
             unite: true,
           ),
           Divider(),
@@ -131,7 +131,7 @@ class RevenueInvoice {
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
-            value: summaryModel.total!.currencyFormatRp,
+            value: summaryModel.total.toString().currencyFormatRpV3,
             unite: true,
           ),
           SizedBox(height: 2 * PdfPageFormat.mm),
@@ -143,7 +143,7 @@ class RevenueInvoice {
     );
   }
 
-  static Widget buildFooter(SummaryModel summaryModel) => Column(
+  static Widget buildFooter(SummaryData summaryModel) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Divider(),
@@ -195,15 +195,13 @@ class RevenueInvoice {
     );
   }
 
-  // Excel Generation
   static Future<File> generateExcel(
-    SummaryModel summaryModel,
+    SummaryData summaryModel,
     String searchDateFormatted,
   ) async {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Summary Sales Report'];
 
-    // Add Header with company info
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("B1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
     headerCell.value = TextCellValue('Seblak Sulthane | Summary Sales Report');
@@ -213,7 +211,6 @@ class RevenueInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    // Add date information
     sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("B2"));
     final dateCell = sheet.cell(CellIndex.indexByString("A2"));
     dateCell.value = TextCellValue('Data: $searchDateFormatted');
@@ -229,24 +226,20 @@ class RevenueInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    // Add empty row for spacing
     final startRow = 5;
 
-    // Add Revenue
     final revenueCell = sheet.cell(CellIndex.indexByString("A$startRow"));
     revenueCell.value = TextCellValue('Revenue');
     revenueCell.cellStyle = CellStyle(bold: true);
 
     final revenueTotalCell = sheet.cell(CellIndex.indexByString("B$startRow"));
     revenueTotalCell.value =
-        TextCellValue(int.parse(summaryModel.totalRevenue!).currencyFormatRp);
+        TextCellValue(int.parse(summaryModel.totalRevenue).currencyFormatRp);
     revenueTotalCell.cellStyle = CellStyle(bold: true);
 
-    // Add separator line
     sheet.merge(CellIndex.indexByString("A${startRow + 1}"),
         CellIndex.indexByString("B${startRow + 1}"));
 
-    // Add Subtotal
     final subtotalCell =
         sheet.cell(CellIndex.indexByString("A${startRow + 2}"));
     subtotalCell.value = TextCellValue('Subtotal');
@@ -254,9 +247,8 @@ class RevenueInvoice {
     final subtotalValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 2}"));
     subtotalValueCell.value =
-        TextCellValue(int.parse(summaryModel.totalSubtotal!).currencyFormatRp);
+        TextCellValue(int.parse(summaryModel.totalSubtotal).currencyFormatRp);
 
-    // Add Discount
     final discountCell =
         sheet.cell(CellIndex.indexByString("A${startRow + 3}"));
     discountCell.value = TextCellValue('Discount');
@@ -264,41 +256,37 @@ class RevenueInvoice {
     final discountValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 3}"));
     discountValueCell.value = TextCellValue(
-        "- ${int.parse(summaryModel.totalDiscount!.replaceAll('.00', '')).currencyFormatRp}");
+        "- ${int.parse(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}");
 
-    // Add Tax
     final taxCell = sheet.cell(CellIndex.indexByString("A${startRow + 4}"));
     taxCell.value = TextCellValue('Tax');
 
     final taxValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 4}"));
-    taxValueCell.value = TextCellValue(
-        "- ${int.parse(summaryModel.totalTax!).currencyFormatRp}");
+    taxValueCell.value =
+        TextCellValue("- ${int.parse(summaryModel.totalTax).currencyFormatRp}");
 
-    // Add Service Charge
     final serviceCell = sheet.cell(CellIndex.indexByString("A${startRow + 5}"));
     serviceCell.value = TextCellValue('Service Charge');
 
     final serviceValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 5}"));
     serviceValueCell.value = TextCellValue(
-        int.parse(summaryModel.totalServiceCharge!).currencyFormatRp);
+        summaryModel.totalServiceCharge.toString().currencyFormatRpV3);
 
-    // Add separator line
     sheet.merge(CellIndex.indexByString("A${startRow + 6}"),
         CellIndex.indexByString("B${startRow + 6}"));
 
-    // Add Total
     final totalCell = sheet.cell(CellIndex.indexByString("A${startRow + 7}"));
     totalCell.value = TextCellValue('TOTAL');
     totalCell.cellStyle = CellStyle(bold: true);
 
     final totalValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 7}"));
-    totalValueCell.value = TextCellValue(summaryModel.total!.currencyFormatRp);
+    totalValueCell.value =
+        TextCellValue(summaryModel.total.toString().currencyFormatRpV3);
     totalValueCell.cellStyle = CellStyle(bold: true);
 
-    // Add Footer
     final footerRow = startRow + 9;
     sheet.merge(
       CellIndex.indexByString("A$footerRow"),
@@ -308,9 +296,8 @@ class RevenueInvoice {
     footerCell.value = TextCellValue(
         'Address: Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568');
 
-    // Set column widths
-    sheet.setColumnWidth(0, 25.0); // Description column
-    sheet.setColumnWidth(1, 25.0); // Amount column
+    sheet.setColumnWidth(0, 25.0);
+    sheet.setColumnWidth(1, 25.0);
 
     return HelperExcelService.saveExcel(
       name:

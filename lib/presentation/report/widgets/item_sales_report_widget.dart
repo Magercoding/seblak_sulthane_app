@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:seblak_sulthane_app/core/components/spaces.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
+import 'package:seblak_sulthane_app/core/extensions/double_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/file_opener.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
@@ -215,7 +216,7 @@ class ItemSalesReportWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Center(
                             child: Text(
-                              itemSales[index].price!.currencyFormatRp,
+                              (itemSales[index].price! * 100).currencyFormatRp,
                             ),
                           ),
                         ),
@@ -227,7 +228,8 @@ class ItemSalesReportWidget extends StatelessWidget {
                           child: Center(
                             child: Text(
                               (itemSales[index].price! *
-                                      itemSales[index].quantity!)
+                                      itemSales[index].quantity! *
+                                      100)
                                   .currencyFormatRp,
                             ),
                           ),

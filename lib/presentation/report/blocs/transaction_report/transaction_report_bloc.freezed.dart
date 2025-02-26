@@ -19,19 +19,21 @@ mixin _$TransactionReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getReport,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getReport,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getReport,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getReport,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getReport,
+    TResult Function(String startDate, String endDate, int outletId)? getReport,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,7 +122,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getReport,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getReport,
   }) {
     return started();
   }
@@ -129,7 +132,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getReport,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getReport,
   }) {
     return started?.call();
   }
@@ -138,7 +142,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getReport,
+    TResult Function(String startDate, String endDate, int outletId)? getReport,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -189,7 +193,7 @@ abstract class _$$GetReportImplCopyWith<$Res> {
           _$GetReportImpl value, $Res Function(_$GetReportImpl) then) =
       __$$GetReportImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String startDate, String endDate});
+  $Res call({String startDate, String endDate, int outletId});
 }
 
 /// @nodoc
@@ -207,6 +211,7 @@ class __$$GetReportImplCopyWithImpl<$Res>
   $Res call({
     Object? startDate = null,
     Object? endDate = null,
+    Object? outletId = null,
   }) {
     return _then(_$GetReportImpl(
       startDate: null == startDate
@@ -217,6 +222,10 @@ class __$$GetReportImplCopyWithImpl<$Res>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as String,
+      outletId: null == outletId
+          ? _value.outletId
+          : outletId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -224,16 +233,19 @@ class __$$GetReportImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GetReportImpl implements _GetReport {
-  const _$GetReportImpl({required this.startDate, required this.endDate});
+  const _$GetReportImpl(
+      {required this.startDate, required this.endDate, required this.outletId});
 
   @override
   final String startDate;
   @override
   final String endDate;
+  @override
+  final int outletId;
 
   @override
   String toString() {
-    return 'TransactionReportEvent.getReport(startDate: $startDate, endDate: $endDate)';
+    return 'TransactionReportEvent.getReport(startDate: $startDate, endDate: $endDate, outletId: $outletId)';
   }
 
   @override
@@ -243,11 +255,13 @@ class _$GetReportImpl implements _GetReport {
             other is _$GetReportImpl &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.outletId, outletId) ||
+                other.outletId == outletId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, startDate, endDate);
+  int get hashCode => Object.hash(runtimeType, startDate, endDate, outletId);
 
   /// Create a copy of TransactionReportEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -261,29 +275,31 @@ class _$GetReportImpl implements _GetReport {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String startDate, String endDate) getReport,
+    required TResult Function(String startDate, String endDate, int outletId)
+        getReport,
   }) {
-    return getReport(startDate, endDate);
+    return getReport(startDate, endDate, outletId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String startDate, String endDate)? getReport,
+    TResult? Function(String startDate, String endDate, int outletId)?
+        getReport,
   }) {
-    return getReport?.call(startDate, endDate);
+    return getReport?.call(startDate, endDate, outletId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String startDate, String endDate)? getReport,
+    TResult Function(String startDate, String endDate, int outletId)? getReport,
     required TResult orElse(),
   }) {
     if (getReport != null) {
-      return getReport(startDate, endDate);
+      return getReport(startDate, endDate, outletId);
     }
     return orElse();
   }
@@ -323,10 +339,12 @@ class _$GetReportImpl implements _GetReport {
 abstract class _GetReport implements TransactionReportEvent {
   const factory _GetReport(
       {required final String startDate,
-      required final String endDate}) = _$GetReportImpl;
+      required final String endDate,
+      required final int outletId}) = _$GetReportImpl;
 
   String get startDate;
   String get endDate;
+  int get outletId;
 
   /// Create a copy of TransactionReportEvent
   /// with the given fields replaced by the non-null parameter values.

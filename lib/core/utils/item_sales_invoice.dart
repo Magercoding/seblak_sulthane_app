@@ -73,8 +73,8 @@ class ItemSalesInvoice {
         item.orderId,
         item.productName,
         item.quantity,
-        item.price!.currencyFormatRp,
-        (item.price! * item.quantity!).currencyFormatRp
+        (item.price! * 100).currencyFormatRp,
+        (item.price! * item.quantity! * 100).currencyFormatRp
       ];
     }).toList();
 

@@ -5,6 +5,7 @@ import 'package:seblak_sulthane_app/core/components/custom_date_picker.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/date_formatter.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/item_sales_report/item_sales_report_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/product_sales/product_sales_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/summary/summary_bloc.dart';
@@ -31,11 +32,60 @@ class _ReportPageState extends State<ReportPage> {
   String title = 'Summary Sales Report';
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
+  int? outletId; // Outlet ID dari profil pengguna
+  bool isLoading = true;
+  String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchOutletId();
+  }
+
+  // Ambil outletId dari profil pengguna
+  Future<void> _fetchOutletId() async {
+    final authRemoteDatasource = AuthRemoteDatasource();
+    final result = await authRemoteDatasource.getProfile();
+
+    result.fold(
+      (error) {
+        setState(() {
+          errorMessage = error;
+          isLoading = false;
+        });
+      },
+      (user) {
+        setState(() {
+          outletId = user.outletId;
+          isLoading = false;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (errorMessage.isNotEmpty) {
+      return Scaffold(
+        body: Center(child: Text(errorMessage)),
+      );
+    }
+
+    if (outletId == null) {
+      return const Scaffold(
+        body: Center(child: Text('Outlet ID tidak ditemukan')),
+      );
+    }
+
     String searchDateFormatted =
         '${fromDate.toFormattedDate2()} to ${toDate.toFormattedDate2()}';
+
     return Scaffold(
       body: Row(
         children: [
@@ -58,9 +108,9 @@ class _ReportPageState extends State<ReportPage> {
                             prefix: const Text('From: '),
                             initialDate: fromDate,
                             onDateSelected: (selectedDate) {
-                              fromDate = selectedDate;
-
-                              setState(() {});
+                              setState(() {
+                                fromDate = selectedDate;
+                              });
                             },
                           ),
                         ),
@@ -70,24 +120,9 @@ class _ReportPageState extends State<ReportPage> {
                             prefix: const Text('To: '),
                             initialDate: toDate,
                             onDateSelected: (selectedDate) {
-                              toDate = selectedDate;
-                              setState(() {});
-                              // context.read<TransactionReportBloc>().add(
-                              //       TransactionReportEvent.getReport(
-                              //           startDate:
-                              //               DateFormatter.formatDateTime(
-                              //                   fromDate),
-                              //           endDate: DateFormatter.formatDateTime(
-                              //               toDate)),
-                              //     );
-                              // context.read<ItemSalesReportBloc>().add(
-                              //       ItemSalesReportEvent.getItemSales(
-                              //           startDate:
-                              //               DateFormatter.formatDateTime(
-                              //                   fromDate),
-                              //           endDate: DateFormatter.formatDateTime(
-                              //               toDate)),
-                              //     );
+                              setState(() {
+                                toDate = selectedDate;
+                              });
                             },
                           ),
                         ),
@@ -100,16 +135,19 @@ class _ReportPageState extends State<ReportPage> {
                           ReportMenu(
                             label: 'Transaction Report',
                             onPressed: () {
-                              selectedMenu = 0;
-                              title = 'Transaction Report';
-                              setState(() {});
-                              //enddate is 1 month before the current date
+                              setState(() {
+                                selectedMenu = 0;
+                                title = 'Transaction Report';
+                              });
                               context.read<TransactionReportBloc>().add(
                                     TransactionReportEvent.getReport(
-                                        startDate: DateFormatter.formatDateTime(
-                                            fromDate),
-                                        endDate: DateFormatter.formatDateTime(
-                                            toDate)),
+                                      startDate: DateFormatter.formatDateTime(
+                                          fromDate),
+                                      endDate:
+                                          DateFormatter.formatDateTime(toDate),
+                                      outletId:
+                                          outletId!, // Kirim outletId untuk filter di sisi klien
+                                    ),
                                   );
                             },
                             isActive: selectedMenu == 0,
@@ -117,15 +155,19 @@ class _ReportPageState extends State<ReportPage> {
                           ReportMenu(
                             label: 'Item Sales Report',
                             onPressed: () {
-                              selectedMenu = 1;
-                              title = 'Item Sales Report';
-                              setState(() {});
+                              setState(() {
+                                selectedMenu = 1;
+                                title = 'Item Sales Report';
+                              });
                               context.read<ItemSalesReportBloc>().add(
                                     ItemSalesReportEvent.getItemSales(
-                                        startDate: DateFormatter.formatDateTime(
-                                            fromDate),
-                                        endDate: DateFormatter.formatDateTime(
-                                            toDate)),
+                                      startDate: DateFormatter.formatDateTime(
+                                          fromDate),
+                                      endDate:
+                                          DateFormatter.formatDateTime(toDate),
+                                      outletId:
+                                          outletId!, // Kirim outletId untuk filter di sisi klien
+                                    ),
                                   );
                             },
                             isActive: selectedMenu == 1,
@@ -133,13 +175,18 @@ class _ReportPageState extends State<ReportPage> {
                           ReportMenu(
                             label: 'Product Sales Chart',
                             onPressed: () {
-                              selectedMenu = 2;
-                              title = 'Product Sales Chart';
-                              setState(() {});
+                              setState(() {
+                                selectedMenu = 2;
+                                title = 'Product Sales Chart';
+                              });
                               context.read<ProductSalesBloc>().add(
                                     ProductSalesEvent.getProductSales(
-                                        DateFormatter.formatDateTime(fromDate),
-                                        DateFormatter.formatDateTime(toDate)),
+                                      DateFormatter.formatDateTime(
+                                          fromDate), // Positional parameter 1
+                                      DateFormatter.formatDateTime(
+                                          toDate), // Positional parameter 2
+                                      outletId!, // Kirim outletId untuk filter di sisi klien
+                                    ),
                                   );
                             },
                             isActive: selectedMenu == 2,
@@ -147,16 +194,19 @@ class _ReportPageState extends State<ReportPage> {
                           ReportMenu(
                             label: 'Summary Sales Report',
                             onPressed: () {
-                              selectedMenu = 3;
-                              title = 'Summary Sales Report';
-                              setState(() {});
+                              setState(() {
+                                selectedMenu = 3;
+                                title = 'Summary Sales Report';
+                              });
                               context.read<SummaryBloc>().add(
                                     SummaryEvent.getSummary(
-                                        DateFormatter.formatDateTime(fromDate),
-                                        DateFormatter.formatDateTime(toDate)),
+                                      DateFormatter.formatDateTime(
+                                          fromDate), // Positional parameter 1
+                                      DateFormatter.formatDateTime(
+                                          toDate), // Positional parameter 2
+                                      outletId!, // Kirim outletId untuk filter di sisi klien
+                                    ),
                                   );
-
-                              log("Date ${DateFormatter.formatDateTime(fromDate)}");
                             },
                             isActive: selectedMenu == 3,
                           ),

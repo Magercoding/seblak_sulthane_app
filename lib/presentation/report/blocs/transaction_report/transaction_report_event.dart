@@ -6,5 +6,6 @@ class TransactionReportEvent with _$TransactionReportEvent {
   const factory TransactionReportEvent.getReport({
     required String startDate,
     required String endDate,
+    required int outletId,
   }) = _GetReport;
 }

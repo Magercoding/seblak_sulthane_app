@@ -6,5 +6,6 @@ class ItemSalesReportEvent with _$ItemSalesReportEvent {
   const factory ItemSalesReportEvent.getItemSales({
     required String startDate,
     required String endDate,
+    required int outletId,
   }) = _GetItemSales;
 }

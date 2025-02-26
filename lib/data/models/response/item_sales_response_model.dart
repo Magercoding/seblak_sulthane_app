@@ -1,83 +1,77 @@
 import 'dart:convert';
 
 class ItemSalesResponseModel {
-  String? status;
-  List<ItemSales>? data;
+  final String? status;
+  final List<ItemSales>? data;
 
-  ItemSalesResponseModel({
+  const ItemSalesResponseModel({
     this.status,
     this.data,
   });
 
-  factory ItemSalesResponseModel.fromJson(String str) =>
-      ItemSalesResponseModel.fromMap(json.decode(str));
+  factory ItemSalesResponseModel.fromJson(Map<String, dynamic> json) {
+    return ItemSalesResponseModel(
+      status: json['status'],
+      data: json['data'] != null
+          ? (json['data'] as List)
+              .map((itemJson) => ItemSales.fromJson(itemJson))
+              .toList()
+          : null,
+    );
+  }
 
-  String toJson() => json.encode(toMap());
-
-  factory ItemSalesResponseModel.fromMap(Map<String, dynamic> json) =>
-      ItemSalesResponseModel(
-        status: json["status"],
-        data: json["data"] == null
-            ? []
-            : List<ItemSales>.from(
-                json["data"]!.map((x) => ItemSales.fromMap(x))),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "status": status,
-        "data":
-            data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'data': data?.map((item) => item.toJson()).toList(),
       };
 }
 
 class ItemSales {
-  int? id;
-  int? orderId;
-  int? productId;
-  int? quantity;
-  int? price;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  String? productName;
-
-  ItemSales({
-    this.id,
-    this.orderId,
-    this.productId,
-    this.quantity,
-    this.price,
-    this.createdAt,
-    this.updatedAt,
-    this.productName,
+  final int id;
+  final int orderId;
+  final int productId;
+  final int quantity;
+  final int price;
+  final String createdAt;
+  final String updatedAt;
+  final String productName;
+  final int outletId; // Added outletId field
+  
+  const ItemSales({
+    required this.id,
+    required this.orderId,
+    required this.productId,
+    required this.quantity,
+    required this.price,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.productName,
+    required this.outletId, // Required parameter
   });
-
-  factory ItemSales.fromJson(String str) => ItemSales.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory ItemSales.fromMap(Map<String, dynamic> json) => ItemSales(
-        id: json["id"],
-        orderId: json["order_id"],
-        productId: json["product_id"],
-        quantity: json["quantity"],
-        price: json["price"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-        productName: json["product_name"]!,
-      );
-
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "order_id": orderId,
-        "product_id": productId,
-        "quantity": quantity,
-        "price": price,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "product_name": productName,
-      };
+  
+  factory ItemSales.fromJson(Map<String, dynamic> json) {
+    return ItemSales(
+      id: json['id'],
+      orderId: json['order_id'],
+      productId: json['product_id'],
+      quantity: json['quantity'],
+      price: json['price'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      productName: json['product_name'],
+      outletId: json['outlet_id'] ?? 0,
+    );
+  }
+  
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'order_id': orderId,
+    'product_id': productId,
+    'quantity': quantity,
+    'price': price,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'product_name': productName,
+    'outlet_id': outletId,
+  };
 }

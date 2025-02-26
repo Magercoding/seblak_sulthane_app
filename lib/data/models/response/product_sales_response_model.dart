@@ -1,60 +1,57 @@
 import 'dart:convert';
 
 class ProductSalesResponseModel {
-  String? status;
-  List<ProductSales>? data;
+  final String? status;
+  final List<ProductSales>? data;
 
-  ProductSalesResponseModel({
+  const ProductSalesResponseModel({
     this.status,
     this.data,
   });
 
-  factory ProductSalesResponseModel.fromJson(String str) =>
-      ProductSalesResponseModel.fromMap(json.decode(str));
+  factory ProductSalesResponseModel.fromJson(Map<String, dynamic> json) {
+    return ProductSalesResponseModel(
+      status: json['status'],
+      data: json['data'] != null
+          ? (json['data'] as List)
+              .map((productJson) => ProductSales.fromJson(productJson))
+              .toList()
+          : null,
+    );
+  }
 
-  String toJson() => json.encode(toMap());
-
-  factory ProductSalesResponseModel.fromMap(Map<String, dynamic> json) =>
-      ProductSalesResponseModel(
-        status: json["status"],
-        data: json["data"] == null
-            ? []
-            : List<ProductSales>.from(
-                json["data"]!.map((x) => ProductSales.fromMap(x))),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "status": status,
-        "data":
-            data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'data': data?.map((product) => product.toJson()).toList(),
       };
 }
 
 class ProductSales {
-  int? productId;
-  String? productName;
-  String? totalQuantity;
+  final int productId;
+  final String productName;
+  final String totalQuantity;
+  final int outletId; // Added outletId field
 
-  ProductSales({
-    this.productId,
-    this.productName,
-    this.totalQuantity,
+  const ProductSales({
+    required this.productId,
+    required this.productName,
+    required this.totalQuantity,
+    required this.outletId, // Required parameter
   });
 
-  factory ProductSales.fromJson(String str) =>
-      ProductSales.fromMap(json.decode(str));
+  factory ProductSales.fromJson(Map<String, dynamic> json) {
+    return ProductSales(
+      productId: json['product_id'],
+      productName: json['product_name'],
+      totalQuantity: json['total_quantity'],
+      outletId: json['outlet_id'] ?? 0,
+    );
+  }
 
-  String toJson() => json.encode(toMap());
-
-  factory ProductSales.fromMap(Map<String, dynamic> json) => ProductSales(
-        productId: json["product_id"],
-        productName: json["product_name"],
-        totalQuantity: json["total_quantity"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "product_id": productId,
-        "product_name": productName,
-        "total_quantity": totalQuantity,
+  Map<String, dynamic> toJson() => {
+        'product_id': productId,
+        'product_name': productName,
+        'total_quantity': totalQuantity,
+        'outlet_id': outletId,
       };
 }

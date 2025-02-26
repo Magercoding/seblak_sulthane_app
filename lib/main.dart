@@ -4,6 +4,7 @@ import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart'
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/member_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/midtrans_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
@@ -24,6 +25,7 @@ import 'package:seblak_sulthane_app/presentation/sales/blocs/day_sales/day_sales
 import 'package:seblak_sulthane_app/presentation/setting/bloc/add_product/add_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/tax/tax_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/splash/splash_screen.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/generate_table/generate_table_bloc.dart';
@@ -128,6 +130,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => TaxBloc()..add(const TaxEvent.started()),
+        ),
+        BlocProvider(
+          create: (context) => MemberBloc(MemberRemoteDatasource()),
         ),
       ],
       child: MaterialApp(

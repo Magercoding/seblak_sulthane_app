@@ -216,7 +216,7 @@ class ItemSalesReportWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Center(
                             child: Text(
-                              (itemSales[index].price! * 100).currencyFormatRp,
+                              (itemSales[index].price!).currencyFormatRp,
                             ),
                           ),
                         ),
@@ -228,8 +228,7 @@ class ItemSalesReportWidget extends StatelessWidget {
                           child: Center(
                             child: Text(
                               (itemSales[index].price! *
-                                      itemSales[index].quantity! *
-                                      100)
+                                      itemSales[index].quantity!)
                                   .currencyFormatRp,
                             ),
                           ),

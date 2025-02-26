@@ -1063,29 +1063,42 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                   ),
                                                 );
                                               } else {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      PaymentQrisDialog(
-                                                    price: totalPriceFinal,
-                                                    items: items,
-                                                    totalQty: totalQty,
-                                                    tax: finalTax.toInt(),
-                                                    discountAmount:
+                                                // Modified QRIS handling to use SuccessPaymentDialog instead of PaymentQrisDialog
+                                                log("discountAmountValue: $totalDiscount");
+                                                context.read<OrderBloc>().add(
+                                                    OrderEvent.order(
+                                                        items,
+                                                        discount,
                                                         totalDiscount.toInt(),
-                                                    subTotal: subTotal.toInt(),
-                                                    customerName:
-                                                        customerController.text,
-                                                    discount: discount,
-                                                    paymentAmount:
+                                                        finalTax.toInt(),
+                                                        0,
                                                         totalPriceController
                                                             .text
                                                             .toIntegerFromText,
-                                                    paymentMethod: 'Qris',
-                                                    tableNumber: 0,
-                                                    paymentStatus: 'paid',
-                                                    serviceCharge: 0,
-                                                    status: 'completed',
+                                                        customerController.text,
+                                                        0,
+                                                        'completed',
+                                                        'paid',
+                                                        'QRIS',
+                                                        totalPriceFinal));
+                                                await showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) =>
+                                                      SuccessPaymentDialog(
+                                                    data: items,
+                                                    totalQty: totalQty,
+                                                    totalPrice: totalPriceFinal,
+                                                    totalTax: finalTax.toInt(),
+                                                    totalDiscount:
+                                                        totalDiscount.toInt(),
+                                                    subTotal: subTotal.toInt(),
+                                                    normalPrice: price,
+                                                    totalService:
+                                                        totalServiceCharge
+                                                            .toInt(),
+                                                    draftName:
+                                                        customerController.text,
                                                   ),
                                                 );
                                               }

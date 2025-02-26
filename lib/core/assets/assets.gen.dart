@@ -89,6 +89,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/member.svg
   SvgGenImage get member => const SvgGenImage('assets/icons/member.svg');
 
+  /// File path: assets/icons/member2.svg
+  SvgGenImage get member2 => const SvgGenImage('assets/icons/member2.svg');
+
   /// File path: assets/icons/no-product.svg
   SvgGenImage get noProduct => const SvgGenImage('assets/icons/no-product.svg');
 
@@ -106,6 +109,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/print.svg
   SvgGenImage get print => const SvgGenImage('assets/icons/print.svg');
+
+  /// File path: assets/icons/profile.svg
+  SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
   /// File path: assets/icons/qr_code.svg
   SvgGenImage get qrCode => const SvgGenImage('assets/icons/qr_code.svg');
@@ -155,12 +161,14 @@ class $AssetsIconsGen {
         layanan,
         logout,
         member,
+        member2,
         noProduct,
         ongkir,
         orders,
         pajak,
         payments,
         print,
+        profile,
         qrCode,
         report,
         seblakSulthaneApp,

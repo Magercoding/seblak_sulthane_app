@@ -24,6 +24,8 @@ import 'package:seblak_sulthane_app/presentation/setting/bloc/add_product/add_pr
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_discount/sync_discount_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_member/sync_member_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/tax/tax_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/splash/splash_screen.dart';
 import 'package:seblak_sulthane_app/presentation/table/blocs/generate_table/generate_table_bloc.dart';
@@ -128,6 +130,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => MemberBloc(MemberRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => SyncMemberBloc(MemberRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => SyncDiscountBloc(DiscountRemoteDatasource()),
         ),
       ],
       child: MaterialApp(

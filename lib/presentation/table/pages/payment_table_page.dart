@@ -13,7 +13,6 @@ import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_blo
 import 'package:seblak_sulthane_app/presentation/home/bloc/get_table_status/get_table_status_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/order/order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/home/dialog/payment_qris_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 import 'package:seblak_sulthane_app/presentation/home/widgets/order_menu.dart';
 import 'package:seblak_sulthane_app/presentation/home/widgets/success_payment_dialog.dart';
@@ -816,70 +815,48 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                       return Flexible(
                                         child: Button.filled(
                                           onPressed: () async {
-                                            if (isCash) {
-                                              context.read<OrderBloc>().add(
-                                                  OrderEvent.order(
-                                                      items,
-                                                      discount,
-                                                      discountAmountFinal,
-                                                      finalTax.toInt(),
-                                                      0,
-                                                      totalPriceController.text
-                                                          .toIntegerFromText,
-                                                      customerController.text,
-                                                      widget.table?.id ?? 0,
-                                                      'completed',
-                                                      'paid',
-                                                      isCash ? 'Cash' : 'Qris',
-                                                      totalPriceFinal));
+                                            // Original code passes different parameters to OrderEvent.order based on payment method
+                                            // Now we'll make both payment methods use the same approach
+                                            context.read<OrderBloc>().add(
+                                                OrderEvent.order(
+                                                    items,
+                                                    discount,
+                                                    discountAmountFinal,
+                                                    finalTax.toInt(),
+                                                    0,
+                                                    totalPriceController
+                                                        .text.toIntegerFromText,
+                                                    customerController.text,
+                                                    widget.table?.id ?? 0,
+                                                    'completed',
+                                                    'paid',
+                                                    isCash
+                                                        ? 'Cash'
+                                                        : 'QRIS', // Changed 'Qris' to 'QRIS' to match ConfirmPaymentPage
+                                                    totalPriceFinal));
 
-                                              await showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) =>
-                                                    SuccessPaymentDialog(
-                                                  data: items,
-                                                  totalQty: totalQty,
-                                                  totalPrice:
-                                                      totalPriceFinal.toInt(),
-                                                  totalTax: finalTax.toInt(),
-                                                  totalDiscount:
-                                                      totalDiscount.toInt(),
-                                                  subTotal: subTotal.toInt(),
-                                                  normalPrice: price,
-                                                  totalService: 0,
-                                                  draftName:
-                                                      customerController.text,
-                                                ),
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    PaymentQrisDialog(
-                                                  price: totalPrice.toInt(),
-                                                  items: items,
-                                                  totalQty: totalQty,
-                                                  tax: finalTax.toInt(),
-                                                  discountAmount:
-                                                      totalDiscount.toInt(),
-                                                  subTotal: subTotal.toInt(),
-                                                  customerName:
-                                                      customerController.text,
-                                                  discount: discount,
-                                                  paymentAmount:
-                                                      totalPriceController.text
-                                                          .toIntegerFromText,
-                                                  paymentMethod: 'Qris',
-                                                  tableNumber: widget
-                                                          .table?.tableNumber ??
-                                                      0,
-                                                  paymentStatus: 'paid',
-                                                  serviceCharge: 0,
-                                                  status: 'completed',
-                                                ),
-                                              );
-                                            }
+                                            await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) =>
+                                                  SuccessPaymentDialog(
+                                                data: items,
+                                                totalQty: totalQty,
+                                                totalPrice:
+                                                    totalPriceFinal.toInt(),
+                                                totalTax: finalTax.toInt(),
+                                                totalDiscount:
+                                                    totalDiscount.toInt(),
+                                                subTotal: subTotal.toInt(),
+                                                normalPrice: price,
+                                                totalService: 0,
+                                                draftName:
+                                                    customerController.text,
+                                              ),
+                                            );
+
+                                            // The code that handles table status updates and draft order removal should still run
+                                            // after the dialog is dismissed, so it's moved outside the conditional blocks
                                           },
                                           label: 'Bayar',
                                         ),

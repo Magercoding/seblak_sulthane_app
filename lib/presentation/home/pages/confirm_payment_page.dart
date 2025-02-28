@@ -10,7 +10,6 @@ import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/get_table_status/get_table_status_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/order/order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/home/dialog/payment_qris_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 import 'package:seblak_sulthane_app/presentation/home/widgets/save_order_dialog.dart';
 

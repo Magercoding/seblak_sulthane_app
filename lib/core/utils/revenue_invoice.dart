@@ -5,6 +5,9 @@ import 'package:seblak_sulthane_app/core/core.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
+import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 import 'package:flutter/services.dart';
 
@@ -15,16 +18,84 @@ import 'package:pdf/widgets.dart' as pw;
 
 class RevenueInvoice {
   static late Font ttf;
+
+  // Get outletId from user profile, similar to ReportPage
+  static Future<int?> _fetchOutletIdFromProfile() async {
+    try {
+      final authRemoteDatasource = AuthRemoteDatasource();
+      final result = await authRemoteDatasource.getProfile();
+
+      int? outletId;
+      result.fold(
+        (error) {
+          print('Error fetching profile: $error');
+          return null;
+        },
+        (user) {
+          outletId = user.outletId;
+        },
+      );
+
+      return outletId;
+    } catch (e) {
+      print('Exception fetching profile: $e');
+      return null;
+    }
+  }
+
+  // Get outlet address using outletId
+  static Future<String> _getOutletAddress(int outletId) async {
+    try {
+      // Debug: check all available outlets
+      final outletDataSource = OutletLocalDataSource();
+      final allOutlets = await outletDataSource.getAllOutlets();
+      print('Available outlets: ${allOutlets.length}');
+      for (var outlet in allOutlets) {
+        print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
+      }
+
+      // Debug: print all outlets as a list
+      print('All outlets: $allOutlets');
+
+      final outlet = await outletDataSource.getOutletById(outletId);
+
+      if (outlet != null) {
+        print('Found outlet for ID $outletId: $outlet');
+      }
+
+      // If the specific outlet is not found but we have other outlets, use the first one
+      if (outlet == null && allOutlets.isNotEmpty) {
+        print(
+            'Outlet with ID $outletId not found, using first available outlet instead');
+        return allOutlets.first.address ?? 'Seblak Sulthane';
+      }
+
+      return outlet?.address ?? 'Seblak Sulthane';
+    } catch (e) {
+      print('Error getting outlet address: $e');
+      return 'Seblak Sulthane';
+    }
+  }
+
   static Future<File> generatePdf(
-    SummaryData summaryModel,
-    String searchDateFormatted,
-  ) async {
+      SummaryData summaryModel, String searchDateFormatted,
+      {int? outletId}) async {
     final pdf = Document();
 
     final ByteData dataImage = await rootBundle.load('assets/images/logo.png');
     final Uint8List bytes = dataImage.buffer.asUint8List();
 
     final image = pw.MemoryImage(bytes);
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await _fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for PDF generation');
+
+    // Get outlet address
+    final String outletAddress = await _getOutletAddress(outletId);
+    print('Using address: $outletAddress for PDF');
 
     pdf.addPage(
       MultiPage(
@@ -33,7 +104,7 @@ class RevenueInvoice {
           SizedBox(height: 1 * PdfPageFormat.cm),
           buildTotal(summaryModel),
         ],
-        footer: (context) => buildFooter(summaryModel),
+        footer: (context) => buildFooter(summaryModel, outletAddress),
       ),
     );
 
@@ -76,6 +147,23 @@ class RevenueInvoice {
         ),
       ]);
 
+  // Safely parse a string to an integer
+  static int safeParseInt(String value) {
+    try {
+      // Try to parse as int first
+      return int.parse(value);
+    } catch (e) {
+      try {
+        // If that fails, try to parse as double and convert to int
+        return double.parse(value).toInt();
+      } catch (e) {
+        // If all parsing fails, return 0
+        print('Failed to parse to int: $value');
+        return 0;
+      }
+    }
+  }
+
   static Widget buildTotal(SummaryData summaryModel) {
     return Container(
       width: double.infinity,
@@ -84,21 +172,21 @@ class RevenueInvoice {
         children: [
           buildText(
             title: 'Revenue',
-            value: int.parse(summaryModel.totalRevenue).currencyFormatRp,
+            value: safeParseInt(summaryModel.totalRevenue).currencyFormatRp,
             unite: true,
           ),
           Divider(),
           buildText(
             title: 'Sub Total',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: int.parse(summaryModel.totalSubtotal).currencyFormatRp,
+            value: safeParseInt(summaryModel.totalSubtotal).currencyFormatRp,
             unite: true,
           ),
           buildText(
             title: 'Discount',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
             value:
-                "- ${int.parse(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}",
+                "- ${safeParseInt(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}",
             unite: true,
             textStyle: TextStyle(
               color: PdfColor.fromHex('#FF0000'),
@@ -108,7 +196,7 @@ class RevenueInvoice {
           buildText(
             title: 'Tax',
             titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: "- ${int.parse(summaryModel.totalTax).currencyFormatRp}",
+            value: "- ${safeParseInt(summaryModel.totalTax).currencyFormatRp}",
             textStyle: TextStyle(
               color: PdfColor.fromHex('#FF0000'),
               fontWeight: FontWeight.bold,
@@ -120,8 +208,8 @@ class RevenueInvoice {
             titleStyle: TextStyle(
               fontWeight: FontWeight.normal,
             ),
-            value:
-                summaryModel.totalServiceCharge.toString().currencyFormatRpV3,
+            value: safeParseInt(summaryModel.totalServiceCharge.toString())
+                .currencyFormatRp,
             unite: true,
           ),
           Divider(),
@@ -131,7 +219,7 @@ class RevenueInvoice {
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
-            value: summaryModel.total.toString().currencyFormatRpV3,
+            value: safeParseInt(summaryModel.total.toString()).currencyFormatRp,
             unite: true,
           ),
           SizedBox(height: 2 * PdfPageFormat.mm),
@@ -143,15 +231,13 @@ class RevenueInvoice {
     );
   }
 
-  static Widget buildFooter(SummaryData summaryModel) => Column(
+  static Widget buildFooter(SummaryData summaryModel, String outletAddress) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(
-              title: 'Address',
-              value:
-                  'Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568'),
+          buildSimpleText(title: 'Address', value: outletAddress),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );
@@ -196,11 +282,20 @@ class RevenueInvoice {
   }
 
   static Future<File> generateExcel(
-    SummaryData summaryModel,
-    String searchDateFormatted,
-  ) async {
+      SummaryData summaryModel, String searchDateFormatted,
+      {int? outletId}) async {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Summary Sales Report'];
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await _fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for Excel generation');
+
+    // Get outlet address
+    final String outletAddress = await _getOutletAddress(outletId);
+    print('Using address: $outletAddress for Excel');
 
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("B1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
@@ -234,7 +329,7 @@ class RevenueInvoice {
 
     final revenueTotalCell = sheet.cell(CellIndex.indexByString("B$startRow"));
     revenueTotalCell.value =
-        TextCellValue(int.parse(summaryModel.totalRevenue).currencyFormatRp);
+        TextCellValue(safeParseInt(summaryModel.totalRevenue).currencyFormatRp);
     revenueTotalCell.cellStyle = CellStyle(bold: true);
 
     sheet.merge(CellIndex.indexByString("A${startRow + 1}"),
@@ -246,8 +341,8 @@ class RevenueInvoice {
 
     final subtotalValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 2}"));
-    subtotalValueCell.value =
-        TextCellValue(int.parse(summaryModel.totalSubtotal).currencyFormatRp);
+    subtotalValueCell.value = TextCellValue(
+        safeParseInt(summaryModel.totalSubtotal).currencyFormatRp);
 
     final discountCell =
         sheet.cell(CellIndex.indexByString("A${startRow + 3}"));
@@ -256,15 +351,15 @@ class RevenueInvoice {
     final discountValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 3}"));
     discountValueCell.value = TextCellValue(
-        "- ${int.parse(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}");
+        "- ${safeParseInt(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}");
 
     final taxCell = sheet.cell(CellIndex.indexByString("A${startRow + 4}"));
     taxCell.value = TextCellValue('Tax');
 
     final taxValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 4}"));
-    taxValueCell.value =
-        TextCellValue("- ${int.parse(summaryModel.totalTax).currencyFormatRp}");
+    taxValueCell.value = TextCellValue(
+        "- ${safeParseInt(summaryModel.totalTax).currencyFormatRp}");
 
     final serviceCell = sheet.cell(CellIndex.indexByString("A${startRow + 5}"));
     serviceCell.value = TextCellValue('Service Charge');
@@ -272,7 +367,8 @@ class RevenueInvoice {
     final serviceValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 5}"));
     serviceValueCell.value = TextCellValue(
-        summaryModel.totalServiceCharge.toString().currencyFormatRpV3);
+        safeParseInt(summaryModel.totalServiceCharge.toString())
+            .currencyFormatRp);
 
     sheet.merge(CellIndex.indexByString("A${startRow + 6}"),
         CellIndex.indexByString("B${startRow + 6}"));
@@ -283,8 +379,8 @@ class RevenueInvoice {
 
     final totalValueCell =
         sheet.cell(CellIndex.indexByString("B${startRow + 7}"));
-    totalValueCell.value =
-        TextCellValue(summaryModel.total.toString().currencyFormatRpV3);
+    totalValueCell.value = TextCellValue(
+        safeParseInt(summaryModel.total.toString()).currencyFormatRp);
     totalValueCell.cellStyle = CellStyle(bold: true);
 
     final footerRow = startRow + 9;
@@ -293,8 +389,7 @@ class RevenueInvoice {
       CellIndex.indexByString("B$footerRow"),
     );
     final footerCell = sheet.cell(CellIndex.indexByString("A$footerRow"));
-    footerCell.value = TextCellValue(
-        'Address: Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568');
+    footerCell.value = TextCellValue('Address: $outletAddress');
 
     sheet.setColumnWidth(0, 25.0);
     sheet.setColumnWidth(1, 25.0);

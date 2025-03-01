@@ -4,13 +4,16 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:seblak_sulthane_app/core/constants/variables.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
-import 'package:seblak_sulthane_app/data/models/response/order_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
+import 'package:seblak_sulthane_app/data/models/response/order_response_model.dart';
+import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/order_model.dart';
 import 'package:http/http.dart' as http;
 
 class OrderRemoteDatasource {
   final String baseUrl = Variables.baseUrl;
+  final OutletLocalDataSource outletLocalDataSource = OutletLocalDataSource();
 
   Future<bool> saveOrder(OrderModel orderModel) async {
     final authData = await AuthLocalDataSource().getAuthData();
@@ -27,7 +30,41 @@ class OrderRemoteDatasource {
     );
     log("Response: ${response.statusCode}");
     log("Response: ${response.body}");
+
     if (response.statusCode == 200) {
+      // Parse the response to extract outlet information
+      try {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['status'] == 'success' &&
+            responseData['data'] != null &&
+            responseData['data']['outlet'] != null) {
+          // Extract outlet information from response
+          final outletData = responseData['data']['outlet'];
+
+          // Create outlet model
+          final outlet = OutletModel(
+            id: outletData['id'],
+            name: outletData['name'],
+            address: outletData['address'],
+            phone: outletData['phone'],
+            createdAt: outletData['created_at'] != null
+                ? DateTime.parse(outletData['created_at'])
+                : null,
+            updatedAt: outletData['updated_at'] != null
+                ? DateTime.parse(outletData['updated_at'])
+                : null,
+          );
+
+          // Save outlet information locally
+          await outletLocalDataSource.saveOutlet(outlet);
+          log("Outlet saved: ${outlet.toJson()}");
+        }
+      } catch (e) {
+        log("Error extracting outlet data: $e");
+        // Continue execution even if outlet parsing fails
+      }
+
       return true;
     } else {
       return false;
@@ -40,7 +77,7 @@ class OrderRemoteDatasource {
     int outletId,
   ) async {
     final authData = await AuthLocalDataSource().getAuthData();
-    final token = authData.token ?? ''; // Ensure it doesn't return null
+    final token = authData.token ?? '';
 
     final url = '$baseUrl/api/orders?start_date=$startDate&end_date=$endDate';
     final headers = {'Authorization': 'Bearer $token'};
@@ -64,6 +101,28 @@ class OrderRemoteDatasource {
           return Left('No orders data for this outlet');
         }
 
+        // Save outlet information if available in the response
+        for (var order in filteredOrders) {
+          if (order['outlet'] != null) {
+            final outletData = order['outlet'];
+
+            final outlet = OutletModel(
+              id: outletData['id'],
+              name: outletData['name'],
+              address: outletData['address'],
+              phone: outletData['phone'],
+              createdAt: outletData['created_at'] != null
+                  ? DateTime.parse(outletData['created_at'])
+                  : null,
+              updatedAt: outletData['updated_at'] != null
+                  ? DateTime.parse(outletData['updated_at'])
+                  : null,
+            );
+
+            await outletLocalDataSource.saveOutlet(outlet);
+          }
+        }
+
         // Map the filtered data to ItemOrder objects
         final mappedOrders =
             filteredOrders.map((order) => ItemOrder.fromMap(order)).toList();
@@ -85,8 +144,9 @@ class OrderRemoteDatasource {
     String endDate,
     int outletId,
   ) async {
+    // Existing implementation...
     final authData = await AuthLocalDataSource().getAuthData();
-    final token = authData.token ?? ''; // Ensure it doesn't return null
+    final token = authData.token ?? '';
 
     final url = '$baseUrl/api/orders?start_date=$startDate&end_date=$endDate';
     final headers = {'Authorization': 'Bearer $token'};
@@ -126,6 +186,26 @@ class OrderRemoteDatasource {
           totalSubtotal += (order['sub_total'] ?? 0).toDouble();
           totalServiceCharge += (order['service_charge'] ?? 0).toDouble();
           total += (order['total'] ?? 0).toDouble();
+
+          // Save outlet information if available
+          if (order['outlet'] != null) {
+            final outletData = order['outlet'];
+
+            final outlet = OutletModel(
+              id: outletData['id'],
+              name: outletData['name'],
+              address: outletData['address'],
+              phone: outletData['phone'],
+              createdAt: outletData['created_at'] != null
+                  ? DateTime.parse(outletData['created_at'])
+                  : null,
+              updatedAt: outletData['updated_at'] != null
+                  ? DateTime.parse(outletData['updated_at'])
+                  : null,
+            );
+
+            await outletLocalDataSource.saveOutlet(outlet);
+          }
         }
 
         final summaryData = SummaryData(
@@ -135,7 +215,7 @@ class OrderRemoteDatasource {
           totalSubtotal: totalSubtotal.toString(),
           totalServiceCharge: totalServiceCharge,
           total: total.round(),
-          outletId: outletId, // Add outletId for reference
+          outletId: outletId,
         );
 
         return Right(SummaryResponseModel(

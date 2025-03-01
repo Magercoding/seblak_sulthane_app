@@ -4,6 +4,9 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
+import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
@@ -12,6 +15,57 @@ class PrintDataoutputs {
   PrintDataoutputs._init();
 
   static final PrintDataoutputs instance = PrintDataoutputs._init();
+
+  // Get outletId from user profile, similar to ReportPage
+  static Future<int?> _fetchOutletIdFromProfile() async {
+    try {
+      final authRemoteDatasource = AuthRemoteDatasource();
+      final result = await authRemoteDatasource.getProfile();
+
+      int? outletId;
+      result.fold(
+        (error) {
+          print('Error fetching profile: $error');
+          return null;
+        },
+        (user) {
+          outletId = user.outletId;
+        },
+      );
+
+      return outletId;
+    } catch (e) {
+      print('Exception fetching profile: $e');
+      return null;
+    }
+  }
+
+  // Get outlet information using outletId
+  static Future<OutletModel?> _getOutletInfo(int outletId) async {
+    try {
+      // Debug: check all available outlets
+      final outletDataSource = OutletLocalDataSource();
+      final allOutlets = await outletDataSource.getAllOutlets();
+      print('Available outlets: ${allOutlets.length}');
+      for (var outlet in allOutlets) {
+        print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
+      }
+
+      final outlet = await outletDataSource.getOutletById(outletId);
+
+      // If the specific outlet is not found but we have other outlets, use the first one
+      if (outlet == null && allOutlets.isNotEmpty) {
+        print(
+            'Outlet with ID $outletId not found, using first available outlet instead');
+        return allOutlets.first;
+      }
+
+      return outlet;
+    } catch (e) {
+      print('Error getting outlet info: $e');
+      return null;
+    }
+  }
 
   Future<List<int>> printOrder(
       List<ProductQuantity> products,
@@ -24,7 +78,8 @@ class PrintDataoutputs {
       int tax,
       int subTotal,
       int normalPrice,
-      int sizeReceipt) async {
+      int sizeReceipt,
+      {int? outletId}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -34,8 +89,19 @@ class PrintDataoutputs {
     final pajak = totalPrice * 0.11;
     final total = totalPrice + pajak;
 
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for receipt printing');
+
+    // Get outlet information
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+    final String outletAddress = outlet?.address ?? 'Seblak Sulthane';
+
     bytes += generator.reset();
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text(outletName,
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -43,7 +109,7 @@ class PrintDataoutputs {
           width: PosTextSize.size1,
         ));
 
-    bytes += generator.text('Jalan Nanasa No. 1',
+    bytes += generator.text(outletAddress,
         styles: const PosStyles(bold: true, align: PosAlign.center));
     bytes += generator.text(
         'Date : ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
@@ -176,7 +242,8 @@ class PrintDataoutputs {
   }
 
   Future<List<int>> printOrderV2(
-      List<ProductQuantity> products, int orderId, int paper
+      List<ProductQuantity> products, int orderId, int paper,
+      {int? outletId}
       // OrderModel order,
       // Uint8List logo,
       // StoreModel store,
@@ -187,6 +254,17 @@ class PrintDataoutputs {
     final profile = await CapabilityProfile.load();
     final generator =
         Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for receipt printing');
+
+    // Get outlet information
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+    final String outletAddress = outlet?.address ?? 'Seblak Sulthane';
 
     // final ByteData data = await rootBundle.load('assets/logo/mylogo.png');
     // final Uint8List bytesData = data.buffer.asUint8List();
@@ -202,7 +280,7 @@ class PrintDataoutputs {
     //   bytes += generator.feed(3);
     // }
 
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text(outletName,
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -210,7 +288,7 @@ class PrintDataoutputs {
           width: PosTextSize.size2,
         ));
 
-    bytes += generator.text('Jalan Nanasa No. 1',
+    bytes += generator.text(outletAddress,
         styles: const PosStyles(bold: false, align: PosAlign.center));
     // bytes += generator.text('Kab. Sleman, DI Yogyakarta',
     //     styles: const PosStyles(bold: false, align: PosAlign.center));
@@ -474,20 +552,20 @@ class PrintDataoutputs {
   }
 
   Future<List<int>> printOrderV3(
-    List<ProductQuantity> products,
-    int totalQuantity,
-    int totalPrice,
-    String paymentMethod,
-    int nominalBayar,
-    int kembalian,
-    int subTotal,
-    int discount,
-    int pajak,
-    int serviceCharge,
-    String namaKasir,
-    String customerName,
-    int paper,
-  ) async {
+      List<ProductQuantity> products,
+      int totalQuantity,
+      int totalPrice,
+      String paymentMethod,
+      int nominalBayar,
+      int kembalian,
+      int subTotal,
+      int discount,
+      int pajak,
+      int serviceCharge,
+      String namaKasir,
+      String customerName,
+      int paper,
+      {int? outletId}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -499,6 +577,19 @@ class PrintDataoutputs {
     final img.Image? orginalImage = img.decodeImage(bytesData);
     bytes += generator.reset();
 
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for receipt printing');
+
+    // Get outlet information
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+    final String outletAddress =
+        outlet?.address ?? 'Jl. Kebun Raya No. 1, Sinduhadi, Ngaglik';
+    final String outletCity = outlet?.phone ?? 'Kab. Sleman, DI Yogyakarta';
+
     if (orginalImage != null) {
       final img.Image grayscalledImage = img.grayscale(orginalImage);
       final img.Image resizedImage =
@@ -507,7 +598,7 @@ class PrintDataoutputs {
       bytes += generator.feed(3);
     }
 
-    bytes += generator.text('Seblak Sulthane',
+    bytes += generator.text(outletName,
         styles: const PosStyles(
           bold: true,
           align: PosAlign.center,
@@ -515,9 +606,9 @@ class PrintDataoutputs {
           width: PosTextSize.size2,
         ));
 
-    bytes += generator.text('Jl. Kebun Raya No. 1, Sinduhadi, Ngaglik',
+    bytes += generator.text(outletAddress,
         styles: const PosStyles(bold: false, align: PosAlign.center));
-    bytes += generator.text('Kab. Sleman, DI Yogyakarta',
+    bytes += generator.text(outletCity,
         styles: const PosStyles(bold: false, align: PosAlign.center));
     bytes += generator.text('085640899224',
         styles: const PosStyles(bold: false, align: PosAlign.center));
@@ -771,12 +862,23 @@ class PrintDataoutputs {
   }
 
   Future<List<int>> printChecker(List<ProductQuantity> products,
-      int tableNumber, String draftName, String cashierName, int paper) async {
+      int tableNumber, String draftName, String cashierName, int paper,
+      {int? outletId}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
     final generator =
         Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for receipt printing');
+
+    // Get outlet information
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
 
     bytes += generator.reset();
 

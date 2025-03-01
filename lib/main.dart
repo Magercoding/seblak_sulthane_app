@@ -6,6 +6,7 @@ import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.
 import 'package:seblak_sulthane_app/data/datasources/discount_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/member_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_item_remote_datasource.dart';
@@ -13,6 +14,7 @@ import 'package:seblak_sulthane_app/presentation/auth/bloc/logout/logout_bloc.da
 import 'package:seblak_sulthane_app/presentation/auth/login_page.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/get_table_status/get_table_status_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/online_checker/online_checker_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/home/bloc/outlet/outlet_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/item_sales_report/item_sales_report_bloc.dart';
@@ -136,6 +138,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => SyncDiscountBloc(DiscountRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => OutletBloc(OutletLocalDataSource()),
         ),
       ],
       child: MaterialApp(

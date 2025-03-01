@@ -5,17 +5,72 @@ import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:flutter/services.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
-
+import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
-import 'package:seblak_sulthane_app/data/models/response/order_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/models/response/order_response_model.dart';
 import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 
 class TransactionSalesInvoice {
   static late Font ttf;
+
+  // Get outletId from user profile, similar to ReportPage
+  static Future<int?> _fetchOutletIdFromProfile() async {
+    try {
+      final authRemoteDatasource = AuthRemoteDatasource();
+      final result = await authRemoteDatasource.getProfile();
+
+      int? outletId;
+      result.fold(
+        (error) {
+          print('Error fetching profile: $error');
+          return null;
+        },
+        (user) {
+          outletId = user.outletId;
+        },
+      );
+
+      return outletId;
+    } catch (e) {
+      print('Exception fetching profile: $e');
+      return null;
+    }
+  }
+
+  // Get outlet address using outletId
+  static Future<String> _getOutletAddress(int outletId) async {
+    try {
+      // Debug: check all available outlets
+      final outletDataSource = OutletLocalDataSource();
+      final allOutlets = await outletDataSource.getAllOutlets();
+      print('Available outlets: ${allOutlets.length}');
+      for (var outlet in allOutlets) {
+        print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
+      }
+
+      final outlet = await outletDataSource.getOutletById(outletId);
+
+      // If the specific outlet is not found but we have other outlets, use the first one
+      if (outlet == null && allOutlets.isNotEmpty) {
+        print(
+            'Outlet with ID $outletId not found, using first available outlet instead');
+        return allOutlets.first.address ?? 'Seblak Sulthane';
+      }
+
+      return outlet?.address ?? 'Seblak Sulthane';
+    } catch (e) {
+      print('Error getting outlet address: $e');
+      return 'Seblak Sulthane';
+    }
+  }
+
   static Future<File> generatePdf(
-      List<ItemOrder> itemOrders, String searchDateFormatted) async {
+      List<ItemOrder> itemOrders, String searchDateFormatted,
+      {int? outletId}) async {
     final pdf = Document();
     // var data = await rootBundle.load("assets/fonts/noto-sans.ttf");
     // ttf = Font.ttf(data);
@@ -24,6 +79,16 @@ class TransactionSalesInvoice {
 
     // Membuat objek Image dari gambar
     final image = pw.MemoryImage(bytes);
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await _fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for PDF generation');
+
+    // Get outlet address
+    final String outletAddress = await _getOutletAddress(outletId);
+    print('Using address: $outletAddress for PDF');
 
     pdf.addPage(
       MultiPage(
@@ -34,7 +99,7 @@ class TransactionSalesInvoice {
           Divider(),
           SizedBox(height: 0.25 * PdfPageFormat.cm),
         ],
-        footer: (context) => buildFooter(),
+        footer: (context) => buildFooter(outletAddress),
       ),
     );
 
@@ -120,15 +185,12 @@ class TransactionSalesInvoice {
     );
   }
 
-  static Widget buildFooter() => Column(
+  static Widget buildFooter(String outletAddress) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(
-              title: 'Address',
-              value:
-                  'Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568'),
+          buildSimpleText(title: 'Address', value: outletAddress),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );
@@ -172,9 +234,20 @@ class TransactionSalesInvoice {
 
   // Excel Generation
   static Future<File> generateExcel(
-      List<ItemOrder> itemOrders, String searchDateFormatted) async {
+      List<ItemOrder> itemOrders, String searchDateFormatted,
+      {int? outletId}) async {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Transaction Sales Report'];
+
+    // If outletId is not provided, try to fetch it from profile
+    outletId ??= await _fetchOutletIdFromProfile();
+    outletId ??= 1; // Default to 1 if still null
+
+    print('Using outletId: $outletId for Excel generation');
+
+    // Get outlet address
+    final String outletAddress = await _getOutletAddress(outletId);
+    print('Using address: $outletAddress for Excel');
 
     // Add Header with company info
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("I1"));
@@ -301,8 +374,7 @@ class TransactionSalesInvoice {
     );
     final footerCell = sheet.cell(
         CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex));
-    footerCell.value = TextCellValue(
-        'Address: Jalan Melati No. 12, Mranggen, Demak, Central Java, 89568');
+    footerCell.value = TextCellValue('Address: $outletAddress');
 
     // Set column widths
     sheet.setColumnWidth(0, 15.0); // ID

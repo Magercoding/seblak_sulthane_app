@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
-import 'package:seblak_sulthane_app/data/models/response/order_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/models/response/order_response_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'transaction_report_event.dart';

@@ -47,8 +47,6 @@ class DiscountRemoteDatasource {
         'category': category,
       };
 
-      print('Request body: ${jsonEncode(body)}');
-
       final response = await http.post(
         url,
         headers: {
@@ -58,9 +56,6 @@ class DiscountRemoteDatasource {
         },
         body: jsonEncode(body),
       );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
         return Right(DiscountResponseModel.fromRawJson(response.body));

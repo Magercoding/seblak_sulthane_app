@@ -18,9 +18,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
         final tax = await _localDatasource.getTax();
         final serviceCharge = await _localDatasource.getServiceCharge();
 
-        print('Initial Tax Value: ${tax.value}');
-        print('Initial Service Charge: $serviceCharge');
-
         final taxes = [
           TaxModel(
             name: 'Biaya Layanan',
@@ -32,7 +29,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
 
         emit(TaxState.loaded(taxes));
       } catch (e) {
-        print('Error loading taxes: $e');
         emit(TaxState.error(e.toString()));
       }
     });
@@ -56,7 +52,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
 
         emit(TaxState.loaded(List.from(_taxes)));
       } catch (e) {
-        print('Error adding tax: $e');
         emit(TaxState.error(e.toString()));
       }
     });
@@ -75,7 +70,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
           emit(TaxState.loaded(List.from(_taxes)));
         }
       } catch (e) {
-        print('Error updating tax: $e');
         emit(TaxState.error(e.toString()));
       }
     });

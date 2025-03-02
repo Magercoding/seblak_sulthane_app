@@ -56,7 +56,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
 
     try {
       platformVersion = await PrintBluetoothThermal.platformVersion;
-      print("patformversion: $platformVersion");
       porcentbatery = await PrintBluetoothThermal.batteryLevel;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
@@ -65,7 +64,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     if (!mounted) return;
 
     final bool result = await PrintBluetoothThermal.bluetoothEnabled;
-    print("bluetooth enabled: $result");
     if (result) {
       _msj = "Bluetooth enabled, please search and connect";
     } else {
@@ -118,7 +116,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     });
     final bool result =
         await PrintBluetoothThermal.connect(macPrinterAddress: mac);
-    print("state conected $result");
     if (result) connected = true;
     setState(() {
       _progress = false;
@@ -126,20 +123,15 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
   }
 
   Future<void> disconnect() async {
-    final bool status = await PrintBluetoothThermal.disconnect;
     setState(() {
       connected = false;
     });
-    print("status disconnect $status");
   }
 
   Future<void> printTest() async {
     bool conexionStatus = await PrintBluetoothThermal.connectionStatus;
 
     if (conexionStatus) {
-      List<int> ticket = await testTicket();
-      final result = await PrintBluetoothThermal.writeBytes(ticket);
-      print("print test result:  $result");
     } else {}
   }
 
@@ -153,7 +145,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
     bytes += generator.reset();
 
     bytes +=
-        generator.text('Code with Bahri', styles: const PosStyles(bold: true));
+        generator.text('Seblak Sulthane', styles: const PosStyles(bold: true));
     bytes +=
         generator.text('Reverse text', styles: const PosStyles(reverse: true));
     bytes += generator.text('Underlined text',
@@ -166,7 +158,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
         styles: const PosStyles(align: PosAlign.right), linesAfter: 1);
 
     bytes += generator.text(
-      'FIC Batch 11',
+      'test',
       styles: const PosStyles(
         height: PosTextSize.size2,
         width: PosTextSize.size2,
@@ -184,7 +176,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
       String text = "${_txtText.text}\n";
       bool result = await PrintBluetoothThermal.writeString(
           printText: PrintTextSize(size: int.parse(_selectSize), text: text));
-      print("status print result: $result");
       setState(() {
         _msj = "printed status: $result";
       });
@@ -192,7 +183,6 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
       setState(() {
         _msj = "no connected device";
       });
-      print("no conectado");
     }
   }
 
@@ -209,9 +199,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
           printText: PrintTextSize(size: 2, text: "$text size 2"));
       await PrintBluetoothThermal.writeString(
           printText: PrintTextSize(size: 3, text: "$text size 3"));
-    } else {
-      print("desconectado bluetooth $conexionStatus");
-    }
+    } else {}
   }
 
   Future<void> loadData() async {

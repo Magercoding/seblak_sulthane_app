@@ -34,8 +34,6 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
           ? widget.data?.value.toString()
           : '',
     );
-
-    print('Initial data: ${widget.data?.toJson()}');
   }
 
   @override
@@ -49,17 +47,12 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
     final serviceValue = int.tryParse(serviceFeeController.text) ?? 0;
     final taxValue = int.tryParse(taxFeeController.text) ?? 0;
 
-    print('Service Value: $serviceValue');
-    print('Tax Value: $taxValue');
-
     if (serviceValue > 0) {
       final serviceTax = TaxModel(
         name: 'Biaya Layanan',
         type: TaxType.layanan,
         value: serviceValue,
       );
-
-      print('Submitting service tax: ${serviceTax.toJson()}');
 
       if (widget.data == null) {
         context.read<TaxBloc>().add(TaxEvent.add(serviceTax));
@@ -74,8 +67,6 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
         type: TaxType.pajak,
         value: taxValue,
       );
-
-      print('Submitting tax fee: ${taxFee.toJson()}');
 
       if (widget.data == null) {
         context.read<TaxBloc>().add(TaxEvent.add(taxFee));
@@ -98,9 +89,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
               SnackBar(content: Text('Error: $message')),
             );
           },
-          loaded: (taxes) {
-            print('Loaded taxes: ${taxes.length}');
-          },
+          loaded: (taxes) {},
         );
       },
       child: AlertDialog(

@@ -134,20 +134,6 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  AssetGenImage get drink1 => const AssetGenImage('assets/images/drink1.png');
-
-  AssetGenImage get drink2 => const AssetGenImage('assets/images/drink2.png');
-
-  AssetGenImage get drink3 => const AssetGenImage('assets/images/drink3.png');
-
-  AssetGenImage get drink4 => const AssetGenImage('assets/images/drink4.png');
-
-  AssetGenImage get drink5 => const AssetGenImage('assets/images/drink5.png');
-
-  AssetGenImage get drink6 => const AssetGenImage('assets/images/drink6.png');
-
-  AssetGenImage get drink7 => const AssetGenImage('assets/images/drink7.png');
-
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
   AssetGenImage get managePrinter =>
@@ -159,73 +145,11 @@ class $AssetsImagesGen {
   AssetGenImage get manageQr =>
       const AssetGenImage('assets/images/manage_qr.png');
 
-  AssetGenImage get menu1 => const AssetGenImage('assets/images/menu1.png');
-
-  AssetGenImage get menu10 => const AssetGenImage('assets/images/menu10.png');
-
-  AssetGenImage get menu11 => const AssetGenImage('assets/images/menu11.png');
-
-  AssetGenImage get menu12 => const AssetGenImage('assets/images/menu12.png');
-
-  AssetGenImage get menu13 => const AssetGenImage('assets/images/menu13.png');
-
-  AssetGenImage get menu14 => const AssetGenImage('assets/images/menu14.png');
-
-  AssetGenImage get menu2 => const AssetGenImage('assets/images/menu2.png');
-
-  AssetGenImage get menu3 => const AssetGenImage('assets/images/menu3.png');
-
-  AssetGenImage get menu4 => const AssetGenImage('assets/images/menu4.png');
-
-  AssetGenImage get menu5 => const AssetGenImage('assets/images/menu5.png');
-
-  AssetGenImage get menu6 => const AssetGenImage('assets/images/menu6.png');
-
-  AssetGenImage get menu7 => const AssetGenImage('assets/images/menu7.png');
-
-  AssetGenImage get menu8 => const AssetGenImage('assets/images/menu8.png');
-
-  AssetGenImage get product1 =>
-      const AssetGenImage('assets/images/product1.jpg');
-
-  AssetGenImage get product2 =>
-      const AssetGenImage('assets/images/product2.jpg');
-
-  AssetGenImage get product3 =>
-      const AssetGenImage('assets/images/product3.jpg');
-
-  AssetGenImage get product4 =>
-      const AssetGenImage('assets/images/product4.jpg');
-
   List<AssetGenImage> get values => [
-        drink1,
-        drink2,
-        drink3,
-        drink4,
-        drink5,
-        drink6,
-        drink7,
         logo,
         managePrinter,
         manageProduct,
         manageQr,
-        menu1,
-        menu10,
-        menu11,
-        menu12,
-        menu13,
-        menu14,
-        menu2,
-        menu3,
-        menu4,
-        menu5,
-        menu6,
-        menu7,
-        menu8,
-        product1,
-        product2,
-        product3,
-        product4
       ];
 }
 

@@ -25,7 +25,6 @@ class TransactionSalesInvoice {
       int? outletId;
       result.fold(
         (error) {
-          print('Error fetching profile: $error');
           return null;
         },
         (user) {
@@ -35,7 +34,6 @@ class TransactionSalesInvoice {
 
       return outletId;
     } catch (e) {
-      print('Exception fetching profile: $e');
       return null;
     }
   }
@@ -44,22 +42,15 @@ class TransactionSalesInvoice {
     try {
       final outletDataSource = OutletLocalDataSource();
       final allOutlets = await outletDataSource.getAllOutlets();
-      print('Available outlets: ${allOutlets.length}');
-      for (var outlet in allOutlets) {
-        print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
-      }
 
       final outlet = await outletDataSource.getOutletById(outletId);
 
       if (outlet == null && allOutlets.isNotEmpty) {
-        print(
-            'Outlet with ID $outletId not found, using first available outlet instead');
         return allOutlets.first.address ?? 'Seblak Sulthane';
       }
 
       return outlet?.address ?? 'Seblak Sulthane';
     } catch (e) {
-      print('Error getting outlet address: $e');
       return 'Seblak Sulthane';
     }
   }
@@ -77,10 +68,7 @@ class TransactionSalesInvoice {
     outletId ??= await _fetchOutletIdFromProfile();
     outletId ??= 1;
 
-    print('Using outletId: $outletId for PDF generation');
-
     final String outletAddress = await _getOutletAddress(outletId);
-    print('Using address: $outletAddress for PDF');
 
     pdf.addPage(
       MultiPage(
@@ -233,10 +221,7 @@ class TransactionSalesInvoice {
     outletId ??= await _fetchOutletIdFromProfile();
     outletId ??= 1;
 
-    print('Using outletId: $outletId for Excel generation');
-
     final String outletAddress = await _getOutletAddress(outletId);
-    print('Using address: $outletAddress for Excel');
 
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("I1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));

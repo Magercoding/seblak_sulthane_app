@@ -12,7 +12,6 @@ class AuthRemoteDatasource {
       String email, String password) async {
     try {
       final url = Uri.parse('${Variables.baseUrl}/api/login');
-      print('Login request to: $url');
 
       final response = await http.post(
         url,
@@ -22,19 +21,13 @@ class AuthRemoteDatasource {
         },
       );
 
-      print('Login status code: ${response.statusCode}');
-      print('Login response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final authModel = AuthResponseModel.fromJson(response.body);
-        print('Login successful - Token: ${authModel.token}');
         return Right(authModel);
       } else {
-        print('Login failed with status: ${response.statusCode}');
         return Left('Failed to login: ${response.body}');
       }
     } catch (e) {
-      print('Login error: $e');
       return Left('Error during login: $e');
     }
   }
@@ -80,9 +73,6 @@ class AuthRemoteDatasource {
         },
       );
 
-      print('Get Profile status code: ${response.statusCode}');
-      print('Get Profile response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final userModel = UserModel.fromJson(json.decode(response.body));
         return Right(userModel);
@@ -90,7 +80,6 @@ class AuthRemoteDatasource {
         return Left('Failed to get profile: ${response.body}');
       }
     } catch (e) {
-      print('Get Profile error: $e');
       return Left('Error during get profile: $e');
     }
   }

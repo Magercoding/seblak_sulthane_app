@@ -10,10 +10,8 @@ class DiscountLocalDatasource {
 
   static Database? _database;
 
-  // Table name
   static const String _tableName = 'discounts';
 
-  // Create discounts table
   static const String createTable = '''
     CREATE TABLE IF NOT EXISTS $_tableName (
       id INTEGER PRIMARY KEY,
@@ -44,16 +42,14 @@ class DiscountLocalDatasource {
         await db.execute(createTable);
       },
       onOpen: (Database db) async {
-        // Ensure table exists when opening the database
         await db.execute(createTable);
       },
     );
   }
 
-  // Insert a single discount
   Future<int> insertDiscount(Discount discount) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     return await db.insert(
       _tableName,
@@ -62,10 +58,9 @@ class DiscountLocalDatasource {
     );
   }
 
-  // Insert multiple discounts
   Future<void> insertDiscounts(List<Discount> discounts) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final batch = db.batch();
 
@@ -80,10 +75,9 @@ class DiscountLocalDatasource {
     await batch.commit(noResult: true);
   }
 
-  // Get all discounts
   Future<List<Discount>> getAllDiscounts() async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
@@ -92,10 +86,9 @@ class DiscountLocalDatasource {
     });
   }
 
-  // Get discount by id
   Future<Discount?> getDiscountById(int id) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,
@@ -110,10 +103,9 @@ class DiscountLocalDatasource {
     return null;
   }
 
-  // Get discounts by category
   Future<List<Discount>> getDiscountsByCategory(String category) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,
@@ -126,26 +118,24 @@ class DiscountLocalDatasource {
     });
   }
 
-  // Delete all discounts
   Future<int> deleteAllDiscounts() async {
     try {
       final db = await database;
-      // Ensure table exists before deleting
+
       await db.execute(createTable);
       return await db.delete(_tableName);
     } catch (e) {
       log('Error deleting discounts: $e');
-      // Create table if it doesn't exist and return 0 (no rows deleted)
+
       final db = await database;
       await db.execute(createTable);
       return 0;
     }
   }
 
-  // Search discounts by name
   Future<List<Discount>> searchDiscountsByName(String name) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,

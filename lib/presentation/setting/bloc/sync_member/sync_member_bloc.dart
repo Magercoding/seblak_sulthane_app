@@ -19,7 +19,6 @@ class SyncMemberBloc extends Bloc<SyncMemberEvent, SyncMemberState> {
       emit(const _Loading());
       log('Starting to sync members...');
 
-      // Get members from the API
       final result = await memberRemoteDatasource.getMembers();
 
       return result.fold(
@@ -28,15 +27,12 @@ class SyncMemberBloc extends Bloc<SyncMemberEvent, SyncMemberState> {
           emit(_Error(error));
         },
         (memberResponseModel) async {
-          // Success, now we need to save to local database
           try {
             log('Successfully fetched members from API');
 
-            // First delete all existing members
             await MemberLocalDatasource.instance.deleteAllMembers();
             log('Deleted existing members from local database');
 
-            // Then insert the new members
             if (memberResponseModel.data.isNotEmpty) {
               log('Inserting ${memberResponseModel.data.length} members to local database');
               await MemberLocalDatasource.instance.insertMembers(

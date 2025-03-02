@@ -5,27 +5,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OutletLocalDataSource {
   static const String _keyOutlets = 'outlets';
 
-  // Singleton pattern
   static final OutletLocalDataSource _instance =
       OutletLocalDataSource._internal();
   factory OutletLocalDataSource() => _instance;
   OutletLocalDataSource._internal();
 
-  // Save outlet data to SharedPreferences
   Future<bool> saveOutlet(OutletModel outlet) async {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // Get existing outlets
       Map<String, dynamic> outlets = {};
       if (prefs.containsKey(_keyOutlets)) {
         outlets = jsonDecode(prefs.getString(_keyOutlets) ?? '{}');
       }
 
-      // Add or update the outlet
       outlets['${outlet.id}'] = outlet.toMap();
 
-      // Save back to SharedPreferences
       return await prefs.setString(_keyOutlets, jsonEncode(outlets));
     } catch (e) {
       print('Error saving outlet: $e');
@@ -33,7 +28,6 @@ class OutletLocalDataSource {
     }
   }
 
-  // Get outlet by ID
   Future<OutletModel?> getOutletById(int id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -59,7 +53,6 @@ class OutletLocalDataSource {
     }
   }
 
-  // Get all outlets
   Future<List<OutletModel>> getAllOutlets() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -79,7 +72,6 @@ class OutletLocalDataSource {
     }
   }
 
-  // Clear all outlets
   Future<bool> clearOutlets() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -99,7 +91,6 @@ class OutletLocalDataSource {
       if (outlet != null && outlet.address != null) {
         return outlet.address!;
       } else {
-        // Return a default address if outlet or address is null
         return 'Default Address, City, State, Zip';
       }
     } catch (e) {

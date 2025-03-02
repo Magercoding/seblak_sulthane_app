@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
@@ -84,9 +83,7 @@ class MenuProductItem extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          // backgroundColor: AppColors.white,
                           builder: (context) {
-                            //container for product detail
                             return AlertDialog(
                               contentPadding: const EdgeInsets.all(16.0),
                               content: Column(

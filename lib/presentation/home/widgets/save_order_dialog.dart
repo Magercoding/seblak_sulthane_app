@@ -45,9 +45,6 @@ class SaveOrderDialog extends StatefulWidget {
 }
 
 class _SaveOrderDialogState extends State<SaveOrderDialog> {
-  // List<ProductQuantity> data = [];
-  // int totalQty = 0;
-  // int totalPrice = 0;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -41,7 +41,6 @@ class ItemSalesReportWidget extends StatelessWidget {
 
         log("Generated file: $file");
 
-        // Pass context to FileOpenerService
         await FileOpenerService.openFile(file, context);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,7 +55,6 @@ class ItemSalesReportWidget extends StatelessWidget {
         log("Error handling file: $e");
         if (!context.mounted) return;
 
-        // Only show error if it's not the "No APP found" error
         if (!e.toString().contains('No APP found to open this file')) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -116,7 +114,6 @@ class ItemSalesReportWidget extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    // Excel Export Button
                     GestureDetector(
                       onTap: () => _handleExport(context, false),
                       child: const Row(
@@ -137,7 +134,6 @@ class ItemSalesReportWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // PDF Export Button
                     GestureDetector(
                       onTap: () => _handleExport(context, true),
                       child: const Row(

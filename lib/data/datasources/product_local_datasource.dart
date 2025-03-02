@@ -22,18 +22,6 @@ class ProductLocalDatasource {
 
   static Database? _database;
 
-  // "id": 1,
-  //           "category_id": 1,
-  //           "name": "Mie Ayam",
-  //           "description": "Ipsa dolorem impedit dolor. Libero nisi quidem expedita quod mollitia ad. Voluptas ut quia nemo nisi odit fuga. Fugit autem qui ratione laborum eum.",
-  //           "image": "https://via.placeholder.com/640x480.png/002200?text=nihil",
-  //           "price": "2000.44",
-  //           "stock": 94,
-  //           "status": 1,
-  //           "is_favorite": 1,
-  //           "created_at": "2024-02-08T14:30:22.000000Z",
-  //           "updated_at": "2024-02-08T15:14:22.000000Z"
-
   Future<void> _createDb(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $tableProduct (
@@ -136,7 +124,6 @@ class ProductLocalDatasource {
     return _database!;
   }
 
-  //save order
   Future<int> saveOrder(OrderModel order) async {
     log("OrderModel:  ${order.toMap()}");
 
@@ -153,7 +140,6 @@ class ProductLocalDatasource {
     return id;
   }
 
-  //get data order
   Future<List<OrderModel>> getOrderByIsNotSync() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps =
@@ -167,20 +153,15 @@ class ProductLocalDatasource {
     DateTime date,
   ) async {
     final db = await instance.database;
-    //date to iso8601
+
     final dateIso = date.toIso8601String();
-    //get yyyy-MM-dd
+
     final dateYYYYMMDD = dateIso.substring(0, 10);
-    // final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
     final List<Map<String, dynamic>> maps = await db.query(
       tableOrder,
       where: 'transaction_time like ?',
       whereArgs: ['$dateYYYYMMDD%'],
-      // where: 'transaction_time BETWEEN ? AND ?',
-      // whereArgs: [
-      //   DateFormat.yMd().format(start),
-      //   DateFormat.yMd().format(end)
-      // ],
     );
     return List.generate(maps.length, (i) {
       log("OrderModel: ${OrderModel.fromMap(maps[i])}");
@@ -188,7 +169,6 @@ class ProductLocalDatasource {
     });
   }
 
-  //get order item by order id
   Future<List<ProductQuantity>> getOrderItemByOrderId(int orderId) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db
@@ -199,7 +179,6 @@ class ProductLocalDatasource {
     });
   }
 
-  //update payment status by order id
   Future<void> updatePaymentStatus(
       int orderId, String paymentStatus, String status) async {
     final db = await instance.database;
@@ -209,14 +188,12 @@ class ProductLocalDatasource {
     log('update payment status success | order id: $orderId | payment status: $paymentStatus | status: $status');
   }
 
-  //update order is sync
   Future<void> updateOrderIsSync(int orderId) async {
     final db = await instance.database;
     await db.update(tableOrder, {'is_sync': 1},
         where: 'id = ?', whereArgs: [orderId]);
   }
 
-  //insert data product
   Future<void> insertProduct(Product product) async {
     log("Product: ${product.toMap()}");
     final db = await instance.database;
@@ -224,7 +201,6 @@ class ProductLocalDatasource {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  //insert list of product
   Future<void> insertProducts(List<Product> products) async {
     final db = await instance.database;
     for (var product in products) {
@@ -235,7 +211,6 @@ class ProductLocalDatasource {
     }
   }
 
-  //get all products
   Future<List<Product>> getProducts() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(tableProduct);
@@ -256,8 +231,6 @@ class ProductLocalDatasource {
     return Product.fromMap(result.first);
   }
 
-  // get Last Table Management
-
   Future<TableModel?> getLastTableManagement() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps =
@@ -268,7 +241,6 @@ class ProductLocalDatasource {
     return TableModel.fromMap(maps[0]);
   }
 
-  // generate table managent with count
   Future<void> generateTableManagement(int count) async {
     final db = await instance.database;
     TableModel? lastTable = await getLastTableManagement();
@@ -289,7 +261,6 @@ class ProductLocalDatasource {
     }
   }
 
-  // get all table
   Future<List<TableModel>> getAllTable() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(tableManagement);
@@ -299,15 +270,14 @@ class ProductLocalDatasource {
     });
   }
 
-  // get last order where table number
   Future<OrderModel?> getLastOrderTable(int tableNumber) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       tableOrder,
       where: 'table_number = ?',
       whereArgs: [tableNumber],
-      orderBy: 'id DESC', // Urutkan berdasarkan id dari yang terbesar (terbaru)
-      limit: 1, // Ambil hanya satu data terakhir
+      orderBy: 'id DESC',
+      limit: 1,
     );
 
     if (maps.isEmpty) {
@@ -317,7 +287,6 @@ class ProductLocalDatasource {
     return OrderModel.fromMap(maps[0]);
   }
 
-  // get table by status
   Future<List<TableModel>> getTableByStatus(String status) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -331,7 +300,6 @@ class ProductLocalDatasource {
     });
   }
 
-  // update status tabel
   Future<void> updateStatusTable(TableModel table) async {
     log("Table: ${table.toMap()}");
     final db = await instance.database;
@@ -340,7 +308,6 @@ class ProductLocalDatasource {
     log("Success Update Status Table: ${table.toMap()}");
   }
 
-  //delete all products
   Future<void> deleteAllProducts() async {
     final db = await instance.database;
     await db.delete(tableProduct);
@@ -359,13 +326,11 @@ class ProductLocalDatasource {
     return id;
   }
 
-  //get all draft order
   Future<List<DraftOrderModel>> getAllDraftOrder() async {
     final db = await instance.database;
     final result = await db.query('draft_orders', orderBy: 'id ASC');
 
     List<DraftOrderModel> results = await Future.wait(result.map((item) async {
-      // Your asynchronous operation here
       final draftOrderItem =
           await getDraftOrderItemByOrderId(item['id'] as int);
       return DraftOrderModel.newFromLocalMap(item, draftOrderItem);
@@ -373,7 +338,6 @@ class ProductLocalDatasource {
     return results;
   }
 
-  // get Darft Order by id
   Future<DraftOrderModel?> getDraftOrderById(int id) async {
     final db = await instance.database;
     final result =
@@ -387,14 +351,12 @@ class ProductLocalDatasource {
     return DraftOrderModel.newFromLocalMap(result.first, draftOrderItem);
   }
 
-  //get draft order item by id order
   Future<List<DraftOrderItem>> getDraftOrderItemByOrderId(int idOrder) async {
     final db = await instance.database;
     final result =
         await db.query('draft_order_items', where: 'id_draft_order = $idOrder');
 
     List<DraftOrderItem> results = await Future.wait(result.map((item) async {
-      // Your asynchronous operation here
       final product = await getProductById(item['id_product'] as int);
       return DraftOrderItem(
           product: product!, quantity: item['quantity'] as int);
@@ -402,7 +364,6 @@ class ProductLocalDatasource {
     return results;
   }
 
-  //remove draft order by id
   Future<void> removeDraftOrderById(int id) async {
     final db = await instance.database;
     await db.delete('draft_orders', where: 'id = ?', whereArgs: [id]);

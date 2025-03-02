@@ -35,8 +35,8 @@ class ItemSales {
   final String createdAt;
   final String updatedAt;
   final String productName;
-  final int outletId; // Added outletId field
-  
+  final int outletId;
+
   const ItemSales({
     required this.id,
     required this.orderId,
@@ -46,9 +46,9 @@ class ItemSales {
     required this.createdAt,
     required this.updatedAt,
     required this.productName,
-    required this.outletId, // Required parameter
+    required this.outletId,
   });
-  
+
   factory ItemSales.fromJson(Map<String, dynamic> json) {
     return ItemSales(
       id: json['id'],
@@ -62,16 +62,16 @@ class ItemSales {
       outletId: json['outlet_id'] ?? 0,
     );
   }
-  
+
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'order_id': orderId,
-    'product_id': productId,
-    'quantity': quantity,
-    'price': price,
-    'created_at': createdAt,
-    'updated_at': updatedAt,
-    'product_name': productName,
-    'outlet_id': outletId,
-  };
+        'id': id,
+        'order_id': orderId,
+        'product_id': productId,
+        'quantity': quantity,
+        'price': price,
+        'created_at': createdAt,
+        'updated_at': updatedAt,
+        'product_name': productName,
+        'outlet_id': outletId,
+      };
 }

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -65,7 +64,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
         child: Scaffold(
           body: Row(
             children: [
-              // LEFT CONTENT
               Expanded(
                 flex: 2,
                 child: Align(
@@ -194,7 +192,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                           },
                         ),
                         const SpaceHeight(16.0),
-
                         const SpaceHeight(8.0),
                         const Divider(),
                         const SpaceHeight(8.0),
@@ -238,7 +235,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                           ],
                         ),
                         const SpaceHeight(16.0),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -348,7 +344,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                           ],
                         ),
                         const SpaceHeight(16.0),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -531,18 +526,11 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                             ),
                           ],
                         ),
-                        // const SpaceHeight(20.0),
-                        // Button.filled(
-                        //   onPressed: () {},
-                        //   label: 'Lanjutkan Pembayaran',
-                        // ),
                       ],
                     ),
                   ),
                 ),
               ),
-
-              // RIGHT CONTENT
               Expanded(
                 flex: 3,
                 child: Align(
@@ -815,8 +803,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                       return Flexible(
                                         child: Button.filled(
                                           onPressed: () async {
-                                            // Original code passes different parameters to OrderEvent.order based on payment method
-                                            // Now we'll make both payment methods use the same approach
                                             context.read<OrderBloc>().add(
                                                 OrderEvent.order(
                                                     items,
@@ -830,9 +816,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                                     widget.table?.id ?? 0,
                                                     'completed',
                                                     'paid',
-                                                    isCash
-                                                        ? 'Cash'
-                                                        : 'QRIS', // Changed 'Qris' to 'QRIS' to match ConfirmPaymentPage
+                                                    isCash ? 'Cash' : 'QRIS',
                                                     totalPriceFinal));
 
                                             await showDialog(
@@ -854,9 +838,6 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                                     customerController.text,
                                               ),
                                             );
-
-                                            // The code that handles table status updates and draft order removal should still run
-                                            // after the dialog is dismissed, so it's moved outside the conditional blocks
                                           },
                                           label: 'Bayar',
                                         ),

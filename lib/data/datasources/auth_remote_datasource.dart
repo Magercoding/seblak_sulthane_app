@@ -49,22 +49,19 @@ class AuthRemoteDatasource {
           'Authorization': 'Bearer ${authData.token}',
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest' // Tambahan untuk Sanctum
+          'X-Requested-With': 'XMLHttpRequest'
         },
       );
 
-      // Jika dapat 401, tetap anggap sukses karena kita mau logout
       if (response.statusCode == 200 || response.statusCode == 401) {
-        await AuthLocalDataSource().removeAuthData(); // Hapus token lokal
-        return const Right(true); // Anggap sukses
+        await AuthLocalDataSource().removeAuthData();
+        return const Right(true);
       } else {
         return Left('Failed to logout: ${response.body}');
       }
     } catch (e) {
-      // Jika error, tetap coba hapus token lokal
       await AuthLocalDataSource().removeAuthData();
-      return const Right(
-          true); // Tetap anggap sukses karena token sudah dihapus
+      return const Right(true);
     }
   }
 

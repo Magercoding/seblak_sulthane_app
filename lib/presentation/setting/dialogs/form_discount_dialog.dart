@@ -151,7 +151,6 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                     orElse: () {
                       return Button.filled(
                         onPressed: () {
-                          // Validate inputs
                           if (nameController.text.isEmpty ||
                               discountController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(

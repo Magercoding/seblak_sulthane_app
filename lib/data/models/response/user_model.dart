@@ -30,12 +30,10 @@ class UserModel {
       id: json['id'] as int,
       name: json['name'] as String,
       email: json['email'] as String,
-      emailVerifiedAt: json['email_verified_at'] as String?, // Nullable
-      twoFactorSecret: json['two_factor_secret'] as String?, // Nullable
-      twoFactorRecoveryCodes:
-          json['two_factor_recovery_codes'] as String?, // Nullable
-      twoFactorConfirmedAt:
-          json['two_factor_confirmed_at'] as String?, // Nullable
+      emailVerifiedAt: json['email_verified_at'] as String?,
+      twoFactorSecret: json['two_factor_secret'] as String?,
+      twoFactorRecoveryCodes: json['two_factor_recovery_codes'] as String?,
+      twoFactorConfirmedAt: json['two_factor_confirmed_at'] as String?,
       createdAt: json['created_at'] as String,
       updatedAt: json['updated_at'] as String,
       role: json['role'] as String,

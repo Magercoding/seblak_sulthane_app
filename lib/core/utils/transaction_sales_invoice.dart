@@ -17,7 +17,6 @@ import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 class TransactionSalesInvoice {
   static late Font ttf;
 
-  // Get outletId from user profile, similar to ReportPage
   static Future<int?> _fetchOutletIdFromProfile() async {
     try {
       final authRemoteDatasource = AuthRemoteDatasource();
@@ -41,10 +40,8 @@ class TransactionSalesInvoice {
     }
   }
 
-  // Get outlet address using outletId
   static Future<String> _getOutletAddress(int outletId) async {
     try {
-      // Debug: check all available outlets
       final outletDataSource = OutletLocalDataSource();
       final allOutlets = await outletDataSource.getAllOutlets();
       print('Available outlets: ${allOutlets.length}');
@@ -54,7 +51,6 @@ class TransactionSalesInvoice {
 
       final outlet = await outletDataSource.getOutletById(outletId);
 
-      // If the specific outlet is not found but we have other outlets, use the first one
       if (outlet == null && allOutlets.isNotEmpty) {
         print(
             'Outlet with ID $outletId not found, using first available outlet instead');
@@ -72,21 +68,17 @@ class TransactionSalesInvoice {
       List<ItemOrder> itemOrders, String searchDateFormatted,
       {int? outletId}) async {
     final pdf = Document();
-    // var data = await rootBundle.load("assets/fonts/noto-sans.ttf");
-    // ttf = Font.ttf(data);
+
     final ByteData dataImage = await rootBundle.load('assets/images/logo.png');
     final Uint8List bytes = dataImage.buffer.asUint8List();
 
-    // Membuat objek Image dari gambar
     final image = pw.MemoryImage(bytes);
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await _fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for PDF generation');
 
-    // Get outlet address
     final String outletAddress = await _getOutletAddress(outletId);
     print('Using address: $outletAddress for PDF');
 
@@ -172,15 +164,15 @@ class TransactionSalesInvoice {
       headerDecoration: BoxDecoration(color: PdfColors.blue),
       cellHeight: 30,
       cellAlignments: {
-        0: Alignment.center, // ID
-        1: Alignment.centerRight, // Total
-        2: Alignment.centerRight, // Sub Total
-        3: Alignment.centerRight, // Tax
-        4: Alignment.centerRight, // Discount
-        5: Alignment.centerRight, // Service
-        6: Alignment.center, // Total Item
-        7: Alignment.center, // Kasir
-        8: Alignment.center, // Time
+        0: Alignment.center,
+        1: Alignment.centerRight,
+        2: Alignment.centerRight,
+        3: Alignment.centerRight,
+        4: Alignment.centerRight,
+        5: Alignment.centerRight,
+        6: Alignment.center,
+        7: Alignment.center,
+        8: Alignment.center,
       },
     );
   }
@@ -232,24 +224,20 @@ class TransactionSalesInvoice {
     );
   }
 
-  // Excel Generation
   static Future<File> generateExcel(
       List<ItemOrder> itemOrders, String searchDateFormatted,
       {int? outletId}) async {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Transaction Sales Report'];
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await _fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for Excel generation');
 
-    // Get outlet address
     final String outletAddress = await _getOutletAddress(outletId);
     print('Using address: $outletAddress for Excel');
 
-    // Add Header with company info
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("I1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
     headerCell.value =
@@ -260,7 +248,6 @@ class TransactionSalesInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    // Add date information
     sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("I2"));
     final dateCell = sheet.cell(CellIndex.indexByString("A2"));
     dateCell.value = TextCellValue('Data: $searchDateFormatted');
@@ -276,10 +263,8 @@ class TransactionSalesInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    // Add empty row for spacing
     sheet.merge(CellIndex.indexByString("A4"), CellIndex.indexByString("I4"));
 
-    // Add table headers
     final headers = [
       'ID',
       'Total',
@@ -301,37 +286,31 @@ class TransactionSalesInvoice {
       );
     }
 
-    // Add data rows
     for (var i = 0; i < itemOrders.length; i++) {
       final item = itemOrders[i];
       final rowIndex = i + 6;
 
-      // ID
       final idCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex));
       idCell.value = TextCellValue(item.id.toString());
       idCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Total
       final totalCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex));
       totalCell.value = TextCellValue(item.total!.currencyFormatRp);
       totalCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Right);
 
-      // Sub Total
       final subtotalCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex));
       subtotalCell.value = TextCellValue(item.subTotal!.currencyFormatRp);
       subtotalCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Right);
 
-      // Tax
       final taxCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex));
       taxCell.value = TextCellValue(item.tax!.currencyFormatRp);
       taxCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Right);
 
-      // Discount
       final discountCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex));
       discountCell.value = TextCellValue(
@@ -340,33 +319,28 @@ class TransactionSalesInvoice {
       discountCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Right);
 
-      // Service Charge
       final serviceCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex));
       serviceCell.value = TextCellValue(item.serviceCharge!.currencyFormatRp);
       serviceCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Right);
 
-      // Total Item
       final totalItemCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex));
       totalItemCell.value = TextCellValue(item.totalItem.toString());
       totalItemCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Kasir
       final kasirCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex));
       kasirCell.value = TextCellValue(item.namaKasir ?? '');
       kasirCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Time
       final timeCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex));
       timeCell.value = TextCellValue(item.transactionTime!.toFormattedDate());
       timeCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Center);
     }
 
-    // Add footer
     final footerRowIndex = itemOrders.length + 7;
     sheet.merge(
       CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex),
@@ -376,16 +350,15 @@ class TransactionSalesInvoice {
         CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex));
     footerCell.value = TextCellValue('Address: $outletAddress');
 
-    // Set column widths
-    sheet.setColumnWidth(0, 15.0); // ID
-    sheet.setColumnWidth(1, 20.0); // Total
-    sheet.setColumnWidth(2, 20.0); // Sub Total
-    sheet.setColumnWidth(3, 20.0); // Tax
-    sheet.setColumnWidth(4, 20.0); // Discount
-    sheet.setColumnWidth(5, 20.0); // Service
-    sheet.setColumnWidth(6, 15.0); // Total Item
-    sheet.setColumnWidth(7, 20.0); // Kasir
-    sheet.setColumnWidth(8, 30.0); // Time
+    sheet.setColumnWidth(0, 15.0);
+    sheet.setColumnWidth(1, 20.0);
+    sheet.setColumnWidth(2, 20.0);
+    sheet.setColumnWidth(3, 20.0);
+    sheet.setColumnWidth(4, 20.0);
+    sheet.setColumnWidth(5, 20.0);
+    sheet.setColumnWidth(6, 15.0);
+    sheet.setColumnWidth(7, 20.0);
+    sheet.setColumnWidth(8, 30.0);
 
     return HelperExcelService.saveExcel(
       name:

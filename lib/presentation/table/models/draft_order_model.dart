@@ -45,13 +45,6 @@ class DraftOrderModel {
     };
   }
 
-  //  mominal INTEGER,
-  //       payment_method TEXT
-  //       total_item INTEGER,
-  //       id_kasir INTEGER,
-  //       nama_kasir TEXT,
-  //       is_sync INTEGER DEFAULT 0
-
   Map<String, dynamic> toMapForLocal() {
     return {
       'total_item': totalQuantity,

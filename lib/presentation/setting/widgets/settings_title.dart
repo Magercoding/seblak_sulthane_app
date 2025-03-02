@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/components/search_input.dart';
 import '../../../core/constants/colors.dart';
 
-
-
 class SettingsTitle extends StatelessWidget {
   final String title;
   final TextEditingController? controller;

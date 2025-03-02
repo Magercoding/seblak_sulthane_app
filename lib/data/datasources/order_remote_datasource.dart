@@ -32,17 +32,14 @@ class OrderRemoteDatasource {
     log("Response: ${response.body}");
 
     if (response.statusCode == 200) {
-      // Parse the response to extract outlet information
       try {
         final responseData = jsonDecode(response.body);
 
         if (responseData['status'] == 'success' &&
             responseData['data'] != null &&
             responseData['data']['outlet'] != null) {
-          // Extract outlet information from response
           final outletData = responseData['data']['outlet'];
 
-          // Create outlet model
           final outlet = OutletModel(
             id: outletData['id'],
             name: outletData['name'],
@@ -56,13 +53,11 @@ class OrderRemoteDatasource {
                 : null,
           );
 
-          // Save outlet information locally
           await outletLocalDataSource.saveOutlet(outlet);
           log("Outlet saved: ${outlet.toJson()}");
         }
       } catch (e) {
         log("Error extracting outlet data: $e");
-        // Continue execution even if outlet parsing fails
       }
 
       return true;
@@ -92,7 +87,6 @@ class OrderRemoteDatasource {
         final responseData = jsonDecode(response.body);
         final ordersData = responseData['data'] as List;
 
-        // Filter orders by outlet_id
         final filteredOrders = ordersData
             .where((order) => order['outlet_id'] == outletId)
             .toList();
@@ -101,7 +95,6 @@ class OrderRemoteDatasource {
           return Left('No orders data for this outlet');
         }
 
-        // Save outlet information if available in the response
         for (var order in filteredOrders) {
           if (order['outlet'] != null) {
             final outletData = order['outlet'];
@@ -123,7 +116,6 @@ class OrderRemoteDatasource {
           }
         }
 
-        // Map the filtered data to ItemOrder objects
         final mappedOrders =
             filteredOrders.map((order) => ItemOrder.fromMap(order)).toList();
 
@@ -144,7 +136,6 @@ class OrderRemoteDatasource {
     String endDate,
     int outletId,
   ) async {
-    // Existing implementation...
     final authData = await AuthLocalDataSource().getAuthData();
     final token = authData.token ?? '';
 
@@ -161,7 +152,6 @@ class OrderRemoteDatasource {
         final responseData = jsonDecode(response.body);
         final ordersData = responseData['data'] as List;
 
-        // Filter orders by outlet_id
         final filteredOrders = ordersData
             .where((order) => order['outlet_id'] == outletId)
             .toList();
@@ -170,7 +160,6 @@ class OrderRemoteDatasource {
           return Left('No summary data for this outlet');
         }
 
-        // Calculate summary based on filtered orders
         double totalRevenue = 0;
         double totalDiscount = 0;
         double totalTax = 0;
@@ -187,7 +176,6 @@ class OrderRemoteDatasource {
           totalServiceCharge += (order['service_charge'] ?? 0).toDouble();
           total += (order['total'] ?? 0).toDouble();
 
-          // Save outlet information if available
           if (order['outlet'] != null) {
             final outletData = order['outlet'];
 

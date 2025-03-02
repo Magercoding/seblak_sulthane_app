@@ -32,7 +32,7 @@ class _ReportPageState extends State<ReportPage> {
   String title = 'Summary Sales Report';
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
-  int? outletId; // Outlet ID dari profil pengguna
+  int? outletId;
   bool isLoading = true;
   String errorMessage = '';
 
@@ -42,7 +42,6 @@ class _ReportPageState extends State<ReportPage> {
     _fetchOutletId();
   }
 
-  // Ambil outletId dari profil pengguna
   Future<void> _fetchOutletId() async {
     final authRemoteDatasource = AuthRemoteDatasource();
     final result = await authRemoteDatasource.getProfile();
@@ -89,7 +88,6 @@ class _ReportPageState extends State<ReportPage> {
     return Scaffold(
       body: Row(
         children: [
-          // LEFT CONTENT
           Expanded(
             flex: 2,
             child: Align(
@@ -145,8 +143,7 @@ class _ReportPageState extends State<ReportPage> {
                                           fromDate),
                                       endDate:
                                           DateFormatter.formatDateTime(toDate),
-                                      outletId:
-                                          outletId!, // Kirim outletId untuk filter di sisi klien
+                                      outletId: outletId!,
                                     ),
                                   );
                             },
@@ -165,8 +162,7 @@ class _ReportPageState extends State<ReportPage> {
                                           fromDate),
                                       endDate:
                                           DateFormatter.formatDateTime(toDate),
-                                      outletId:
-                                          outletId!, // Kirim outletId untuk filter di sisi klien
+                                      outletId: outletId!,
                                     ),
                                   );
                             },
@@ -181,11 +177,9 @@ class _ReportPageState extends State<ReportPage> {
                               });
                               context.read<ProductSalesBloc>().add(
                                     ProductSalesEvent.getProductSales(
-                                      DateFormatter.formatDateTime(
-                                          fromDate), // Positional parameter 1
-                                      DateFormatter.formatDateTime(
-                                          toDate), // Positional parameter 2
-                                      outletId!, // Kirim outletId untuk filter di sisi klien
+                                      DateFormatter.formatDateTime(fromDate),
+                                      DateFormatter.formatDateTime(toDate),
+                                      outletId!,
                                     ),
                                   );
                             },
@@ -200,11 +194,9 @@ class _ReportPageState extends State<ReportPage> {
                               });
                               context.read<SummaryBloc>().add(
                                     SummaryEvent.getSummary(
-                                      DateFormatter.formatDateTime(
-                                          fromDate), // Positional parameter 1
-                                      DateFormatter.formatDateTime(
-                                          toDate), // Positional parameter 2
-                                      outletId!, // Kirim outletId untuk filter di sisi klien
+                                      DateFormatter.formatDateTime(fromDate),
+                                      DateFormatter.formatDateTime(toDate),
+                                      outletId!,
                                     ),
                                   );
                             },
@@ -218,8 +210,6 @@ class _ReportPageState extends State<ReportPage> {
               ),
             ),
           ),
-
-          // RIGHT CONTENT
           Expanded(
               flex: 2,
               child: selectedMenu == 0

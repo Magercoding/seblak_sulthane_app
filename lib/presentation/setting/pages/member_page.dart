@@ -60,7 +60,9 @@ class _MemberPageState extends State<MemberPage> {
                           backgroundColor: Colors.green,
                         ),
                       );
-                      context.read<MemberBloc>().add(const MemberEvent.getMembers());
+                      context
+                          .read<MemberBloc>()
+                          .add(const MemberEvent.getMembers());
                     },
                     error: (message) {
                       ScaffoldMessenger.of(context).showSnackBar(

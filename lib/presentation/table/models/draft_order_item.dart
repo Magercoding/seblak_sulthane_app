@@ -17,12 +17,6 @@ class DraftOrderItem {
     };
   }
 
-  // id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     id_order INTEGER,
-  //     id_product INTEGER,
-  //     quantity INTEGER,
-  //     price INTEGER
-
   Map<String, dynamic> toMapForLocal(int orderId) {
     return {
       'id_draft_order': orderId,

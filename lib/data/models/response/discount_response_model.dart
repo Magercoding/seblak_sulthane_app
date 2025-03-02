@@ -15,7 +15,6 @@ class DiscountResponseModel {
   String toRawJson() => json.encode(toJson());
 
   factory DiscountResponseModel.fromJson(Map<String, dynamic> json) {
-    // Handle the case where data might be a single object or a list
     var rawData = json["data"];
     List<Discount> discountList = [];
 
@@ -23,7 +22,6 @@ class DiscountResponseModel {
       if (rawData is List) {
         discountList = rawData.map((x) => Discount.fromJson(x)).toList();
       } else if (rawData is Map<String, dynamic>) {
-        // If it's a single object, wrap it in a list
         discountList = [Discount.fromJson(rawData)];
       }
     }

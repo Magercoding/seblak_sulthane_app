@@ -24,7 +24,6 @@ class ProductSalesBloc extends Bloc<ProductSalesEvent, ProductSalesState> {
         (l) => emit(_Error(l)),
         (r) {
           if (r.data != null && r.data!.isNotEmpty) {
-            // Create a dataMap for pie chart
             final Map<String, double> dataMap = {};
 
             for (var product in r.data!) {

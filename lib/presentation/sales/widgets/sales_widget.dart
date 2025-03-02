@@ -69,9 +69,7 @@ class SalesWidget extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Center(
                             child: Text(
-                          orders[index].isSync == 0
-                              ? 'Belum' //belum sync
-                              : 'Sudah', //sudah sync
+                          orders[index].isSync == 0 ? 'Belum' : 'Sudah',
                         )),
                       ),
                       Container(

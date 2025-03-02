@@ -52,21 +52,21 @@ class _DashboardPageState extends State<DashboardPage> {
     StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
         .onConnectivityChanged
         .listen((List<ConnectivityResult> connectivityResult) {
-      // Received changes in available connectivity types!
+      
       if (connectivityResult.contains(ConnectivityResult.mobile)) {
-        // Mobile network available.
+        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(true));
       } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-        // Wi-fi is available.
+        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(true));
-        // Note for Android:
-        // When both mobile and Wi-Fi are turned on system will return Wi-Fi only as active network type
+        
+        
       } else {
-        // Neither mobile network nor Wi-fi available.
+        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(false));
@@ -113,7 +113,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         isActive: _selectedIndex == 4,
                         onTap: () => _onItemTapped(4),
                       ),
-                      //container flag online/offline
+                      
                       BlocBuilder<OnlineCheckerBloc, OnlineCheckerState>(
                         builder: (context, state) {
                           return state.maybeWhen(

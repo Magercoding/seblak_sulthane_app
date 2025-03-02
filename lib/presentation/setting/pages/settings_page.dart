@@ -46,7 +46,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: Row(
         children: [
-          // LEFT CONTENT
           Expanded(
             flex: 2,
             child: Align(
@@ -134,8 +133,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
-
-          // RIGHT CONTENT
           Expanded(
             flex: 4,
             child: Align(
@@ -145,17 +142,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: IndexedStack(
                   index: currentIndex,
                   children: [
-                    ProfilePage(), // Halaman profil pengguna
+                    ProfilePage(),
                     DiscountPage(),
                     MemberPage(),
                     TaxPage(),
-
                     ManagePrinterPage(),
                     SyncDataPage(),
-                    // Text('tax'),
-                    // ManageDiscount(),
-                    // ManagePrinterPage(),
-                    // ManageTax(),
                   ],
                 ),
               ),

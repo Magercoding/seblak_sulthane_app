@@ -9,7 +9,6 @@ class AuthLocalDataSource {
       print('Saving auth data: $jsonData');
       await prefs.setString('auth_data', jsonData);
 
-      // Verifikasi data tersimpan
       final savedData = prefs.getString('auth_data');
       print('Verified saved auth data: $savedData');
     } catch (e) {
@@ -26,7 +25,6 @@ class AuthLocalDataSource {
 
       await prefs.remove('auth_data');
 
-      // Verifikasi data terhapus
       final afterRemove = prefs.getString('auth_data');
       print('Auth data after removal: $afterRemove');
     } catch (e) {
@@ -61,7 +59,6 @@ class AuthLocalDataSource {
       print('Auth data exists: $exists');
 
       if (exists) {
-        // Jika ada, cek juga isi datanya
         final data = prefs.getString('auth_data');
         print('Existing auth data: $data');
       }
@@ -73,7 +70,6 @@ class AuthLocalDataSource {
     }
   }
 
-  // Midtrans dan Receipt methods tetap sama
   Future<void> saveMidtransServerKey(String serverKey) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('server_key', serverKey);

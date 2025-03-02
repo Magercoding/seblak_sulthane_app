@@ -34,12 +34,15 @@ class OutletModel {
       name: map['name'],
       address: map['address'],
       phone: map['phone'],
-      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
-      updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
+      createdAt:
+          map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
+      updatedAt:
+          map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory OutletModel.fromJson(String source) => OutletModel.fromMap(json.decode(source));
+  factory OutletModel.fromJson(String source) =>
+      OutletModel.fromMap(json.decode(source));
 }

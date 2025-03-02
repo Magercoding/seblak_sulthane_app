@@ -29,7 +29,7 @@ class SummaryData {
   final String totalSubtotal;
   final num totalServiceCharge;
   final num total;
-  final int outletId; // Added outletId field
+  final int outletId;
 
   const SummaryData({
     required this.totalRevenue,
@@ -38,7 +38,7 @@ class SummaryData {
     required this.totalSubtotal,
     required this.totalServiceCharge,
     required this.total,
-    required this.outletId, // Required parameter
+    required this.outletId,
   });
 
   factory SummaryData.fromJson(Map<String, dynamic> json) {

@@ -30,13 +30,13 @@ class ProductSales {
   final int productId;
   final String productName;
   final String totalQuantity;
-  final int outletId; // Added outletId field
+  final int outletId;
 
   const ProductSales({
     required this.productId,
     required this.productName,
     required this.totalQuantity,
-    required this.outletId, // Required parameter
+    required this.outletId,
   });
 
   factory ProductSales.fromJson(Map<String, dynamic> json) {

@@ -46,7 +46,7 @@ class ItemOrder {
   DateTime? transactionTime;
   DateTime? createdAt;
   DateTime? updatedAt;
-  int? outletId; // Tambahkan properti outletId
+  int? outletId;
 
   ItemOrder({
     this.id,

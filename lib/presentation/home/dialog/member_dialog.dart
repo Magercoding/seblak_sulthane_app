@@ -19,7 +19,7 @@ class _MemberDialogState extends State<MemberDialog> {
   @override
   void initState() {
     super.initState();
-    // Request member data when the dialog is opened
+
     context.read<MemberBloc>().add(const MemberEvent.getMembers());
     searchController.addListener(_onSearchChanged);
   }
@@ -80,12 +80,10 @@ class _MemberDialogState extends State<MemberDialog> {
               listener: (context, state) {
                 state.maybeWhen(
                   loaded: (membersData) {
-                    // Convert data if it's a List<Map<String, dynamic>> and not already List<Member>
                     List<Member> members;
                     if (membersData is List<Member>) {
                       members = membersData;
                     } else {
-                      // Assuming membersData is List<Map<String, dynamic>>
                       members = (membersData as List).map((item) {
                         if (item is Member) return item;
                         return Member.fromJson(item as Map<String, dynamic>);
@@ -123,7 +121,6 @@ class _MemberDialogState extends State<MemberDialog> {
                         children: filteredMembers.map((member) {
                           return GestureDetector(
                             onTap: () {
-                              // Return the selected member when tapped
                               Navigator.pop(context, member);
                             },
                             child: Container(

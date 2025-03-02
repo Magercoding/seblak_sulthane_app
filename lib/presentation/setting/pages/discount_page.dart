@@ -54,7 +54,6 @@ class _DiscountPageState extends State<DiscountPage> {
                 listener: (context, state) {
                   state.maybeWhen(
                     success: (message) {
-                      // Jika penghapusan berhasil, muat ulang data diskon
                       context
                           .read<DiscountBloc>()
                           .add(const DiscountEvent.getDiscounts());

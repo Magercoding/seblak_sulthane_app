@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class TableModel {
   int? id;
   final int tableNumber;
@@ -16,7 +15,6 @@ class TableModel {
     required this.paymentAmount,
   });
 
-  // from map
   factory TableModel.fromMap(Map<String, dynamic> map) {
     return TableModel(
       id: map['id'],
@@ -28,7 +26,6 @@ class TableModel {
     );
   }
 
-  // to map
   Map<String, dynamic> toMap() {
     return {
       'table_number': tableNumber,

@@ -75,7 +75,7 @@ class Product {
         name: json["name"],
         description: json["description"],
         image: json["image"],
-        // price: json["price"].substring(0, json["price"].length - 3),
+        
         price: json["price"].toString().replaceAll('.00', ''),
         stock: json["stock"],
         status: json["status"],

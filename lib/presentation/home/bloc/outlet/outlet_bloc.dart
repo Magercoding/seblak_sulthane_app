@@ -20,7 +20,6 @@ class OutletBloc extends Bloc<OutletEvent, OutletState> {
       try {
         log("Getting outlet with id: ${event.id}");
 
-        // Debug: check all available outlets
         final allOutlets = await outletLocalDataSource.getAllOutlets();
         log("All available outlets: ${allOutlets.map((o) => '${o.id}: ${o.name}').join(', ')}");
 
@@ -42,12 +41,6 @@ class OutletBloc extends Bloc<OutletEvent, OutletState> {
     on<_SaveOutlet>((event, emit) async {
       emit(const _Loading());
       try {
-        // Validate outlet data before saving
-        if (event.outlet == null) {
-          emit(const _Error('Cannot save null outlet'));
-          return;
-        }
-
         log("Saving outlet: ${event.outlet.toJson()}");
 
         final result = await outletLocalDataSource.saveOutlet(event.outlet);
@@ -69,16 +62,6 @@ class OutletBloc extends Bloc<OutletEvent, OutletState> {
         log("Getting all outlets");
 
         final allOutlets = await outletLocalDataSource.getAllOutlets();
-        print(
-            'Available outlets before report generation: ${allOutlets.length}');
-        for (var outlet in allOutlets) {
-          print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
-        }
-        // Handle potential null response
-        if (allOutlets == null) {
-          emit(const _Error('Failed to retrieve outlets'));
-          return;
-        }
 
         emit(_LoadedAll(allOutlets));
       } catch (e) {

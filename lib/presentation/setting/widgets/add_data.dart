@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
 
-
-
 class AddData extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;

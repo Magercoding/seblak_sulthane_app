@@ -19,7 +19,6 @@ class SyncDiscountBloc extends Bloc<SyncDiscountEvent, SyncDiscountState> {
       emit(const _Loading());
       log('Starting to sync discounts...');
 
-      // Get discounts from the API
       final result = await discountRemoteDatasource.getDiscounts();
 
       return result.fold(
@@ -28,15 +27,12 @@ class SyncDiscountBloc extends Bloc<SyncDiscountEvent, SyncDiscountState> {
           emit(_Error(error));
         },
         (discountResponseModel) async {
-          // Success, now we need to save to local database
           try {
             log('Successfully fetched discounts from API');
-            
-            // First delete all existing discounts
+
             await DiscountLocalDatasource.instance.deleteAllDiscounts();
             log('Deleted existing discounts from local database');
 
-            // Then insert the new discounts
             if (discountResponseModel.data != null &&
                 discountResponseModel.data!.isNotEmpty) {
               log('Inserting ${discountResponseModel.data!.length} discounts to local database');

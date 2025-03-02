@@ -19,7 +19,6 @@ class OrderMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          // Image Section
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(50.0)),
             child: SizedBox(
@@ -55,8 +54,6 @@ class OrderMenu extends StatelessWidget {
             ),
           ),
           const SpaceWidth(12),
-
-          // Product Details Section
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,8 +78,6 @@ class OrderMenu extends StatelessWidget {
               ],
             ),
           ),
-
-          // Quantity Controls Section
           Row(
             children: [
               GestureDetector(
@@ -128,8 +123,6 @@ class OrderMenu extends StatelessWidget {
             ],
           ),
           const SpaceWidth(8),
-
-          // Total Price Section
           SizedBox(
             width: 80.0,
             child: Text(

@@ -20,16 +20,14 @@ class MemberRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        // Parse the nested data structure from the API response
         final jsonResponse = json.decode(response.body);
         final memberList = jsonResponse['data']['data'] as List;
-        
-        // Create a simplified response with just the members list
+
         final simplifiedResponse = {
           'status': jsonResponse['status'],
           'data': memberList,
         };
-        
+
         return Right(MemberResponseModel.fromJson(simplifiedResponse));
       } else {
         return Left('Failed to get members: ${response.statusCode}');
@@ -68,7 +66,7 @@ class MemberRemoteDatasource {
           'status': jsonResponse['status'],
           'data': jsonResponse['data'],
         };
-        
+
         return Right(MemberResponseModel.fromJson(simplifiedResponse));
       } else {
         return Left(
@@ -109,7 +107,7 @@ class MemberRemoteDatasource {
           'status': jsonResponse['status'],
           'data': jsonResponse['data'],
         };
-        
+
         return Right(MemberResponseModel.fromJson(simplifiedResponse));
       } else {
         return Left(
@@ -134,14 +132,12 @@ class MemberRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        // For delete operations, create a simplified response
-        // since the API just returns a success message
         final jsonResponse = json.decode(response.body);
         final simplifiedResponse = {
           'status': jsonResponse['status'],
-          'data': [], // Empty data for delete response
+          'data': [],
         };
-        
+
         return Right(MemberResponseModel.fromJson(simplifiedResponse));
       } else {
         return Left('Failed to delete member: ${response.statusCode}');

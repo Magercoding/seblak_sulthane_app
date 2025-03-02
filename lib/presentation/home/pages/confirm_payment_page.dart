@@ -44,10 +44,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   int uangPas = 0;
   int uangPas2 = 0;
   int uangPas3 = 0;
-  // int discountAmountValue = 0;
+
   int totalPriceFinal = 0;
-  // int taxFinal = 0;
-  // int serviceChargeFinal = 0;
 
   @override
   void initState() {
@@ -368,8 +366,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                     price - (discount / 100 * price);
                                 final finalTax = subTotal * (tax / 100);
                                 final finalDiscount = discount / 100 * subTotal;
-                                // discountAmountValue = finalDiscount.toInt();
-                                // taxFinal = finalTax.toInt();
+
                                 return Text(
                                   '$tax % (${finalTax.toInt().currencyFormatRp})',
                                   style: const TextStyle(
@@ -430,8 +427,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                     (serviceCharge / 100) *
                                         (price - discountAmount);
 
-                                // serviceChargeFinal =
-                                //     nominalServiceCharge.toInt();
                                 return Text(
                                   '$serviceCharge % (${nominalServiceCharge.toInt().currencyFormatRp})',
                                   style: const TextStyle(
@@ -535,7 +530,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                 uangPas2 = uangPas ~/ 50000 * 50000 + 50000;
                                 uangPas3 = uangPas ~/ 50000 * 50000 + 100000;
                                 totalPriceFinal = total.ceil();
-                                // log("totalPriceFinal: $totalPriceFinal");
+
                                 return Text(
                                   total.ceil().currencyFormatRp,
                                   style: const TextStyle(
@@ -1001,28 +996,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                 ),
                                               );
                                             } else if (isPayNow) {
-                                              // context.read<CheckO>().add(
-                                              //     OrderEvent.addPaymentMethod(
-                                              //         items,
-                                              //         totalPrice,
-                                              //         finalTax,
-                                              //         discount != null
-                                              //             ? discount.value
-                                              //                 .replaceAll(
-                                              //                     '.00', '')
-                                              //                 .toIntegerFromText
-                                              //             : 0,
-                                              //         finalDiscountAmount,
-                                              //         finalService,
-                                              //         subTotal,
-                                              //         totalPriceController.text
-                                              //             .toIntegerFromText,
-                                              //         auth?.user.name ?? '-',
-                                              //         totalQuantity,
-                                              //         auth?.user.id ?? 1,
-                                              //         isCash
-                                              //             ? 'Cash'
-                                              //             : 'QR Pay'));
                                               if (isCash) {
                                                 log("discountAmountValue: $totalDiscount");
                                                 context.read<OrderBloc>().add(
@@ -1062,7 +1035,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                   ),
                                                 );
                                               } else {
-                                                // Modified QRIS handling to use SuccessPaymentDialog instead of PaymentQrisDialog
                                                 log("discountAmountValue: $totalDiscount");
                                                 context.read<OrderBloc>().add(
                                                     OrderEvent.order(

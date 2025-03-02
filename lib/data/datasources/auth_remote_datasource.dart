@@ -12,7 +12,6 @@ class AuthRemoteDatasource {
       String email, String password) async {
     try {
       final url = Uri.parse('${Variables.baseUrl}/api/login');
-      print('Login request to: $url');
 
       final response = await http.post(
         url,
@@ -22,19 +21,13 @@ class AuthRemoteDatasource {
         },
       );
 
-      print('Login status code: ${response.statusCode}');
-      print('Login response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final authModel = AuthResponseModel.fromJson(response.body);
-        print('Login successful - Token: ${authModel.token}');
         return Right(authModel);
       } else {
-        print('Login failed with status: ${response.statusCode}');
         return Left('Failed to login: ${response.body}');
       }
     } catch (e) {
-      print('Login error: $e');
       return Left('Error during login: $e');
     }
   }
@@ -49,22 +42,19 @@ class AuthRemoteDatasource {
           'Authorization': 'Bearer ${authData.token}',
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest' // Tambahan untuk Sanctum
+          'X-Requested-With': 'XMLHttpRequest'
         },
       );
 
-      // Jika dapat 401, tetap anggap sukses karena kita mau logout
       if (response.statusCode == 200 || response.statusCode == 401) {
-        await AuthLocalDataSource().removeAuthData(); // Hapus token lokal
-        return const Right(true); // Anggap sukses
+        await AuthLocalDataSource().removeAuthData();
+        return const Right(true);
       } else {
         return Left('Failed to logout: ${response.body}');
       }
     } catch (e) {
-      // Jika error, tetap coba hapus token lokal
       await AuthLocalDataSource().removeAuthData();
-      return const Right(
-          true); // Tetap anggap sukses karena token sudah dihapus
+      return const Right(true);
     }
   }
 
@@ -83,9 +73,6 @@ class AuthRemoteDatasource {
         },
       );
 
-      print('Get Profile status code: ${response.statusCode}');
-      print('Get Profile response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final userModel = UserModel.fromJson(json.decode(response.body));
         return Right(userModel);
@@ -93,7 +80,6 @@ class AuthRemoteDatasource {
         return Left('Failed to get profile: ${response.body}');
       }
     } catch (e) {
-      print('Get Profile error: $e');
       return Left('Error during get profile: $e');
     }
   }

@@ -19,7 +19,7 @@ class _TaxDialogState extends State<TaxDialog> {
   @override
   void initState() {
     super.initState();
-    // Load tax data when dialog opens
+
     context.read<TaxBloc>().add(const TaxEvent.started());
   }
 
@@ -45,10 +45,9 @@ class _TaxDialogState extends State<TaxDialog> {
                 return tax.value;
               },
               orElse: () {
-                // Get tax value from SettingsLocalDatasource directly
                 final localDatasource = SettingsLocalDatasource();
                 print('Getting tax from local storage');
-                return 15; // Default value while loading
+                return 15;
               },
             );
 
@@ -99,7 +98,6 @@ class _TaxDialogState extends State<TaxDialog> {
                                 CheckoutEvent.addTax(tax > 0 ? 0 : taxValue),
                               );
                           if (tax <= 0) {
-                            // Trigger tax bloc update when enabling tax
                             context
                                 .read<TaxBloc>()
                                 .add(const TaxEvent.started());

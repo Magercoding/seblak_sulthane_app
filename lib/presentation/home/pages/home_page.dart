@@ -323,13 +323,6 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {},
                                 label: 'Dine In',
                               ),
-                              const SpaceWidth(8.0),
-                              Button.outlined(
-                                width: 100.0,
-                                height: 40,
-                                onPressed: () {},
-                                label: 'Delivery',
-                              ),
                             ],
                           ),
                           const SpaceHeight(16.0),
@@ -550,7 +543,6 @@ class _HomePageState extends State<HomePage> {
                                         );
                                       }
 
-                                      // Show total discount percentage
                                       return Text(
                                         '$discount %',
                                         style: const TextStyle(
@@ -564,7 +556,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-// Add this row to show discount amount
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

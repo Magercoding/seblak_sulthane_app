@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class CategroyResponseModel {
@@ -40,14 +39,11 @@ class CategoryModel {
   int? categoryId;
   int? isSync;
   String? image;
-  // DateTime createdAt;
-  // DateTime updatedAt;
 
   CategoryModel({this.id, this.name, this.categoryId, this.isSync, this.image});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      // 'id': id,
       'name': name,
       'is_sync': isSync ?? 1,
       'category_id': id,

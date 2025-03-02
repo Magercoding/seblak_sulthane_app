@@ -1,4 +1,3 @@
-// tax_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:seblak_sulthane_app/data/datasources/settings_local_datasource.dart';
@@ -16,12 +15,8 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
   TaxBloc() : super(const TaxState.initial()) {
     on<_Started>((event, emit) async {
       try {
-        // Ambil data tax dan service charge
         final tax = await _localDatasource.getTax();
         final serviceCharge = await _localDatasource.getServiceCharge();
-
-        print('Initial Tax Value: ${tax.value}');
-        print('Initial Service Charge: $serviceCharge');
 
         final taxes = [
           TaxModel(
@@ -34,11 +29,10 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
 
         emit(TaxState.loaded(taxes));
       } catch (e) {
-        print('Error loading taxes: $e');
         emit(TaxState.error(e.toString()));
       }
     });
-    // Jalankan event Started saat inisialisasi
+
     this.add(const TaxEvent.started());
 
     on<_Add>((event, emit) async {
@@ -58,7 +52,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
 
         emit(TaxState.loaded(List.from(_taxes)));
       } catch (e) {
-        print('Error adding tax: $e');
         emit(TaxState.error(e.toString()));
       }
     });
@@ -77,7 +70,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
           emit(TaxState.loaded(List.from(_taxes)));
         }
       } catch (e) {
-        print('Error updating tax: $e');
         emit(TaxState.error(e.toString()));
       }
     });

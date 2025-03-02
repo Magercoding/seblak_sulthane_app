@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:seblak_sulthane_app/core/utils/lifecycle_manager.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
@@ -22,7 +21,6 @@ import 'package:seblak_sulthane_app/presentation/report/blocs/product_sales/prod
 import 'package:seblak_sulthane_app/presentation/report/blocs/summary/summary_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/sales/blocs/bloc/last_order_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/sales/blocs/day_sales/day_sales_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/setting/bloc/add_product/add_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
@@ -47,14 +45,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'presentation/home/pages/dashboard_page.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Tambahkan ini
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -102,9 +99,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => GetTableStatusBloc(),
-        ),
-        BlocProvider(
-          create: (context) => AddProductBloc(ProductRemoteDatasource()),
         ),
         BlocProvider(
           create: (context) => GetProductsBloc(ProductRemoteDatasource()),
@@ -165,9 +159,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const LifecycleManager(
-          child: SplashScreen(),
-        ),
+        home: const SplashScreen(),
       ),
     );
   }

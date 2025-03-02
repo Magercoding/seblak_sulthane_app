@@ -18,7 +18,7 @@ class _ServiceDialogState extends State<ServiceDialog> {
   @override
   void initState() {
     super.initState();
-    // Load tax data when dialog opens
+
     context.read<TaxBloc>().add(const TaxEvent.started());
   }
 
@@ -43,7 +43,7 @@ class _ServiceDialogState extends State<ServiceDialog> {
               },
               orElse: () {
                 print('Getting service charge from local storage');
-                return 5; // Default value while loading
+                return 5;
               },
             );
 
@@ -77,8 +77,7 @@ class _ServiceDialogState extends State<ServiceDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ListTile(
-                                        title: const Text('Biaya layanan'),
-
+                    title: const Text('Biaya layanan'),
                     subtitle: Text('Presentase ($serviceValue%)'),
                     contentPadding: EdgeInsets.zero,
                     textColor: AppColors.primary,
@@ -97,7 +96,6 @@ class _ServiceDialogState extends State<ServiceDialog> {
                                 ),
                               );
                           if (service <= 0) {
-                            // Trigger tax bloc update when enabling service
                             context
                                 .read<TaxBloc>()
                                 .add(const TaxEvent.started());

@@ -77,33 +77,27 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var currentState = state as _Loaded;
       List<Discount> currentDiscounts = [...currentState.discounts];
 
-      // Check if discount of same category exists
       int index = currentDiscounts
           .indexWhere((d) => d.category == event.discount.category);
 
       if (index != -1) {
-        // Replace existing discount of same category
         currentDiscounts[index] = event.discount;
       } else {
-        // Add new discount
         currentDiscounts.add(event.discount);
       }
 
-      // Calculate total discount percentage
       int totalDiscountPercentage = currentDiscounts.fold(
         0,
         (sum, discount) =>
             sum + int.parse(discount.value!.replaceAll('.00', '')),
       );
 
-      // Calculate the total price before discount
       final totalPrice = currentState.items.fold(
         0,
         (sum, item) =>
             sum + (item.product.price!.toIntegerFromText * item.quantity),
       );
 
-      // Calculate discount amount
       final discountAmount =
           (totalPrice * totalDiscountPercentage / 100).round();
 
@@ -123,24 +117,20 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var currentState = state as _Loaded;
       List<Discount> currentDiscounts = [...currentState.discounts];
 
-      // Remove discount by category
       currentDiscounts.removeWhere((d) => d.category == event.category);
 
-      // Recalculate total discount percentage
       int totalDiscountPercentage = currentDiscounts.fold(
         0,
         (sum, discount) =>
             sum + int.parse(discount.value!.replaceAll('.00', '')),
       );
 
-      // Calculate the total price before discount
       final totalPrice = currentState.items.fold(
         0,
         (sum, item) =>
             sum + (item.product.price!.toIntegerFromText * item.quantity),
       );
 
-      // Calculate new discount amount
       final discountAmount =
           (totalPrice * totalDiscountPercentage / 100).round();
 
@@ -152,7 +142,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         currentState.tax,
         currentState.serviceCharge,
         currentState.totalQuantity,
-        totalPrice - discountAmount, // Update total price after discount
+        totalPrice - discountAmount,
         currentState.draftName,
       ));
     });
@@ -252,7 +242,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
               .map((e) =>
                   ProductQuantity(product: e.product, quantity: e.quantity))
               .toList(),
-          [], // Use empty list instead of null
+          [],
           draftOrder.discount,
           draftOrder.discountAmount,
           draftOrder.tax,

@@ -46,9 +46,6 @@ class SuccessPaymentDialog extends StatefulWidget {
 }
 
 class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
-  // List<ProductQuantity> data = [];
-  // int totalQty = 0;
-  // int totalPrice = 0;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

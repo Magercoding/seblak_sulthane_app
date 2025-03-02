@@ -39,7 +39,6 @@ class DiscountRemoteDatasource {
     final authData = await AuthLocalDataSource().getAuthData();
 
     try {
-      // Convert value to string before sending
       final Map<String, dynamic> body = {
         'name': name,
         'description': description,
@@ -47,8 +46,6 @@ class DiscountRemoteDatasource {
         'type': 'percentage',
         'category': category,
       };
-
-      print('Request body: ${jsonEncode(body)}'); // Debug print
 
       final response = await http.post(
         url,
@@ -59,9 +56,6 @@ class DiscountRemoteDatasource {
         },
         body: jsonEncode(body),
       );
-
-      print('Response status: ${response.statusCode}'); // Debug print
-      print('Response body: ${response.body}'); // Debug print
 
       if (response.statusCode == 201) {
         return Right(DiscountResponseModel.fromRawJson(response.body));

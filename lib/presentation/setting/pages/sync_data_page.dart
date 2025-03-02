@@ -22,7 +22,6 @@ class _SyncDataPageState extends State<SyncDataPage> {
       ),
       body: Column(
         children: [
-          // Sync Product
           BlocConsumer<SyncProductBloc, SyncProductState>(
             listener: (context, state) {
               state.maybeWhen(
@@ -68,8 +67,6 @@ class _SyncDataPageState extends State<SyncDataPage> {
               );
             },
           ),
-
-          // Sync Member
           BlocConsumer<SyncMemberBloc, SyncMemberState>(
             listener: (context, state) {
               state.maybeWhen(
@@ -112,8 +109,6 @@ class _SyncDataPageState extends State<SyncDataPage> {
               );
             },
           ),
-
-          // Sync Discount
           BlocConsumer<SyncDiscountBloc, SyncDiscountState>(
             listener: (context, state) {
               state.maybeWhen(
@@ -156,8 +151,6 @@ class _SyncDataPageState extends State<SyncDataPage> {
               );
             },
           ),
-
-          // Sync Order
           BlocConsumer<SyncOrderBloc, SyncOrderState>(
             listener: (context, state) {
               state.maybeWhen(

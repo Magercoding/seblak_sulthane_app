@@ -16,14 +16,12 @@ class ProductSalesChartWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Create the data map for pie chart
     final Map<String, double> dataMap = {};
-    
+
     for (var product in productSales) {
       dataMap[product.productName] = double.parse(product.totalQuantity);
     }
 
-    // Generate random colors for the chart
     final List<Color> colorList = [
       const Color(0xff0293ee),
       const Color(0xfff8b250),
@@ -56,9 +54,7 @@ class ProductSalesChartWidgets extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32.0),
-          
           if (dataMap.isEmpty)
-            // Show message when no data is available
             const Center(
               child: Padding(
                 padding: EdgeInsets.all(50.0),
@@ -70,7 +66,6 @@ class ProductSalesChartWidgets extends StatelessWidget {
               ),
             )
           else
-            // Show pie chart when data is available
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -120,7 +115,6 @@ class ProductSalesChartWidgets extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24.0),
-                  // Product sales table
                   DataTable(
                     columns: const [
                       DataColumn(label: Text('Product')),
@@ -139,10 +133,10 @@ class ProductSalesChartWidgets extends StatelessWidget {
 
   List<DataRow> _createProductRows(Map<String, double> dataMap) {
     final double total = dataMap.values.fold(0, (sum, value) => sum + value);
-    
+
     return dataMap.entries.map((entry) {
       final percentage = (entry.value / total * 100).toStringAsFixed(1);
-      
+
       return DataRow(
         cells: [
           DataCell(Text(entry.key)),

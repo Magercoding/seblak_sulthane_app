@@ -10,10 +10,8 @@ class MemberLocalDatasource {
 
   static Database? _database;
 
-  // Table name
   static const String _tableName = 'members';
 
-  // Create members table
   static const String createTable = '''
     CREATE TABLE IF NOT EXISTS $_tableName (
       id INTEGER PRIMARY KEY,
@@ -39,16 +37,14 @@ class MemberLocalDatasource {
         await db.execute(createTable);
       },
       onOpen: (Database db) async {
-        // Ensure table exists when opening the database
         await db.execute(createTable);
       },
     );
   }
 
-  // Insert a single member
   Future<int> insertMember(Member member) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     return await db.insert(
       _tableName,
@@ -57,10 +53,9 @@ class MemberLocalDatasource {
     );
   }
 
-  // Insert multiple members
   Future<void> insertMembers(List<Member> members) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final batch = db.batch();
 
@@ -75,10 +70,9 @@ class MemberLocalDatasource {
     await batch.commit(noResult: true);
   }
 
-  // Get all members
   Future<List<Member>> getAllMembers() async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
@@ -87,10 +81,9 @@ class MemberLocalDatasource {
     });
   }
 
-  // Get member by id
   Future<Member?> getMemberById(int id) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,
@@ -105,10 +98,9 @@ class MemberLocalDatasource {
     return null;
   }
 
-  // Get member by phone
   Future<Member?> getMemberByPhone(String phone) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,
@@ -123,26 +115,24 @@ class MemberLocalDatasource {
     return null;
   }
 
-  // Delete all members
   Future<int> deleteAllMembers() async {
     try {
       final db = await database;
-      // Ensure table exists before deleting
+
       await db.execute(createTable);
       return await db.delete(_tableName);
     } catch (e) {
       log('Error deleting members: $e');
-      // Create table if it doesn't exist and return 0 (no rows deleted)
+
       final db = await database;
       await db.execute(createTable);
       return 0;
     }
   }
 
-  // Search members by name
   Future<List<Member>> searchMembersByName(String name) async {
     final db = await database;
-    // Ensure table exists
+
     await db.execute(createTable);
     final List<Map<String, dynamic>> maps = await db.query(
       _tableName,

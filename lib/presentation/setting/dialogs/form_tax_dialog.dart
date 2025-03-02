@@ -8,7 +8,6 @@ import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/spaces.dart';
 import '../models/tax_model.dart';
 
-// FormTaxDialog.dart
 class FormTaxDialog extends StatefulWidget {
   final TaxModel? data;
   const FormTaxDialog({super.key, this.data});
@@ -24,7 +23,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing data if editing
+
     serviceFeeController = TextEditingController(
       text: widget.data?.type.isLayanan == true
           ? widget.data?.value.toString()
@@ -35,9 +34,6 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
           ? widget.data?.value.toString()
           : '',
     );
-
-    // Debug print
-    print('Initial data: ${widget.data?.toJson()}');
   }
 
   @override
@@ -51,17 +47,12 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
     final serviceValue = int.tryParse(serviceFeeController.text) ?? 0;
     final taxValue = int.tryParse(taxFeeController.text) ?? 0;
 
-    print('Service Value: $serviceValue'); // Debug print
-    print('Tax Value: $taxValue'); // Debug print
-
     if (serviceValue > 0) {
       final serviceTax = TaxModel(
         name: 'Biaya Layanan',
         type: TaxType.layanan,
         value: serviceValue,
       );
-
-      print('Submitting service tax: ${serviceTax.toJson()}'); // Debug print
 
       if (widget.data == null) {
         context.read<TaxBloc>().add(TaxEvent.add(serviceTax));
@@ -77,8 +68,6 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
         value: taxValue,
       );
 
-      print('Submitting tax fee: ${taxFee.toJson()}'); // Debug print
-
       if (widget.data == null) {
         context.read<TaxBloc>().add(TaxEvent.add(taxFee));
       } else if (widget.data?.type.isPajak == true) {
@@ -87,7 +76,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
     }
     context.read<TaxBloc>().add(const TaxEvent.started());
 
-    context.pop(); // Close dialog after submission
+    context.pop();
   }
 
   @override
@@ -100,9 +89,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
               SnackBar(content: Text('Error: $message')),
             );
           },
-          loaded: (taxes) {
-            print('Loaded taxes: ${taxes.length}'); // Debug print
-          },
+          loaded: (taxes) {},
         );
       },
       child: AlertDialog(
@@ -128,8 +115,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
                 CustomTextField(
                   controller: serviceFeeController,
                   label: 'Biaya Layanan',
-                  onChanged: (value) =>
-                      print('Service fee changed: $value'), // Debug print
+                  onChanged: (value) => print('Service fee changed: $value'),
                   keyboardType: TextInputType.number,
                   suffixIcon: const Icon(Icons.percent),
                 ),
@@ -137,8 +123,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
                 CustomTextField(
                   controller: taxFeeController,
                   label: 'Pajak PB1',
-                  onChanged: (value) =>
-                      print('Tax fee changed: $value'), // Debug print
+                  onChanged: (value) => print('Tax fee changed: $value'),
                   keyboardType: TextInputType.number,
                   suffixIcon: const Icon(Icons.percent),
                 ),

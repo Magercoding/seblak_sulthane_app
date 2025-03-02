@@ -19,7 +19,6 @@ import 'package:pdf/widgets.dart' as pw;
 class RevenueInvoice {
   static late Font ttf;
 
-  // Get outletId from user profile, similar to ReportPage
   static Future<int?> _fetchOutletIdFromProfile() async {
     try {
       final authRemoteDatasource = AuthRemoteDatasource();
@@ -43,36 +42,19 @@ class RevenueInvoice {
     }
   }
 
-  // Get outlet address using outletId
   static Future<String> _getOutletAddress(int outletId) async {
     try {
-      // Debug: check all available outlets
       final outletDataSource = OutletLocalDataSource();
       final allOutlets = await outletDataSource.getAllOutlets();
-      print('Available outlets: ${allOutlets.length}');
-      for (var outlet in allOutlets) {
-        print('Outlet ${outlet.id}: ${outlet.name}, ${outlet.address}');
-      }
-
-      // Debug: print all outlets as a list
-      print('All outlets: $allOutlets');
 
       final outlet = await outletDataSource.getOutletById(outletId);
 
-      if (outlet != null) {
-        print('Found outlet for ID $outletId: $outlet');
-      }
-
-      // If the specific outlet is not found but we have other outlets, use the first one
       if (outlet == null && allOutlets.isNotEmpty) {
-        print(
-            'Outlet with ID $outletId not found, using first available outlet instead');
         return allOutlets.first.address ?? 'Seblak Sulthane';
       }
 
       return outlet?.address ?? 'Seblak Sulthane';
     } catch (e) {
-      print('Error getting outlet address: $e');
       return 'Seblak Sulthane';
     }
   }
@@ -87,15 +69,10 @@ class RevenueInvoice {
 
     final image = pw.MemoryImage(bytes);
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await _fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
-    print('Using outletId: $outletId for PDF generation');
-
-    // Get outlet address
     final String outletAddress = await _getOutletAddress(outletId);
-    print('Using address: $outletAddress for PDF');
 
     pdf.addPage(
       MultiPage(
@@ -147,18 +124,13 @@ class RevenueInvoice {
         ),
       ]);
 
-  // Safely parse a string to an integer
   static int safeParseInt(String value) {
     try {
-      // Try to parse as int first
       return int.parse(value);
     } catch (e) {
       try {
-        // If that fails, try to parse as double and convert to int
         return double.parse(value).toInt();
       } catch (e) {
-        // If all parsing fails, return 0
-        print('Failed to parse to int: $value');
         return 0;
       }
     }
@@ -287,15 +259,10 @@ class RevenueInvoice {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Summary Sales Report'];
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await _fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
-    print('Using outletId: $outletId for Excel generation');
-
-    // Get outlet address
     final String outletAddress = await _getOutletAddress(outletId);
-    print('Using address: $outletAddress for Excel');
 
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("B1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));

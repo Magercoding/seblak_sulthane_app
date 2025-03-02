@@ -111,7 +111,6 @@ class TransactionReportWidget extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    // Excel Export Button
                     GestureDetector(
                       onTap: () => _handleExport(context, false),
                       child: const Row(
@@ -132,7 +131,6 @@ class TransactionReportWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // PDF Export Button
                     GestureDetector(
                       onTap: () => _handleExport(context, true),
                       child: const Row(
@@ -168,8 +166,6 @@ class TransactionReportWidget extends StatelessWidget {
                   rightHandSideColumnWidth: 1020,
                   isFixedHeader: true,
                   headerWidgets: headerWidgets,
-                  // isFixedFooter: true,
-                  // footerWidgets: _getTitleWidget(),
                   leftSideItemBuilder: (context, index) {
                     return Container(
                       width: 40,
@@ -280,7 +276,6 @@ class TransactionReportWidget extends StatelessWidget {
                   ),
                   leftHandSideColBackgroundColor: AppColors.white,
                   rightHandSideColBackgroundColor: AppColors.white,
-
                   itemExtent: 55,
                 ),
               ),

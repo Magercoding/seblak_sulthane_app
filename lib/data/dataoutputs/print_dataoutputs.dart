@@ -16,7 +16,6 @@ class PrintDataoutputs {
 
   static final PrintDataoutputs instance = PrintDataoutputs._init();
 
-  // Get outletId from user profile, similar to ReportPage
   static Future<int?> _fetchOutletIdFromProfile() async {
     try {
       final authRemoteDatasource = AuthRemoteDatasource();
@@ -40,10 +39,8 @@ class PrintDataoutputs {
     }
   }
 
-  // Get outlet information using outletId
   static Future<OutletModel?> _getOutletInfo(int outletId) async {
     try {
-      // Debug: check all available outlets
       final outletDataSource = OutletLocalDataSource();
       final allOutlets = await outletDataSource.getAllOutlets();
       print('Available outlets: ${allOutlets.length}');
@@ -53,7 +50,6 @@ class PrintDataoutputs {
 
       final outlet = await outletDataSource.getOutletById(outletId);
 
-      // If the specific outlet is not found but we have other outlets, use the first one
       if (outlet == null && allOutlets.isNotEmpty) {
         print(
             'Outlet with ID $outletId not found, using first available outlet instead');
@@ -89,13 +85,11 @@ class PrintDataoutputs {
     final pajak = totalPrice * 0.11;
     final total = totalPrice + pajak;
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for receipt printing');
 
-    // Get outlet information
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     final String outletName = outlet?.name ?? 'Seblak Sulthane';
     final String outletAddress = outlet?.address ?? 'Seblak Sulthane';
@@ -243,42 +237,23 @@ class PrintDataoutputs {
 
   Future<List<int>> printOrderV2(
       List<ProductQuantity> products, int orderId, int paper,
-      {int? outletId}
-      // OrderModel order,
-      // Uint8List logo,
-      // StoreModel store,
-      // TemplateReceiptModel? template,
-      ) async {
+      {int? outletId}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
     final generator =
         Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for receipt printing');
 
-    // Get outlet information
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     final String outletName = outlet?.name ?? 'Seblak Sulthane';
     final String outletAddress = outlet?.address ?? 'Seblak Sulthane';
 
-    // final ByteData data = await rootBundle.load('assets/logo/mylogo.png');
-    // final Uint8List bytesData = data.buffer.asUint8List();
-    // final img.Image? orginalImage = img.decodeImage(logo);
-
     bytes += generator.reset();
-
-    // if (orginalImage != null) {
-    //   final img.Image grayscalledImage = img.grayscale(orginalImage);
-    //   final img.Image resizedImage =
-    //       img.copyResize(grayscalledImage, width: 240);
-    //   bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
-    //   bytes += generator.feed(3);
-    // }
 
     bytes += generator.text(outletName,
         styles: const PosStyles(
@@ -290,12 +265,6 @@ class PrintDataoutputs {
 
     bytes += generator.text(outletAddress,
         styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.text('Kab. Sleman, DI Yogyakarta',
-    //     styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.text('coffeewithbahri@gmail.com',
-    //     styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.text('085640899224',
-    //     styles: const PosStyles(bold: false, align: PosAlign.center));
 
     bytes += generator.feed(1);
 
@@ -305,25 +274,6 @@ class PrintDataoutputs {
             : '================================',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
-    // if (template.receiptType == 'Default') {
-    //   bytes += generator.row([
-    //     PosColumn(
-    //       text: 'Antrian',
-    //       width: 5,
-    //       styles: const PosStyles(align: PosAlign.left),
-    //     ),
-    //     PosColumn(
-    //       text: ':',
-    //       width: 1,
-    //       styles: const PosStyles(align: PosAlign.left),
-    //     ),
-    //     PosColumn(
-    //       text: order.noQueue.toString(),
-    //       width: 6,
-    //       styles: const PosStyles(align: PosAlign.left),
-    //     ),
-    //   ]);
-    // }
     bytes += generator.row([
       PosColumn(
         text: 'ID Transaksi',
@@ -419,56 +369,6 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
-    // bytes += generator.row([
-    //   PosColumn(
-    //     text: 'Subtotal  Produk',
-    //     width: 8,
-    //     styles: const PosStyles(align: PosAlign.left),
-    //   ),
-    //   PosColumn(
-    //     text: order.subTotal.currencyFormatRpV2,
-    //     width: 4,
-    //     styles: const PosStyles(align: PosAlign.right),
-    //   ),
-    // ]);
-
-    // bytes += generator.row([
-    //   PosColumn(
-    //     text: 'Diskon',
-    //     width: 8,
-    //     styles: const PosStyles(align: PosAlign.left),
-    //   ),
-    //   PosColumn(
-    //     text: order.discountAmount.currencyFormatRpV2,
-    //     width: 4,
-    //     styles: const PosStyles(align: PosAlign.right),
-    //   ),
-    // ]);
-    // bytes += generator.row([
-    //   PosColumn(
-    //     text: 'PPN',
-    //     width: 8,
-    //     styles: const PosStyles(align: PosAlign.left),
-    //   ),
-    //   PosColumn(
-    //     text: order.tax.currencyFormatRpV2,
-    //     width: 4,
-    //     styles: const PosStyles(align: PosAlign.right),
-    //   ),
-    // ]);
-    // bytes += generator.row([
-    //   PosColumn(
-    //     text: 'Service',
-    //     width: 8,
-    //     styles: const PosStyles(align: PosAlign.left),
-    //   ),
-    //   PosColumn(
-    //     text: order.serviceCharge.currencyFormatRpV2,
-    //     width: 4,
-    //     styles: const PosStyles(align: PosAlign.right),
-    //   ),
-    // ]);
-
     bytes += generator.row([
       PosColumn(
         text: 'Total Tagihan',
@@ -532,11 +432,7 @@ class PrintDataoutputs {
             ? '================================================'
             : '================================',
         styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.text('Password: fic11jilid2',
-    //     styles: const PosStyles(bold: false, align: PosAlign.center));
-    // bytes += generator.feed(1);
-    // bytes += generator.text('instagram: @codewithbahri',
-    //     styles: const PosStyles(bold: false, align: PosAlign.center));
+
     bytes += generator.feed(1);
     bytes += generator.text(
         'Terbayar: ${DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now())}',
@@ -577,13 +473,11 @@ class PrintDataoutputs {
     final img.Image? orginalImage = img.decodeImage(bytesData);
     bytes += generator.reset();
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for receipt printing');
 
-    // Get outlet information
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     final String outletName = outlet?.name ?? 'Seblak Sulthane';
     final String outletAddress =
@@ -818,7 +712,7 @@ class PrintDataoutputs {
         styles: const PosStyles(bold: false, align: PosAlign.center));
     bytes += generator.text('Pass Wifi: fic14jilid2',
         styles: const PosStyles(bold: false, align: PosAlign.center));
-    //terima kasih
+
     bytes += generator.text('Terima Kasih',
         styles: const PosStyles(bold: true, align: PosAlign.center));
     bytes += generator.feed(3);
@@ -836,10 +730,6 @@ class PrintDataoutputs {
 
     final img.Image? orginalImage = img.decodeImage(imageQris);
     bytes += generator.reset();
-
-    // final Uint8List bytesData = data.buffer.asUint8List();
-    // final img.Image? orginalImage = img.decodeImage(bytesData);
-    // bytes += generator.reset();
 
     bytes += generator.text('Scan QRIS Below for Payment',
         styles: const PosStyles(bold: false, align: PosAlign.center));
@@ -870,13 +760,11 @@ class PrintDataoutputs {
     final generator =
         Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
 
-    // If outletId is not provided, try to fetch it from profile
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
-    outletId ??= 1; // Default to 1 if still null
+    outletId ??= 1;
 
     print('Using outletId: $outletId for receipt printing');
 
-    // Get outlet information
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     final String outletName = outlet?.name ?? 'Seblak Sulthane';
 
@@ -911,10 +799,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
-    // bytes += generator.text(
-    //     'Date: ${DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now())}',
-    //     styles: const PosStyles(bold: false, align: PosAlign.left));
-    //reciept number
+
     bytes += generator.row([
       PosColumn(
         text: 'Receipt',
@@ -927,10 +812,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
-    // bytes += generator.text(
-    //     'Receipt: JF-${DateFormat('yyyyMMddhhmm').format(DateTime.now())}',
-    //     styles: const PosStyles(bold: false, align: PosAlign.left));
-//cashier name
+
     bytes += generator.row([
       PosColumn(
         text: 'Cashier',
@@ -943,10 +825,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
-    // bytes += generator.text('Cashier: $cashierName',
-    //     styles: const PosStyles(bold: false, align: PosAlign.left));
-    //customer name
-    //column 2
+
     bytes += generator.row([
       PosColumn(
         text: 'Customer - $draftName',
@@ -960,7 +839,6 @@ class PrintDataoutputs {
       ),
     ]);
 
-    //----
     bytes += generator.text(
         paper == 80
             ? '------------------------------------------------'
@@ -984,7 +862,7 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
     bytes += generator.feed(3);
-    //cut
+
     bytes += generator.cut();
 
     return bytes;

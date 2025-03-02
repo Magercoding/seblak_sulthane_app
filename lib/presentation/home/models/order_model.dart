@@ -1,24 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 
-//  id INTEGER PRIMARY KEY AUTOINCREMENT,
-//       sub_total INTEGER,
-//       tax INTEGER,
-//       discount INTEGER,
-//       service_charge INTEGER,
-//       total INTEGER,
-//       payment_method TEXT,
-//       total_item INTEGER,
-//       id_kasir INTEGER,
-//       nama_kasir TEXT,
-//       transaction_time TEXT,
-//       is_sync INTEGER DEFAULT 0
-
 class OrderModel {
   final int? id;
-  //payment_amount
+
   final int paymentAmount;
   final int subTotal;
   final int tax;
@@ -59,19 +45,6 @@ class OrderModel {
     required this.orderItems,
   });
 
-  //  'payment_amount' => 'required',
-  //           'sub_total' => 'required',
-  //           'tax' => 'required',
-  //           'discount' => 'required',
-  //           'service_charge' => 'required',
-  //           'total' => 'required',
-  //           'payment_method' => 'required',
-  //           'total_item' => 'required',
-  //           'id_kasir' => 'required',
-  //           'nama_kasir' => 'required',
-  //           'transaction_time' => 'required',
-  //           'order_items' => 'required'
-
   Map<String, dynamic> toServerMap() {
     return {
       'payment_amount': paymentAmount,
@@ -96,7 +69,6 @@ class OrderModel {
 
   Map<String, dynamic> toMap() {
     return {
-      // 'id': id,
       'payment_amount': paymentAmount,
       'sub_total': subTotal,
       'tax': tax,

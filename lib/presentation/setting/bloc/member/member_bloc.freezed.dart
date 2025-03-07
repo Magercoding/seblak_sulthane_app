@@ -20,6 +20,8 @@ mixin _$MemberEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -29,6 +31,8 @@ mixin _$MemberEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -38,6 +42,8 @@ mixin _$MemberEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -48,6 +54,8 @@ mixin _$MemberEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -57,6 +65,8 @@ mixin _$MemberEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -66,6 +76,8 @@ mixin _$MemberEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,
@@ -138,6 +150,8 @@ class _$StartedImpl implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -150,6 +164,8 @@ class _$StartedImpl implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -162,6 +178,8 @@ class _$StartedImpl implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -178,6 +196,8 @@ class _$StartedImpl implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -190,6 +210,8 @@ class _$StartedImpl implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -202,6 +224,8 @@ class _$StartedImpl implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,
@@ -261,6 +285,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -273,6 +299,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -285,6 +313,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -301,6 +331,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -313,6 +345,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -325,6 +359,8 @@ class _$GetMembersImpl implements _GetMembers {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,
@@ -339,6 +375,347 @@ class _$GetMembersImpl implements _GetMembers {
 
 abstract class _GetMembers implements MemberEvent {
   const factory _GetMembers() = _$GetMembersImpl;
+}
+
+/// @nodoc
+abstract class _$$SearchMembersImplCopyWith<$Res> {
+  factory _$$SearchMembersImplCopyWith(
+          _$SearchMembersImpl value, $Res Function(_$SearchMembersImpl) then) =
+      __$$SearchMembersImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String query});
+}
+
+/// @nodoc
+class __$$SearchMembersImplCopyWithImpl<$Res>
+    extends _$MemberEventCopyWithImpl<$Res, _$SearchMembersImpl>
+    implements _$$SearchMembersImplCopyWith<$Res> {
+  __$$SearchMembersImplCopyWithImpl(
+      _$SearchMembersImpl _value, $Res Function(_$SearchMembersImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = null,
+  }) {
+    return _then(_$SearchMembersImpl(
+      null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SearchMembersImpl implements _SearchMembers {
+  const _$SearchMembersImpl(this.query);
+
+  @override
+  final String query;
+
+  @override
+  String toString() {
+    return 'MemberEvent.searchMembers(query: $query)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchMembersImpl &&
+            (identical(other.query, query) || other.query == query));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, query);
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchMembersImplCopyWith<_$SearchMembersImpl> get copyWith =>
+      __$$SearchMembersImplCopyWithImpl<_$SearchMembersImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
+    required TResult Function(String name, String phone) addMember,
+    required TResult Function(int id, String name, String phone) updateMember,
+    required TResult Function(int id) deleteMember,
+  }) {
+    return searchMembers(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
+    TResult? Function(String name, String phone)? addMember,
+    TResult? Function(int id, String name, String phone)? updateMember,
+    TResult? Function(int id)? deleteMember,
+  }) {
+    return searchMembers?.call(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
+    TResult Function(String name, String phone)? addMember,
+    TResult Function(int id, String name, String phone)? updateMember,
+    TResult Function(int id)? deleteMember,
+    required TResult orElse(),
+  }) {
+    if (searchMembers != null) {
+      return searchMembers(query);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
+    required TResult Function(_AddMember value) addMember,
+    required TResult Function(_UpdateMember value) updateMember,
+    required TResult Function(_DeleteMember value) deleteMember,
+  }) {
+    return searchMembers(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
+    TResult? Function(_AddMember value)? addMember,
+    TResult? Function(_UpdateMember value)? updateMember,
+    TResult? Function(_DeleteMember value)? deleteMember,
+  }) {
+    return searchMembers?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
+    TResult Function(_AddMember value)? addMember,
+    TResult Function(_UpdateMember value)? updateMember,
+    TResult Function(_DeleteMember value)? deleteMember,
+    required TResult orElse(),
+  }) {
+    if (searchMembers != null) {
+      return searchMembers(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SearchMembers implements MemberEvent {
+  const factory _SearchMembers(final String query) = _$SearchMembersImpl;
+
+  String get query;
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SearchMembersImplCopyWith<_$SearchMembersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$GetMemberByPhoneImplCopyWith<$Res> {
+  factory _$$GetMemberByPhoneImplCopyWith(_$GetMemberByPhoneImpl value,
+          $Res Function(_$GetMemberByPhoneImpl) then) =
+      __$$GetMemberByPhoneImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String phone});
+}
+
+/// @nodoc
+class __$$GetMemberByPhoneImplCopyWithImpl<$Res>
+    extends _$MemberEventCopyWithImpl<$Res, _$GetMemberByPhoneImpl>
+    implements _$$GetMemberByPhoneImplCopyWith<$Res> {
+  __$$GetMemberByPhoneImplCopyWithImpl(_$GetMemberByPhoneImpl _value,
+      $Res Function(_$GetMemberByPhoneImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? phone = null,
+  }) {
+    return _then(_$GetMemberByPhoneImpl(
+      null == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$GetMemberByPhoneImpl implements _GetMemberByPhone {
+  const _$GetMemberByPhoneImpl(this.phone);
+
+  @override
+  final String phone;
+
+  @override
+  String toString() {
+    return 'MemberEvent.getMemberByPhone(phone: $phone)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GetMemberByPhoneImpl &&
+            (identical(other.phone, phone) || other.phone == phone));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, phone);
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GetMemberByPhoneImplCopyWith<_$GetMemberByPhoneImpl> get copyWith =>
+      __$$GetMemberByPhoneImplCopyWithImpl<_$GetMemberByPhoneImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
+    required TResult Function(String name, String phone) addMember,
+    required TResult Function(int id, String name, String phone) updateMember,
+    required TResult Function(int id) deleteMember,
+  }) {
+    return getMemberByPhone(phone);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
+    TResult? Function(String name, String phone)? addMember,
+    TResult? Function(int id, String name, String phone)? updateMember,
+    TResult? Function(int id)? deleteMember,
+  }) {
+    return getMemberByPhone?.call(phone);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
+    TResult Function(String name, String phone)? addMember,
+    TResult Function(int id, String name, String phone)? updateMember,
+    TResult Function(int id)? deleteMember,
+    required TResult orElse(),
+  }) {
+    if (getMemberByPhone != null) {
+      return getMemberByPhone(phone);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
+    required TResult Function(_AddMember value) addMember,
+    required TResult Function(_UpdateMember value) updateMember,
+    required TResult Function(_DeleteMember value) deleteMember,
+  }) {
+    return getMemberByPhone(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
+    TResult? Function(_AddMember value)? addMember,
+    TResult? Function(_UpdateMember value)? updateMember,
+    TResult? Function(_DeleteMember value)? deleteMember,
+  }) {
+    return getMemberByPhone?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
+    TResult Function(_AddMember value)? addMember,
+    TResult Function(_UpdateMember value)? updateMember,
+    TResult Function(_DeleteMember value)? deleteMember,
+    required TResult orElse(),
+  }) {
+    if (getMemberByPhone != null) {
+      return getMemberByPhone(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _GetMemberByPhone implements MemberEvent {
+  const factory _GetMemberByPhone(final String phone) = _$GetMemberByPhoneImpl;
+
+  String get phone;
+
+  /// Create a copy of MemberEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GetMemberByPhoneImplCopyWith<_$GetMemberByPhoneImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -419,6 +796,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -431,6 +810,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -443,6 +824,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -459,6 +842,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -471,6 +856,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -483,6 +870,8 @@ class _$AddMemberImpl implements _AddMember {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,
@@ -597,6 +986,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -609,6 +1000,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -621,6 +1014,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -637,6 +1032,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -649,6 +1046,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -661,6 +1060,8 @@ class _$UpdateMemberImpl implements _UpdateMember {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,
@@ -760,6 +1161,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getMembers,
+    required TResult Function(String query) searchMembers,
+    required TResult Function(String phone) getMemberByPhone,
     required TResult Function(String name, String phone) addMember,
     required TResult Function(int id, String name, String phone) updateMember,
     required TResult Function(int id) deleteMember,
@@ -772,6 +1175,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getMembers,
+    TResult? Function(String query)? searchMembers,
+    TResult? Function(String phone)? getMemberByPhone,
     TResult? Function(String name, String phone)? addMember,
     TResult? Function(int id, String name, String phone)? updateMember,
     TResult? Function(int id)? deleteMember,
@@ -784,6 +1189,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getMembers,
+    TResult Function(String query)? searchMembers,
+    TResult Function(String phone)? getMemberByPhone,
     TResult Function(String name, String phone)? addMember,
     TResult Function(int id, String name, String phone)? updateMember,
     TResult Function(int id)? deleteMember,
@@ -800,6 +1207,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetMembers value) getMembers,
+    required TResult Function(_SearchMembers value) searchMembers,
+    required TResult Function(_GetMemberByPhone value) getMemberByPhone,
     required TResult Function(_AddMember value) addMember,
     required TResult Function(_UpdateMember value) updateMember,
     required TResult Function(_DeleteMember value) deleteMember,
@@ -812,6 +1221,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetMembers value)? getMembers,
+    TResult? Function(_SearchMembers value)? searchMembers,
+    TResult? Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult? Function(_AddMember value)? addMember,
     TResult? Function(_UpdateMember value)? updateMember,
     TResult? Function(_DeleteMember value)? deleteMember,
@@ -824,6 +1235,8 @@ class _$DeleteMemberImpl implements _DeleteMember {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetMembers value)? getMembers,
+    TResult Function(_SearchMembers value)? searchMembers,
+    TResult Function(_GetMemberByPhone value)? getMemberByPhone,
     TResult Function(_AddMember value)? addMember,
     TResult Function(_UpdateMember value)? updateMember,
     TResult Function(_DeleteMember value)? deleteMember,

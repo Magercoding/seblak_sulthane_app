@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:seblak_sulthane_app/data/models/response/member_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
 import '../../../core/constants/colors.dart';
@@ -15,13 +16,28 @@ class _MemberDialogState extends State<MemberDialog> {
   final searchController = TextEditingController();
   List<Member> filteredMembers = [];
   List<Member> allMembers = [];
+  bool isOffline = false;
 
   @override
   void initState() {
     super.initState();
-
+    _checkConnectivity();
     context.read<MemberBloc>().add(const MemberEvent.getMembers());
     searchController.addListener(_onSearchChanged);
+
+    // Listen for connectivity changes
+    Connectivity().onConnectivityChanged.listen((result) {
+      setState(() {
+        isOffline = result == ConnectivityResult.none;
+      });
+    });
+  }
+
+  Future<void> _checkConnectivity() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      isOffline = connectivityResult == ConnectivityResult.none;
+    });
   }
 
   @override
@@ -31,13 +47,23 @@ class _MemberDialogState extends State<MemberDialog> {
   }
 
   void _onSearchChanged() {
-    String query = searchController.text.toLowerCase();
-    setState(() {
-      filteredMembers = allMembers.where((member) {
-        return member.name.toLowerCase().contains(query) ||
-            member.phone.contains(query);
-      }).toList();
-    });
+    final query = searchController.text.toLowerCase();
+    if (query.isEmpty) {
+      setState(() {
+        filteredMembers = allMembers;
+      });
+    } else {
+      // For quick feedback, filter locally first
+      setState(() {
+        filteredMembers = allMembers.where((member) {
+          return member.name.toLowerCase().contains(query) ||
+              member.phone.contains(query);
+        }).toList();
+      });
+
+      // Then trigger the search event for more comprehensive results
+      context.read<MemberBloc>().add(MemberEvent.searchMembers(query));
+    }
   }
 
   Widget _buildMembersList() {
@@ -55,9 +81,9 @@ class _MemberDialogState extends State<MemberDialog> {
                 bottom: BorderSide(color: Colors.white, width: 0.5),
               ),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Text(
+                const Text(
                   'Members List',
                   style: TextStyle(
                     color: Colors.white,
@@ -65,7 +91,33 @@ class _MemberDialogState extends State<MemberDialog> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
+                // Show offline indicator if offline
+                if (isOffline)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.wifi_off,
+                            color: Colors.white, size: 14),
+                        const SizedBox(width: 4),
+                        Text(
+                          'OFFLINE',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -92,7 +144,10 @@ class _MemberDialogState extends State<MemberDialog> {
 
                     setState(() {
                       allMembers = members;
-                      filteredMembers = members;
+                      // Only update filtered members if not searching
+                      if (searchController.text.isEmpty) {
+                        filteredMembers = members;
+                      }
                     });
                   },
                   orElse: () {},
@@ -105,13 +160,38 @@ class _MemberDialogState extends State<MemberDialog> {
                   ),
                   loaded: (_) {
                     if (filteredMembers.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No members found',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.person_search,
+                              size: 48,
+                              color: Colors.grey.shade300,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              searchController.text.isEmpty
+                                  ? 'No members available'
+                                  : 'No members found matching "${searchController.text}"',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            if (isOffline) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                'You are currently offline',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.amber.shade800,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ],
                         ),
                       );
                     }
@@ -132,26 +212,42 @@ class _MemberDialogState extends State<MemberDialog> {
                               ),
                               child: Row(
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        member.name,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.primary,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          member.name,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.primary,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        member.phone,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          member.phone,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Selection indicator
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 14,
+                                      color: AppColors.primary,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -162,9 +258,43 @@ class _MemberDialogState extends State<MemberDialog> {
                     );
                   },
                   error: (message) => Center(
-                    child: Text(
-                      'Error: $message',
-                      style: const TextStyle(color: Colors.red),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: Colors.red.shade300,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error: $message',
+                          style: TextStyle(color: Colors.red.shade400),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        if (isOffline)
+                          Text(
+                            'You are currently offline',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.amber.shade800,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<MemberBloc>()
+                                .add(const MemberEvent.getMembers());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
                   ),
                   orElse: () => const Center(

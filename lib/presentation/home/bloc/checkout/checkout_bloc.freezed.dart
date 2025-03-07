@@ -2773,7 +2773,6 @@ class _$LoadedImpl implements _Loaded {
     return EqualUnmodifiableListView(_discounts);
   }
 
-// Ubah dari Discount? menjadi List<Discount>
   @override
   final int discount;
   @override
@@ -2965,7 +2964,7 @@ abstract class _Loaded implements CheckoutState {
       final String draftName) = _$LoadedImpl;
 
   List<ProductQuantity> get items;
-  List<Discount> get discounts; // Ubah dari Discount? menjadi List<Discount>
+  List<Discount> get discounts;
   int get discount;
   int get discountAmount;
   int get tax;

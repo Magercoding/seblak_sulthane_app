@@ -2,17 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seblak_sulthane_app/core/components/spaces.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/auth/login_page.dart';
-import 'package:seblak_sulthane_app/presentation/sales/pages/sales_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/table/pages/table_page.dart';
 import 'package:seblak_sulthane_app/presentation/report/pages/report_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/settings_page.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../auth/bloc/logout/logout_bloc.dart';
@@ -37,7 +34,6 @@ class _DashboardPageState extends State<DashboardPage> {
     ),
     const TablePage(),
     const ReportPage(),
-    SalesPage(),
     const SettingsPage(),
   ];
 
@@ -52,21 +48,15 @@ class _DashboardPageState extends State<DashboardPage> {
     StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
         .onConnectivityChanged
         .listen((List<ConnectivityResult> connectivityResult) {
-      
       if (connectivityResult.contains(ConnectivityResult.mobile)) {
-        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(true));
       } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(true));
-        
-        
       } else {
-        
         context
             .read<OnlineCheckerBloc>()
             .add(const OnlineCheckerEvent.check(false));
@@ -104,16 +94,10 @@ class _DashboardPageState extends State<DashboardPage> {
                         onTap: () => _onItemTapped(2),
                       ),
                       NavItem(
-                        iconPath: Assets.icons.dashboard.path,
+                        iconPath: Assets.icons.setting.path,
                         isActive: _selectedIndex == 3,
                         onTap: () => _onItemTapped(3),
                       ),
-                      NavItem(
-                        iconPath: Assets.icons.setting.path,
-                        isActive: _selectedIndex == 4,
-                        onTap: () => _onItemTapped(4),
-                      ),
-                      
                       BlocBuilder<OnlineCheckerBloc, OnlineCheckerState>(
                         builder: (context, state) {
                           return state.maybeWhen(
@@ -153,7 +137,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           );
                         },
                       ),
-
                       BlocListener<LogoutBloc, LogoutState>(
                         listener: (context, state) {
                           state.maybeMap(

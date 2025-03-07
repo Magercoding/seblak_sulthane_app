@@ -1,23 +1,22 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../../data/datasources/discount_remote_datasource.dart';
-import '../../../../data/models/response/discount_response_model.dart';
+import 'package:seblak_sulthane_app/data/datasources/discount_repository%20.dart';
+import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
 
 part 'discount_bloc.freezed.dart';
 part 'discount_event.dart';
 part 'discount_state.dart';
 
 class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
-  final DiscountRemoteDatasource discountRemoteDatasource;
+  final DiscountRepository discountRepository;
 
-  DiscountBloc(this.discountRemoteDatasource) : super(const _Initial()) {
+  DiscountBloc(this.discountRepository) : super(const _Initial()) {
     on<_GetDiscounts>((event, emit) async {
       emit(const _Loading());
-      final result = await discountRemoteDatasource.getDiscounts();
+      final result = await discountRepository.getDiscounts();
       result.fold(
-        (l) => emit(_Error(l)),
-        (r) => emit(_Loaded(r.data!)),
+        (error) => emit(_Error(error)),
+        (response) => emit(_Loaded(response.data ?? [])),
       );
     });
 
@@ -27,21 +26,25 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
         return;
       }
       emit(const _Loading());
-      final result = await discountRemoteDatasource.addDiscount(
+      final result = await discountRepository.addDiscount(
         name: event.name,
         description: event.description,
         value: event.value,
         category: event.category,
       );
       result.fold(
-        (l) => emit(_Error(l)),
-        (r) => emit(const _Success('Discount added successfully')),
+        (error) => emit(_Error(error)),
+        (r) {
+          emit(const _Success('Discount added successfully'));
+          // Automatically refresh the discounts list
+          add(const DiscountEvent.getDiscounts());
+        },
       );
     });
 
     on<_UpdateDiscount>((event, emit) async {
       emit(const _Loading());
-      final result = await discountRemoteDatasource.updateDiscount(
+      final result = await discountRepository.updateDiscount(
         id: event.id,
         name: event.name,
         description: event.description,
@@ -49,17 +52,35 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
         category: event.category,
       );
       result.fold(
-        (l) => emit(_Error(l)),
-        (r) => emit(const _Success('Discount updated successfully')),
+        (error) => emit(_Error(error)),
+        (r) {
+          emit(const _Success('Discount updated successfully'));
+          // Automatically refresh the discounts list
+          add(const DiscountEvent.getDiscounts());
+        },
       );
     });
 
     on<_DeleteDiscount>((event, emit) async {
       emit(const _Loading());
-      final result = await discountRemoteDatasource.deleteDiscount(event.id);
+      final result = await discountRepository.deleteDiscount(event.id);
       result.fold(
-        (l) => emit(_Error(l)),
-        (r) => emit(const _Success('Discount deleted successfully')),
+        (error) => emit(_Error(error)),
+        (r) {
+          emit(const _Success('Discount deleted successfully'));
+          // Automatically refresh the discounts list
+          add(const DiscountEvent.getDiscounts());
+        },
+      );
+    });
+
+    on<_GetDiscountsByCategory>((event, emit) async {
+      emit(const _Loading());
+      final result =
+          await discountRepository.getDiscountsByCategory(event.category);
+      result.fold(
+        (error) => emit(_Error(error)),
+        (discounts) => emit(_Loaded(discounts)),
       );
     });
   }

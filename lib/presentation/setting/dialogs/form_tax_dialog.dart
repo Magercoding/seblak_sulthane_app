@@ -63,7 +63,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
 
     if (taxValue > 0) {
       final taxFee = TaxModel(
-        name: 'Pajak PB1',
+        name: 'Pajak',
         type: TaxType.pajak,
         value: taxValue,
       );
@@ -122,7 +122,7 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
                 const SpaceHeight(24.0),
                 CustomTextField(
                   controller: taxFeeController,
-                  label: 'Pajak PB1',
+                  label: 'Pajak',
                   onChanged: (value) => print('Tax fee changed: $value'),
                   keyboardType: TextInputType.number,
                   suffixIcon: const Icon(Icons.percent),

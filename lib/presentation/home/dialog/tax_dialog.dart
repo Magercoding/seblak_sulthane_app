@@ -36,7 +36,7 @@ class _TaxDialogState extends State<TaxDialog> {
                 final tax = taxes.firstWhere(
                   (tax) => tax.type.isPajak,
                   orElse: () => TaxModel(
-                    name: 'Pajak PB1',
+                    name: 'Pajak',
                     type: TaxType.pajak,
                     value: 15,
                   ),
@@ -56,7 +56,7 @@ class _TaxDialogState extends State<TaxDialog> {
                 alignment: Alignment.center,
                 children: [
                   const Text(
-                    'PAJAK PB1',
+                    'PAJAK',
                     style: TextStyle(
                       color: AppColors.primary,
                       fontSize: 28,

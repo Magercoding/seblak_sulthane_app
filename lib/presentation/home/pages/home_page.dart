@@ -37,6 +37,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
+  bool isTakeaway = true; // State untuk menyimpan status pemesanan
 
   @override
   void initState() {
@@ -317,11 +318,34 @@ class _HomePageState extends State<HomePage> {
                           const SpaceHeight(8.0),
                           Row(
                             children: [
-                              Button.filled(
-                                width: 120.0,
-                                height: 40,
-                                onPressed: () {},
-                                label: 'Dine In',
+                              Expanded(
+                                child: Button.filled(
+                                  height: 40,
+                                  onPressed: () {
+                                    setState(() {
+                                      isTakeaway = true; // Set ke Dine In
+                                    });
+                                  },
+                                  label: 'Take Away',
+                                  color: isTakeaway
+                                      ? AppColors.primary
+                                      : AppColors.grey, // Warna tombol aktif
+                                ),
+                              ),
+                              const SpaceWidth(8.0),
+                              Expanded(
+                                child: Button.filled(
+                                  height: 40,
+                                  onPressed: () {
+                                    setState(() {
+                                      isTakeaway = false; // Set ke Take Away
+                                    });
+                                  },
+                                  label: 'Dine In',
+                                  color: !isTakeaway
+                                      ? AppColors.primary
+                                      : AppColors.grey, // Warna tombol aktif
+                                ),
                               ),
                             ],
                           ),
@@ -414,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               ColumnButton(
-                                label: 'Pajak PB1',
+                                label: 'Pajak',
                                 svgGenImage: Assets.icons.pajak,
                                 onPressed: () => showDialog(
                                   context: context,
@@ -446,7 +470,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                'Pajak PB1',
+                                'Pajak',
                                 style: TextStyle(color: AppColors.grey),
                               ),
                               BlocBuilder<CheckoutBloc, CheckoutState>(

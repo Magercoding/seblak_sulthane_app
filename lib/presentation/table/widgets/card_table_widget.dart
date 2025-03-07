@@ -1,3 +1,6 @@
+// Update the CardTableWidget class:
+// This code modifies the button logic to handle different status conditions
+
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,15 +9,12 @@ import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
-import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
-
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/pages/home_page.dart';
-import 'package:seblak_sulthane_app/presentation/table/blocs/get_table/get_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_model.dart';
+import 'package:seblak_sulthane_app/presentation/table/pages/close_table_confirmation_dialog.dart.dart';
 import 'package:seblak_sulthane_app/presentation/table/pages/payment_table_page.dart';
 
 class CardTableWidget extends StatefulWidget {
@@ -44,6 +44,30 @@ class _CardTableWidgetState extends State<CardTableWidget> {
     }
   }
 
+  // Get the appropriate color based on table status
+  Color getStatusColor() {
+    switch (widget.table.status) {
+      case 'available':
+        return AppColors.primary;
+      case 'closed':
+        return Colors.orange;
+      default: // 'occupied' or any other status
+        return AppColors.red;
+    }
+  }
+
+  // Get the appropriate button label based on table status
+  String getButtonLabel() {
+    switch (widget.table.status) {
+      case 'available':
+        return 'Open';
+      case 'closed':
+        return 'Close';
+      default: // 'occupied' or any other status
+        return 'Close';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,11 +75,7 @@ class _CardTableWidgetState extends State<CardTableWidget> {
       height: 200,
       width: 200,
       decoration: BoxDecoration(
-        border: Border.all(
-            color: widget.table.status == 'available'
-                ? AppColors.primary
-                : AppColors.red,
-            width: 2),
+        border: Border.all(color: getStatusColor(), width: 2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -80,16 +100,25 @@ class _CardTableWidgetState extends State<CardTableWidget> {
             ),
           ),
           Button.filled(
-              color: widget.table.status == 'available'
-                  ? AppColors.primary
-                  : AppColors.red,
+              color: getStatusColor(),
               onPressed: () async {
+                // Handle button press based on table status
                 if (widget.table.status == 'available') {
+                  // Open the table
                   context.push(HomePage(
                     isTable: true,
                     table: widget.table,
                   ));
+                } else if (widget.table.status == 'closed') {
+                  // Show close confirmation dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) => CloseTableConfirmationDialog(
+                      table: widget.table,
+                    ),
+                  );
                 } else {
+                  // For occupied tables - proceed to payment
                   context.read<CheckoutBloc>().add(
                         CheckoutEvent.loadDraftOrder(data!),
                       );
@@ -100,7 +129,7 @@ class _CardTableWidgetState extends State<CardTableWidget> {
                   ));
                 }
               },
-              label: widget.table.status == 'available' ? 'Open' : 'Close')
+              label: getButtonLabel())
         ],
       ),
     );

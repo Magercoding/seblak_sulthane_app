@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/discount_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/discount_repository%20.dart';
+import 'package:seblak_sulthane_app/data/datasources/member_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/member_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/member_repository.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
@@ -20,7 +25,6 @@ import 'package:seblak_sulthane_app/presentation/report/blocs/item_sales_report/
 import 'package:seblak_sulthane_app/presentation/report/blocs/product_sales/product_sales_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/summary/summary_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/sales/blocs/bloc/last_order_table_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/sales/blocs/day_sales/day_sales_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
@@ -54,6 +58,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create instances of datasources
+    final discountRemoteDatasource = DiscountRemoteDatasource();
+    final discountLocalDatasource = DiscountLocalDatasource();
+    final memberRemoteDatasource = MemberRemoteDatasource();
+    final memberLocalDatasource = MemberLocalDatasource.instance;
+    final connectivity = Connectivity();
+
+    // Create repositories
+    final discountRepository = DiscountRepository(
+      remoteDatasource: discountRemoteDatasource,
+      localDatasource: discountLocalDatasource,
+      connectivity: connectivity,
+    );
+
+    final memberRepository = MemberRepository(
+      remoteDatasource: memberRemoteDatasource,
+      localDatasource: memberLocalDatasource,
+      connectivity: connectivity,
+    );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -78,8 +102,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
         ),
+        // Updated BlocProvider for DiscountBloc
         BlocProvider(
-          create: (context) => DiscountBloc(DiscountRemoteDatasource()),
+          create: (context) => DiscountBloc(discountRepository),
+        ),
+        // Updated BlocProvider for MemberBloc
+        BlocProvider(
+          create: (context) => MemberBloc(memberRepository),
         ),
         BlocProvider(
           create: (context) => TransactionReportBloc(OrderRemoteDatasource()),
@@ -116,22 +145,18 @@ class MyApp extends StatelessWidget {
           create: (context) => ItemSalesReportBloc(OrderItemRemoteDatasource()),
         ),
         BlocProvider(
-          create: (context) => DaySalesBloc(ProductLocalDatasource.instance),
-        ),
-        BlocProvider(
           create: (context) => OnlineCheckerBloc(),
         ),
         BlocProvider(
           create: (context) => TaxBloc()..add(const TaxEvent.started()),
         ),
+        // Updated BlocProvider for SyncMemberBloc
         BlocProvider(
-          create: (context) => MemberBloc(MemberRemoteDatasource()),
+          create: (context) => SyncMemberBloc(memberRepository),
         ),
+        // Updated BlocProvider for SyncDiscountBloc
         BlocProvider(
-          create: (context) => SyncMemberBloc(MemberRemoteDatasource()),
-        ),
-        BlocProvider(
-          create: (context) => SyncDiscountBloc(DiscountRemoteDatasource()),
+          create: (context) => SyncDiscountBloc(discountRepository),
         ),
         BlocProvider(
           create: (context) => OutletBloc(OutletLocalDataSource()),

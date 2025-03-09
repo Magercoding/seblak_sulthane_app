@@ -307,8 +307,9 @@ class _ReportPageState extends State<ReportPage> {
       _getTitleItemWidget('Disocunt', 100),
       _getTitleItemWidget('Service', 100),
       _getTitleItemWidget('Total Item', 100),
+      _getTitleItemWidget('Payment Method', 130),
       _getTitleItemWidget('Cashier', 180),
-      _getTitleItemWidget('Time', 200),
+      _getTitleItemWidget('Time', 180),
     ];
   }
 

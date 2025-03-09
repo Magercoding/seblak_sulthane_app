@@ -163,7 +163,8 @@ class TransactionReportWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: HorizontalDataTable(
                   leftHandSideColumnWidth: 50,
-                  rightHandSideColumnWidth: 1020,
+                  rightHandSideColumnWidth:
+                      1110, // Increased width to accommodate payment method
                   isFixedHeader: true,
                   headerWidgets: headerWidgets,
                   leftSideItemBuilder: (context, index) {
@@ -179,7 +180,7 @@ class TransactionReportWidget extends StatelessWidget {
                     return Row(
                       children: <Widget>[
                         Container(
-                          width: 120,
+                          width: 100,
                           height: 52,
                           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           alignment: Alignment.centerLeft,
@@ -189,7 +190,7 @@ class TransactionReportWidget extends StatelessWidget {
                           )),
                         ),
                         Container(
-                          width: 120,
+                          width: 100,
                           height: 52,
                           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           alignment: Alignment.centerLeft,
@@ -245,8 +246,20 @@ class TransactionReportWidget extends StatelessWidget {
                                 transactionReport[index].totalItem.toString()),
                           ),
                         ),
+                        // Payment Method Column
                         Container(
-                          width: 150,
+                          width: 120,
+                          height: 52,
+                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          alignment: Alignment.centerLeft,
+                          child: Center(
+                            child: Text(
+                              transactionReport[index].paymentMethod ?? 'Cash',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 190,
                           height: 52,
                           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           alignment: Alignment.centerLeft,
@@ -255,7 +268,7 @@ class TransactionReportWidget extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: 230,
+                          width: 200,
                           height: 52,
                           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           alignment: Alignment.centerLeft,

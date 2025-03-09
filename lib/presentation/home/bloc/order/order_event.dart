@@ -15,6 +15,7 @@ class OrderEvent with _$OrderEvent {
     String status,
     String paymentStatus,
     String paymentMethod,
-    int totalPriceFinal,
-  ) = _Order;
+    int totalPriceFinal, {
+    @Default('dine_in') String orderType, // Use named parameter with default value
+  }) = _Order;
 }

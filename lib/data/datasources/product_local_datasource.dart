@@ -22,6 +22,9 @@ class ProductLocalDatasource {
 
   static Database? _database;
 
+  // Increase database version to trigger migration
+  final int _databaseVersion = 2;
+
   Future<void> _createDb(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $tableProduct (
@@ -60,7 +63,8 @@ class ProductLocalDatasource {
         customer_name TEXT,
         status TEXT,
         payment_status TEXT,
-        is_sync INTEGER DEFAULT 0
+        is_sync INTEGER DEFAULT 0,
+        order_type TEXT
       )
     ''');
 
@@ -112,10 +116,30 @@ class ProductLocalDatasource {
     ''');
   }
 
+  // Add database migration function
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    log('Database upgrade from $oldVersion to $newVersion');
+
+    if (oldVersion < 2) {
+      // Adding order_type column to orders table for version 2
+      try {
+        await db.execute('ALTER TABLE $tableOrder ADD COLUMN order_type TEXT');
+        log('Added order_type column to $tableOrder table');
+      } catch (e) {
+        log('Error adding order_type column: ${e.toString()}');
+      }
+    }
+  }
+
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = dbPath + filePath;
-    return await openDatabase(path, version: 1, onCreate: _createDb);
+    return await openDatabase(
+      path,
+      version: _databaseVersion,
+      onCreate: _createDb,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   Future<Database> get database async {
@@ -128,16 +152,44 @@ class ProductLocalDatasource {
     log("OrderModel:  ${order.toMap()}");
 
     final db = await instance.database;
-    int id = await db.insert(tableOrder, order.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
 
-    for (var item in order.orderItems) {
-      log("Item: ${item.toLocalMap(id)}");
-      await db.insert(tableOrderItem, item.toLocalMap(id),
+    try {
+      // Try saving the full order first
+      int id = await db.insert(tableOrder, order.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+
+      for (var item in order.orderItems) {
+        await db.insert(tableOrderItem, item.toLocalMap(id),
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+
+      log("Success Order: ${order.toMap()}");
+      return id;
+    } catch (e) {
+      log("Error saving order with order_type: ${e.toString()}");
+
+      // If the error is about order_type, try again without it
+      if (e.toString().contains("order_type")) {
+        Map<String, dynamic> orderMap = Map.from(order.toMap());
+        orderMap.remove('order_type');
+
+        log("Retrying without order_type field: $orderMap");
+
+        int id = await db.insert(tableOrder, orderMap,
+            conflictAlgorithm: ConflictAlgorithm.replace);
+
+        for (var item in order.orderItems) {
+          await db.insert(tableOrderItem, item.toLocalMap(id),
+              conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+
+        log("Success Order without order_type: $orderMap");
+        return id;
+      } else {
+        // If it's not an order_type error, rethrow
+        rethrow;
+      }
     }
-    log("Success Order: ${order.toMap()}");
-    return id;
   }
 
   Future<List<OrderModel>> getOrderByIsNotSync() async {

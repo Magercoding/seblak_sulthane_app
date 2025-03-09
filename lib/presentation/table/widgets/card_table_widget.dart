@@ -126,6 +126,8 @@ class _CardTableWidgetState extends State<CardTableWidget> {
                   context.push(PaymentTablePage(
                     table: widget.table,
                     draftOrder: data!,
+                    isTable: true, // Add this parameter
+                    orderType: 'dine_in',
                   ));
                 }
               },

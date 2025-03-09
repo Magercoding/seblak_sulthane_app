@@ -38,7 +38,7 @@ class _TaxDialogState extends State<TaxDialog> {
                   orElse: () => TaxModel(
                     name: 'Pajak',
                     type: TaxType.pajak,
-                    value: 15,
+                    value: 0,
                   ),
                 );
                 print('Found tax value: ${tax.value}');

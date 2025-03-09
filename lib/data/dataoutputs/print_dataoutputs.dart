@@ -168,7 +168,8 @@ class PrintDataoutputs {
           namaKasir, // This parameter will be IGNORED and overridden with local data
       String customerName,
       int paper,
-      {int? outletId}) async {
+      {int? outletId,
+      String orderType = ''}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -184,16 +185,10 @@ class PrintDataoutputs {
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
     outletId ??= 1;
 
-    // IMPORTANT: Add logging to diagnose the issue
-    print("🧾 ORDER - Cashier name parameter received: '$namaKasir'");
-
-    // ALWAYS get cashier name from local storage regardless of what was passed in
-    print("🧾 ORDER - Directly fetching cashier name from local storage");
     try {
       final authLocalDataSource = AuthLocalDataSource();
       final userData = await authLocalDataSource.getUserData();
       if (userData.name.isNotEmpty) {
-        // Force override any passed name
         namaKasir = userData.name;
         print("🧾 ORDER - Forced name from local storage: '${userData.name}'");
       } else {
@@ -290,6 +285,20 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
+    if (orderType.isNotEmpty) {
+      bytes += generator.row([
+        PosColumn(
+          text: 'Order Type',
+          width: 6,
+          styles: const PosStyles(align: PosAlign.left),
+        ),
+        PosColumn(
+          text: orderType == 'take_away' ? 'TAKE AWAY' : 'DINE IN',
+          width: 6,
+          styles: const PosStyles(align: PosAlign.right, bold: true),
+        ),
+      ]);
+    }
     bytes += generator.text(
         paper == 80
             ? '------------------------------------------------'
@@ -453,40 +462,9 @@ class PrintDataoutputs {
     return bytes;
   }
 
-  Future<List<int>> printQRIS(
-      int totalPrice, Uint8List imageQris, int paper) async {
-    List<int> bytes = [];
-
-    final profile = await CapabilityProfile.load();
-    final generator =
-        Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
-
-    final img.Image? orginalImage = img.decodeImage(imageQris);
-    bytes += generator.reset();
-
-    bytes += generator.text('Scan QRIS Below for Payment',
-        styles: const PosStyles(bold: false, align: PosAlign.center));
-    bytes += generator.feed(2);
-    if (orginalImage != null) {
-      final img.Image grayscalledImage = img.grayscale(orginalImage);
-      final img.Image resizedImage =
-          img.copyResize(grayscalledImage, width: 240);
-      bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
-      bytes += generator.feed(1);
-    }
-
-    bytes += generator.text('Price : ${totalPrice.currencyFormatRp}',
-        styles: const PosStyles(bold: false, align: PosAlign.center));
-
-    bytes += generator.feed(4);
-    bytes += generator.cut();
-
-    return bytes;
-  }
-
   Future<List<int>> printChecker(List<ProductQuantity> products,
       int tableNumber, String draftName, String cashierName, int paper,
-      {int? outletId}) async {
+      {int? outletId, String orderType = ''}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -589,6 +567,17 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
     ]);
+    if (orderType.isNotEmpty) {
+      bytes +=
+          generator.text(orderType == 'take_away' ? 'TAKE AWAY' : 'DINE IN',
+              styles: const PosStyles(
+                bold: true,
+                align: PosAlign.center,
+                height: PosTextSize.size2,
+                width: PosTextSize.size2,
+              ));
+      bytes += generator.feed(1);
+    }
 
     bytes += generator.text(
         paper == 80

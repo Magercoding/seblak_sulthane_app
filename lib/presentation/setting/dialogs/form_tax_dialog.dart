@@ -47,33 +47,32 @@ class _FormTaxDialogState extends State<FormTaxDialog> {
     final serviceValue = int.tryParse(serviceFeeController.text) ?? 0;
     final taxValue = int.tryParse(taxFeeController.text) ?? 0;
 
-    if (serviceValue > 0) {
-      final serviceTax = TaxModel(
-        name: 'Biaya Layanan',
-        type: TaxType.layanan,
-        value: serviceValue,
-      );
+    // Process service fee regardless of value (including zero)
+    final serviceTax = TaxModel(
+      name: 'Biaya Layanan',
+      type: TaxType.layanan,
+      value: serviceValue,
+    );
 
-      if (widget.data == null) {
-        context.read<TaxBloc>().add(TaxEvent.add(serviceTax));
-      } else if (widget.data?.type.isLayanan == true) {
-        context.read<TaxBloc>().add(TaxEvent.update(serviceTax));
-      }
+    if (widget.data == null) {
+      context.read<TaxBloc>().add(TaxEvent.add(serviceTax));
+    } else if (widget.data?.type.isLayanan == true) {
+      context.read<TaxBloc>().add(TaxEvent.update(serviceTax));
     }
 
-    if (taxValue > 0) {
-      final taxFee = TaxModel(
-        name: 'Pajak',
-        type: TaxType.pajak,
-        value: taxValue,
-      );
+    // Process tax fee regardless of value (including zero)
+    final taxFee = TaxModel(
+      name: 'Pajak',
+      type: TaxType.pajak,
+      value: taxValue,
+    );
 
-      if (widget.data == null) {
-        context.read<TaxBloc>().add(TaxEvent.add(taxFee));
-      } else if (widget.data?.type.isPajak == true) {
-        context.read<TaxBloc>().add(TaxEvent.update(taxFee));
-      }
+    if (widget.data == null) {
+      context.read<TaxBloc>().add(TaxEvent.add(taxFee));
+    } else if (widget.data?.type.isPajak == true) {
+      context.read<TaxBloc>().add(TaxEvent.update(taxFee));
     }
+
     context.read<TaxBloc>().add(const TaxEvent.started());
 
     context.pop();

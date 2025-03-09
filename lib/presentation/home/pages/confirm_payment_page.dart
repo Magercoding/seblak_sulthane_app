@@ -22,10 +22,13 @@ import '../widgets/success_payment_dialog.dart';
 class ConfirmPaymentPage extends StatefulWidget {
   final bool isTable;
   final TableModel? table;
+  final String orderType; // Add this parameter
+
   const ConfirmPaymentPage({
     super.key,
     required this.isTable,
     this.table,
+    required this.orderType, // Add this parameter
   });
 
   @override
@@ -44,12 +47,17 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   int uangPas3 = 0;
 
   int totalPriceFinal = 0;
+  String orderTypeDisplay = ''; // Added to show order type in UI
 
   @override
   void initState() {
     context
         .read<GetTableStatusBloc>()
         .add(GetTableStatusEvent.getTablesStatus('available'));
+
+    orderTypeDisplay =
+        widget.orderType == 'take_away' ? 'Take Away' : 'Dine In';
+
     super.initState();
   }
 
@@ -94,7 +102,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                 Text(
                                   widget.isTable
                                       ? 'Orders Table ${widget.table?.tableNumber}'
-                                      : 'Orders #1',
+                                      : 'Orders #1 - $orderTypeDisplay', // Show order type for take away
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -123,6 +131,44 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                         ),
                         const SpaceHeight(8.0),
                         const Divider(),
+                        if (!widget.isTable) ...[
+                          const SpaceHeight(12.0),
+                          Row(
+                            children: [
+                              const Text(
+                                'Tipe Pesanan:',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SpaceWidth(8.0),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 4.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: widget.orderType == 'take_away'
+                                      ? AppColors.primary.withOpacity(0.2)
+                                      : Colors.green.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Text(
+                                  orderTypeDisplay,
+                                  style: TextStyle(
+                                    color: widget.orderType == 'take_away'
+                                        ? AppColors.primary
+                                        : Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SpaceHeight(8.0),
+                          const Divider(),
+                        ],
                         const SpaceHeight(24.0),
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -558,13 +604,40 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (widget.isTable != true) ...[
-                              const Text(
-                                'Pembayaran',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Pembayaran',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SpaceWidth(12.0),
+                                  // Order Type Badge
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0,
+                                      vertical: 4.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: widget.orderType == 'take_away'
+                                          ? AppColors.primary.withOpacity(0.2)
+                                          : Colors.green.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Text(
+                                      orderTypeDisplay,
+                                      style: TextStyle(
+                                        color: widget.orderType == 'take_away'
+                                            ? AppColors.primary
+                                            : Colors.green,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SpaceHeight(16.0),
                             ],
@@ -893,7 +966,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                       'completed',
                                                       'paid',
                                                       isCash ? 'Cash' : 'QRIS',
-                                                      totalPriceFinal));
+                                                      totalPriceFinal,
+                                                      orderType: 'dine_in'));
 
                                               // Update table status to 'closed' after payment
                                               final newTableStatus = TableModel(
@@ -934,6 +1008,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                           .toInt(),
                                                   draftName:
                                                       customerController.text,
+                                                  orderType: 'dine_in',
                                                 ),
                                               );
                                             } else {
@@ -953,7 +1028,9 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                       'completed',
                                                       'paid',
                                                       isCash ? 'Cash' : 'QRIS',
-                                                      totalPriceFinal));
+                                                      totalPriceFinal,
+                                                      orderType:
+                                                          widget.orderType));
                                               await showDialog(
                                                 context: context,
                                                 barrierDismissible: false,
@@ -972,6 +1049,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                           .toInt(),
                                                   draftName:
                                                       customerController.text,
+                                                  orderType: widget.orderType,
                                                 ),
                                               );
                                             }

@@ -22,7 +22,9 @@ class OrderModel {
   final String status;
   final String paymentStatus;
   final int isSync;
+  final String orderType; // Added order type field
   final List<ProductQuantity> orderItems;
+
   OrderModel({
     this.id,
     required this.paymentAmount,
@@ -42,6 +44,7 @@ class OrderModel {
     required this.status,
     required this.paymentStatus,
     required this.isSync,
+    required this.orderType, // Added parameter
     required this.orderItems,
   });
 
@@ -63,6 +66,7 @@ class OrderModel {
       'status': status,
       'payment_status': paymentStatus,
       'transaction_time': transactionTime,
+      'order_type': orderType, // Added to server map
       'order_items': orderItems.map((e) => e.toServerMap(id)).toList(),
     };
   }
@@ -78,19 +82,20 @@ class OrderModel {
       'total': total,
       'payment_method': paymentMethod,
       'total_item': totalItem,
-      'id_kasir': 1,
-      'nama_kasir': 'Kasir',
+      'id_kasir': idKasir,
+      'nama_kasir': namaKasir,
       'transaction_time': transactionTime,
       'customer_name': customerName,
       'table_number': tableNumber,
       'status': status,
       'payment_status': paymentStatus,
       'is_sync': isSync,
+      'order_type': orderType, // Added to local map
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
-    print("Discount AMount${map['discount_amount']}");
+    print("Discount Amount: ${map['discount_amount']}");
     return OrderModel(
       id: map['id']?.toInt(),
       paymentAmount: map['payment_amount']?.toInt() ?? 0,
@@ -110,6 +115,7 @@ class OrderModel {
       tableNumber: map['table_number']?.toInt() ?? 0,
       status: map['status'] ?? '',
       paymentStatus: map['payment_status'] ?? '',
+      orderType: map['order_type'] ?? 'dine_in', // Added with default
       orderItems: [],
     );
   }
@@ -138,6 +144,7 @@ class OrderModel {
     String? status,
     String? paymentStatus,
     int? isSync,
+    String? orderType, // Added parameter
     List<ProductQuantity>? orderItems,
   }) {
     return OrderModel(
@@ -159,12 +166,13 @@ class OrderModel {
       status: status ?? this.status,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       isSync: isSync ?? this.isSync,
+      orderType: orderType ?? this.orderType, // Added to copyWith
       orderItems: orderItems ?? this.orderItems,
     );
   }
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, paymentAmount: $paymentAmount, subTotal: $subTotal, tax: $tax, discount: $discount, discountAmount: $discountAmount, serviceCharge: $serviceCharge, total: $total, paymentMethod: $paymentMethod, totalItem: $totalItem, idKasir: $idKasir, namaKasir: $namaKasir, transactionTime: $transactionTime, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, isSync: $isSync, orderItems: $orderItems)';
+    return 'OrderModel(id: $id, paymentAmount: $paymentAmount, subTotal: $subTotal, tax: $tax, discount: $discount, discountAmount: $discountAmount, serviceCharge: $serviceCharge, total: $total, paymentMethod: $paymentMethod, totalItem: $totalItem, idKasir: $idKasir, namaKasir: $namaKasir, transactionTime: $transactionTime, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, isSync: $isSync, orderType: $orderType, orderItems: $orderItems)';
   }
 }

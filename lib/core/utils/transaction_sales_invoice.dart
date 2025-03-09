@@ -126,6 +126,7 @@ class TransactionSalesInvoice {
       'Discount',
       'Service',
       'Total Item',
+      'Payment Method', // Added Payment Method header
       'Kasir',
       'Time'
     ];
@@ -138,6 +139,8 @@ class TransactionSalesInvoice {
         int.parse(item.discountAmount!.replaceAll('.00', '')).currencyFormatRp,
         item.serviceCharge!.currencyFormatRp,
         item.totalItem.toString(),
+        item.paymentMethod ??
+            'Cash', // Added Payment Method, defaulting to 'Cash'
         item.namaKasir ?? '',
         item.transactionTime!.toFormattedDate(),
       ];
@@ -159,8 +162,9 @@ class TransactionSalesInvoice {
         4: Alignment.centerRight,
         5: Alignment.centerRight,
         6: Alignment.center,
-        7: Alignment.center,
-        8: Alignment.center,
+        7: Alignment.center, // Alignment for Payment Method
+        8: Alignment.center, // Updated index for Kasir
+        9: Alignment.center, // Updated index for Time
       },
     );
   }
@@ -223,7 +227,8 @@ class TransactionSalesInvoice {
 
     final String outletAddress = await _getOutletAddress(outletId);
 
-    sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("I1"));
+    sheet.merge(CellIndex.indexByString("A1"),
+        CellIndex.indexByString("J1")); // Updated to include one more column
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
     headerCell.value =
         TextCellValue('Seblak Sulthane | Transaction Sales Report');
@@ -233,14 +238,16 @@ class TransactionSalesInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("I2"));
+    sheet.merge(CellIndex.indexByString("A2"),
+        CellIndex.indexByString("J2")); // Updated to include one more column
     final dateCell = sheet.cell(CellIndex.indexByString("A2"));
     dateCell.value = TextCellValue('Data: $searchDateFormatted');
     dateCell.cellStyle = CellStyle(
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("I3"));
+    sheet.merge(CellIndex.indexByString("A3"),
+        CellIndex.indexByString("J3")); // Updated to include one more column
     final createdCell = sheet.cell(CellIndex.indexByString("A3"));
     createdCell.value =
         TextCellValue('Created At: ${DateTime.now().toFormattedDate3()}');
@@ -248,7 +255,8 @@ class TransactionSalesInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A4"), CellIndex.indexByString("I4"));
+    sheet.merge(CellIndex.indexByString("A4"),
+        CellIndex.indexByString("J4")); // Updated to include one more column
 
     final headers = [
       'ID',
@@ -258,6 +266,7 @@ class TransactionSalesInvoice {
       'Discount',
       'Service',
       'Total Item',
+      'Payment Method', // Added Payment Method header
       'Kasir',
       'Time'
     ];
@@ -315,13 +324,21 @@ class TransactionSalesInvoice {
       totalItemCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      final kasirCell = sheet
+      // Add Payment Method column
+      final paymentMethodCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex));
+      paymentMethodCell.value = TextCellValue(item.paymentMethod ?? 'Cash');
+      paymentMethodCell.cellStyle =
+          CellStyle(horizontalAlign: HorizontalAlign.Center);
+
+      // Update the column indices for the remaining columns
+      final kasirCell = sheet
+          .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex));
       kasirCell.value = TextCellValue(item.namaKasir ?? '');
       kasirCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Center);
 
       final timeCell = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex));
+          .cell(CellIndex.indexByColumnRow(columnIndex: 9, rowIndex: rowIndex));
       timeCell.value = TextCellValue(item.transactionTime!.toFormattedDate());
       timeCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Center);
     }
@@ -329,7 +346,9 @@ class TransactionSalesInvoice {
     final footerRowIndex = itemOrders.length + 7;
     sheet.merge(
       CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex),
-      CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: footerRowIndex),
+      CellIndex.indexByColumnRow(
+          columnIndex: 9,
+          rowIndex: footerRowIndex), // Updated to include one more column
     );
     final footerCell = sheet.cell(
         CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex));
@@ -342,8 +361,9 @@ class TransactionSalesInvoice {
     sheet.setColumnWidth(4, 20.0);
     sheet.setColumnWidth(5, 20.0);
     sheet.setColumnWidth(6, 15.0);
-    sheet.setColumnWidth(7, 20.0);
-    sheet.setColumnWidth(8, 30.0);
+    sheet.setColumnWidth(7, 20.0); // Width for Payment Method
+    sheet.setColumnWidth(8, 20.0); // Updated width for Kasir
+    sheet.setColumnWidth(9, 30.0); // Updated width for Time
 
     return HelperExcelService.saveExcel(
       name:

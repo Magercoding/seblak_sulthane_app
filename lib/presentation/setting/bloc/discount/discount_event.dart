@@ -4,6 +4,7 @@ part of 'discount_bloc.dart';
 class DiscountEvent with _$DiscountEvent {
   const factory DiscountEvent.started() = _Started;
   const factory DiscountEvent.getDiscounts() = _GetDiscounts;
+  const factory DiscountEvent.getDiscountsByCategory(String category) = _GetDiscountsByCategory;
   const factory DiscountEvent.addDiscount({
     required String name,
     required String description,

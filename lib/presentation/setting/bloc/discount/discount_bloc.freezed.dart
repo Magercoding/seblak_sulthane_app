@@ -20,6 +20,7 @@ mixin _$DiscountEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -33,6 +34,7 @@ mixin _$DiscountEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -46,6 +48,7 @@ mixin _$DiscountEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -60,6 +63,8 @@ mixin _$DiscountEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -69,6 +74,7 @@ mixin _$DiscountEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -78,6 +84,7 @@ mixin _$DiscountEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,
@@ -150,6 +157,7 @@ class _$StartedImpl implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -166,6 +174,7 @@ class _$StartedImpl implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -182,6 +191,7 @@ class _$StartedImpl implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -202,6 +212,8 @@ class _$StartedImpl implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -214,6 +226,7 @@ class _$StartedImpl implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -226,6 +239,7 @@ class _$StartedImpl implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,
@@ -285,6 +299,7 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -301,6 +316,7 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -317,6 +333,7 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -337,6 +354,8 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -349,6 +368,7 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -361,6 +381,7 @@ class _$GetDiscountsImpl implements _GetDiscounts {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,
@@ -375,6 +396,188 @@ class _$GetDiscountsImpl implements _GetDiscounts {
 
 abstract class _GetDiscounts implements DiscountEvent {
   const factory _GetDiscounts() = _$GetDiscountsImpl;
+}
+
+/// @nodoc
+abstract class _$$GetDiscountsByCategoryImplCopyWith<$Res> {
+  factory _$$GetDiscountsByCategoryImplCopyWith(
+          _$GetDiscountsByCategoryImpl value,
+          $Res Function(_$GetDiscountsByCategoryImpl) then) =
+      __$$GetDiscountsByCategoryImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String category});
+}
+
+/// @nodoc
+class __$$GetDiscountsByCategoryImplCopyWithImpl<$Res>
+    extends _$DiscountEventCopyWithImpl<$Res, _$GetDiscountsByCategoryImpl>
+    implements _$$GetDiscountsByCategoryImplCopyWith<$Res> {
+  __$$GetDiscountsByCategoryImplCopyWithImpl(
+      _$GetDiscountsByCategoryImpl _value,
+      $Res Function(_$GetDiscountsByCategoryImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? category = null,
+  }) {
+    return _then(_$GetDiscountsByCategoryImpl(
+      null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$GetDiscountsByCategoryImpl implements _GetDiscountsByCategory {
+  const _$GetDiscountsByCategoryImpl(this.category);
+
+  @override
+  final String category;
+
+  @override
+  String toString() {
+    return 'DiscountEvent.getDiscountsByCategory(category: $category)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GetDiscountsByCategoryImpl &&
+            (identical(other.category, category) ||
+                other.category == category));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, category);
+
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GetDiscountsByCategoryImplCopyWith<_$GetDiscountsByCategoryImpl>
+      get copyWith => __$$GetDiscountsByCategoryImplCopyWithImpl<
+          _$GetDiscountsByCategoryImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
+    required TResult Function(
+            String name, String description, double value, String category)
+        addDiscount,
+    required TResult Function(int id, String name, String description,
+            double value, String category)
+        updateDiscount,
+    required TResult Function(int id) deleteDiscount,
+  }) {
+    return getDiscountsByCategory(category);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
+    TResult? Function(
+            String name, String description, double value, String category)?
+        addDiscount,
+    TResult? Function(int id, String name, String description, double value,
+            String category)?
+        updateDiscount,
+    TResult? Function(int id)? deleteDiscount,
+  }) {
+    return getDiscountsByCategory?.call(category);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
+    TResult Function(
+            String name, String description, double value, String category)?
+        addDiscount,
+    TResult Function(int id, String name, String description, double value,
+            String category)?
+        updateDiscount,
+    TResult Function(int id)? deleteDiscount,
+    required TResult orElse(),
+  }) {
+    if (getDiscountsByCategory != null) {
+      return getDiscountsByCategory(category);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_UpdateDiscount value) updateDiscount,
+    required TResult Function(_DeleteDiscount value) deleteDiscount,
+  }) {
+    return getDiscountsByCategory(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_UpdateDiscount value)? updateDiscount,
+    TResult? Function(_DeleteDiscount value)? deleteDiscount,
+  }) {
+    return getDiscountsByCategory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_UpdateDiscount value)? updateDiscount,
+    TResult Function(_DeleteDiscount value)? deleteDiscount,
+    required TResult orElse(),
+  }) {
+    if (getDiscountsByCategory != null) {
+      return getDiscountsByCategory(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _GetDiscountsByCategory implements DiscountEvent {
+  const factory _GetDiscountsByCategory(final String category) =
+      _$GetDiscountsByCategoryImpl;
+
+  String get category;
+
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GetDiscountsByCategoryImplCopyWith<_$GetDiscountsByCategoryImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -478,6 +681,7 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -494,6 +698,7 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -510,6 +715,7 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -530,6 +736,8 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -542,6 +750,7 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -554,6 +763,7 @@ class _$AddDiscountImpl implements _AddDiscount {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,
@@ -697,6 +907,7 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -713,6 +924,7 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -729,6 +941,7 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -749,6 +962,8 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -761,6 +976,7 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -773,6 +989,7 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,
@@ -877,6 +1094,7 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
     required TResult Function(
             String name, String description, double value, String category)
         addDiscount,
@@ -893,6 +1111,7 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
     TResult? Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -909,6 +1128,7 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getDiscounts,
+    TResult Function(String category)? getDiscountsByCategory,
     TResult Function(
             String name, String description, double value, String category)?
         addDiscount,
@@ -929,6 +1149,8 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
     required TResult Function(_AddDiscount value) addDiscount,
     required TResult Function(_UpdateDiscount value) updateDiscount,
     required TResult Function(_DeleteDiscount value) deleteDiscount,
@@ -941,6 +1163,7 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult? Function(_AddDiscount value)? addDiscount,
     TResult? Function(_UpdateDiscount value)? updateDiscount,
     TResult? Function(_DeleteDiscount value)? deleteDiscount,
@@ -953,6 +1176,7 @@ class _$DeleteDiscountImpl implements _DeleteDiscount {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
     TResult Function(_AddDiscount value)? addDiscount,
     TResult Function(_UpdateDiscount value)? updateDiscount,
     TResult Function(_DeleteDiscount value)? deleteDiscount,

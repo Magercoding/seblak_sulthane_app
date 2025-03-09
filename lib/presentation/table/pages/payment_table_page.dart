@@ -277,7 +277,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Pajak PB1',
+                              'Pajak',
                               style: TextStyle(color: AppColors.grey),
                             ),
                             BlocBuilder<CheckoutBloc, CheckoutState>(

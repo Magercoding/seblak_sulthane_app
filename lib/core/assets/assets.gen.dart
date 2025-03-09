@@ -145,12 +145,8 @@ class $AssetsImagesGen {
   AssetGenImage get manageQr =>
       const AssetGenImage('assets/images/manage_qr.png');
 
-  List<AssetGenImage> get values => [
-        logo,
-        managePrinter,
-        manageProduct,
-        manageQr,
-      ];
+  List<AssetGenImage> get values =>
+      [logo, managePrinter, manageProduct, manageQr];
 }
 
 class $AssetsLogoGen {
@@ -158,10 +154,13 @@ class $AssetsLogoGen {
 
   AssetGenImage get mylogo => const AssetGenImage('assets/logo/mylogo.png');
 
+  AssetGenImage get seblakSulthane =>
+      const AssetGenImage('assets/logo/seblak_sulthane.png');
+
   AssetGenImage get seblakSulthaneApp =>
       const AssetGenImage('assets/logo/seblak_sulthane_app.png');
 
-  List<AssetGenImage> get values => [mylogo, seblakSulthaneApp];
+  List<AssetGenImage> get values => [mylogo, seblakSulthane, seblakSulthaneApp];
 }
 
 class Assets {

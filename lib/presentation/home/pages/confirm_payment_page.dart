@@ -11,7 +11,6 @@ import 'package:seblak_sulthane_app/presentation/home/bloc/get_table_status/get_
 import 'package:seblak_sulthane_app/presentation/home/bloc/order/order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
-import 'package:seblak_sulthane_app/presentation/home/widgets/save_order_dialog.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
@@ -36,7 +35,6 @@ class ConfirmPaymentPage extends StatefulWidget {
 class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   final totalPriceController = TextEditingController();
   final customerController = TextEditingController();
-  bool isPayNow = true;
   bool isCash = true;
   TableModel? selectTable;
   int discountAmount = 0;
@@ -306,7 +304,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Pajak PB1',
+                              'Pajak',
                               style: TextStyle(color: AppColors.grey),
                             ),
                             BlocBuilder<CheckoutBloc, CheckoutState>(
@@ -569,106 +567,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                 ),
                               ),
                               const SpaceHeight(16.0),
-                              Row(
-                                children: [
-                                  isPayNow
-                                      ? Button.filled(
-                                          width: 180.0,
-                                          height: 52.0,
-                                          onPressed: () {
-                                            isPayNow = true;
-                                            setState(() {});
-                                          },
-                                          label: 'Bayar Sekarang',
-                                        )
-                                      : Button.outlined(
-                                          width: 180.0,
-                                          height: 52.0,
-                                          onPressed: () {
-                                            isPayNow = true;
-                                            setState(() {});
-                                          },
-                                          label: 'Bayar Sekarang'),
-                                  SpaceWidth(16),
-                                  isPayNow
-                                      ? Button.outlined(
-                                          width: 180.0,
-                                          height: 52.0,
-                                          onPressed: () {
-                                            isPayNow = false;
-                                            setState(() {});
-                                          },
-                                          label: 'Bayar Nanti')
-                                      : Button.filled(
-                                          width: 180.0,
-                                          height: 52.0,
-                                          onPressed: () {
-                                            isPayNow = false;
-                                            setState(() {});
-                                          },
-                                          label: 'Bayar Nanti',
-                                        )
-                                ],
-                              ),
-                            ],
-                            const SpaceHeight(8.0),
-                            if (!isPayNow) ...[
-                              const Divider(),
-                              const SpaceHeight(8.0),
-                              const Text(
-                                'Nomor Meja',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SpaceHeight(12.0),
-                              BlocBuilder<GetTableStatusBloc,
-                                      GetTableStatusState>(
-                                  builder: (context, state) {
-                                return state.maybeWhen(
-                                  orElse: () =>
-                                      const CircularProgressIndicator(),
-                                  success: (tables) {
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton<TableModel>(
-                                          isExpanded: true,
-                                          value: selectTable,
-                                          onChanged: (TableModel? newValue) {
-                                            setState(() {
-                                              selectTable = newValue;
-                                            });
-                                          },
-                                          items: tables
-                                              .map<
-                                                  DropdownMenuItem<TableModel>>(
-                                                (TableModel value) =>
-                                                    DropdownMenuItem<
-                                                        TableModel>(
-                                                  value: value,
-                                                  child: Text(
-                                                      'Table ${value.tableNumber}'),
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }),
                             ],
                             const SpaceHeight(8.0),
                             const Divider(),
@@ -693,146 +591,142 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                               textCapitalization: TextCapitalization.words,
                             ),
                             const SpaceHeight(8.0),
-                            if (isPayNow) ...[
-                              const Divider(),
-                              const SpaceHeight(8.0),
-                              const Text(
-                                'Metode Bayar',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            const Divider(),
+                            const SpaceHeight(8.0),
+                            const Text(
+                              'Metode Bayar',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
                               ),
-                              const SpaceHeight(12.0),
-                              Row(
-                                children: [
-                                  isCash
-                                      ? Button.filled(
-                                          width: 120.0,
-                                          height: 50.0,
-                                          onPressed: () {
-                                            isCash = true;
-                                            setState(() {});
-                                          },
-                                          label: 'Cash',
-                                        )
-                                      : Button.outlined(
-                                          width: 120.0,
-                                          height: 50.0,
-                                          onPressed: () {
-                                            isCash = true;
-                                            setState(() {});
-                                          },
-                                          label: 'Cash',
-                                        ),
-                                  const SpaceWidth(8.0),
-                                  isCash
-                                      ? Button.outlined(
-                                          width: 120.0,
-                                          height: 50.0,
-                                          onPressed: () {
-                                            isCash = false;
-                                            setState(() {});
-                                          },
-                                          label: 'QRIS',
-                                        )
-                                      : Button.filled(
-                                          width: 120.0,
-                                          height: 50.0,
-                                          onPressed: () {
-                                            isCash = false;
-                                            setState(() {});
-                                          },
-                                          label: 'QRIS',
-                                        ),
-                                ],
-                              ),
-                              const SpaceHeight(8.0),
-                              const Divider(),
-                              const SpaceHeight(8.0),
-                              const Text(
-                                'Total Bayar',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SpaceHeight(12.0),
-                              BlocBuilder<CheckoutBloc, CheckoutState>(
-                                builder: (context, state) {
-                                  return TextFormField(
-                                    controller: totalPriceController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                            ),
+                            const SpaceHeight(12.0),
+                            Row(
+                              children: [
+                                isCash
+                                    ? Button.filled(
+                                        width: 120.0,
+                                        height: 50.0,
+                                        onPressed: () {
+                                          isCash = true;
+                                          setState(() {});
+                                        },
+                                        label: 'Cash',
+                                      )
+                                    : Button.outlined(
+                                        width: 120.0,
+                                        height: 50.0,
+                                        onPressed: () {
+                                          isCash = true;
+                                          setState(() {});
+                                        },
+                                        label: 'Cash',
                                       ),
-                                      hintText: 'Total harga',
+                                const SpaceWidth(8.0),
+                                isCash
+                                    ? Button.outlined(
+                                        width: 120.0,
+                                        height: 50.0,
+                                        onPressed: () {
+                                          isCash = false;
+                                          setState(() {});
+                                        },
+                                        label: 'QRIS',
+                                      )
+                                    : Button.filled(
+                                        width: 120.0,
+                                        height: 50.0,
+                                        onPressed: () {
+                                          isCash = false;
+                                          setState(() {});
+                                        },
+                                        label: 'QRIS',
+                                      ),
+                              ],
+                            ),
+                            const SpaceHeight(8.0),
+                            const Divider(),
+                            const SpaceHeight(8.0),
+                            const Text(
+                              'Total Bayar',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SpaceHeight(12.0),
+                            BlocBuilder<CheckoutBloc, CheckoutState>(
+                              builder: (context, state) {
+                                return TextFormField(
+                                  controller: totalPriceController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                    onChanged: (value) {
-                                      priceValue = value.toIntegerFromText;
-                                      final int newValue =
-                                          value.toIntegerFromText;
-                                      totalPriceController.text =
-                                          newValue.currencyFormatRp;
-                                      totalPriceController.selection =
-                                          TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: totalPriceController
-                                                      .text.length));
-                                    },
-                                  );
-                                },
-                              ),
-                              const SpaceHeight(20.0),
-                              BlocBuilder<CheckoutBloc, CheckoutState>(
-                                builder: (context, state) {
-                                  return Row(
-                                    children: [
-                                      Button.filled(
-                                        width: 150.0,
-                                        onPressed: () {
-                                          totalPriceController.text = uangPas
-                                              .toString()
-                                              .currencyFormatRpV2;
-                                          priceValue = uangPas;
-                                        },
-                                        label: 'UANG PAS',
-                                      ),
-                                      const SpaceWidth(20.0),
-                                      Button.filled(
-                                        width: 150.0,
-                                        onPressed: () {
-                                          totalPriceController.text = uangPas2
-                                              .toString()
-                                              .currencyFormatRpV2;
-                                          priceValue = uangPas2;
-                                        },
-                                        label: uangPas2
+                                    hintText: 'Total harga',
+                                  ),
+                                  onChanged: (value) {
+                                    priceValue = value.toIntegerFromText;
+                                    final int newValue =
+                                        value.toIntegerFromText;
+                                    totalPriceController.text =
+                                        newValue.currencyFormatRp;
+                                    totalPriceController.selection =
+                                        TextSelection.fromPosition(TextPosition(
+                                            offset: totalPriceController
+                                                .text.length));
+                                  },
+                                );
+                              },
+                            ),
+                            const SpaceHeight(20.0),
+                            BlocBuilder<CheckoutBloc, CheckoutState>(
+                              builder: (context, state) {
+                                return Row(
+                                  children: [
+                                    Button.filled(
+                                      width: 150.0,
+                                      onPressed: () {
+                                        totalPriceController.text = uangPas
                                             .toString()
-                                            .currencyFormatRpV2,
-                                      ),
-                                      const SpaceWidth(20.0),
-                                      Button.filled(
-                                        width: 150.0,
-                                        onPressed: () {
-                                          totalPriceController.text = uangPas3
-                                              .toString()
-                                              .currencyFormatRpV2;
-                                          priceValue = uangPas3;
-                                        },
-                                        label: uangPas3
+                                            .currencyFormatRpV2;
+                                        priceValue = uangPas;
+                                      },
+                                      label: 'UANG PAS',
+                                    ),
+                                    const SpaceWidth(20.0),
+                                    Button.filled(
+                                      width: 150.0,
+                                      onPressed: () {
+                                        totalPriceController.text = uangPas2
                                             .toString()
-                                            .currencyFormatRpV2,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ]
+                                            .currencyFormatRpV2;
+                                        priceValue = uangPas2;
+                                      },
+                                      label: uangPas2
+                                          .toString()
+                                          .currencyFormatRpV2,
+                                    ),
+                                    const SpaceWidth(20.0),
+                                    Button.filled(
+                                      width: 150.0,
+                                      onPressed: () {
+                                        totalPriceController.text = uangPas3
+                                            .toString()
+                                            .currencyFormatRpV2;
+                                        priceValue = uangPas3;
+                                      },
+                                      label: uangPas3
+                                          .toString()
+                                          .currencyFormatRpV2,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -919,6 +813,20 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         ),
                                       );
 
+                                      final tax = state.maybeWhen(
+                                        orElse: () => 0,
+                                        loaded: (products,
+                                                discountModel,
+                                                discount,
+                                                discountAmount,
+                                                tax,
+                                                serviceCharge,
+                                                totalQuantity,
+                                                totalPrice,
+                                                draftName) =>
+                                            tax,
+                                      );
+
                                       final serviceCharge = state.maybeWhen(
                                         orElse: () => 0,
                                         loaded: (products,
@@ -937,7 +845,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                           price - (discount / 100 * price);
                                       final totalDiscount =
                                           discount / 100 * price;
-                                      final finalTax = subTotal * 0.11;
+                                      final finalTax = subTotal * (tax / 100);
                                       final totalServiceCharge =
                                           (serviceCharge / 100) * price;
 
@@ -963,25 +871,56 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
 
                                       return Flexible(
                                         child: Button.filled(
+                                          // 1. First, in your ConfirmPaymentPage, update the onPressed handler for the payment button:
+// Look for the final payment button logic and make sure after showing SuccessPaymentDialog, it updates the table status
+
                                           onPressed: () async {
                                             if (widget.isTable) {
+                                              // For table orders - show SuccessPaymentDialog
                                               log("discountAmountValue: $totalDiscount");
-                                              context.read<CheckoutBloc>().add(
-                                                    CheckoutEvent
-                                                        .saveDraftOrder(
-                                                      widget.isTable == true
-                                                          ? widget.table!.id!
-                                                          : selectTable!
-                                                              .tableNumber,
-                                                      customerController.text,
+                                              context.read<OrderBloc>().add(
+                                                  OrderEvent.order(
+                                                      items,
+                                                      discount,
                                                       totalDiscount.toInt(),
-                                                    ),
+                                                      finalTax.toInt(),
+                                                      0,
+                                                      totalPriceController.text
+                                                          .toIntegerFromText,
+                                                      customerController.text,
+                                                      widget.table!
+                                                          .id!, // Use table ID
+                                                      'completed',
+                                                      'paid',
+                                                      isCash ? 'Cash' : 'QRIS',
+                                                      totalPriceFinal));
+
+                                              // Update table status to 'closed' after payment
+                                              final newTableStatus = TableModel(
+                                                id: widget.table!.id,
+                                                tableNumber:
+                                                    widget.table!.tableNumber,
+                                                status:
+                                                    'closed', // Change status to 'closed' instead of 'occupied'
+                                                paymentAmount: priceValue,
+                                                orderId: widget.table!.orderId,
+                                                startTime:
+                                                    widget.table!.startTime,
+                                              );
+
+                                              context
+                                                  .read<StatusTableBloc>()
+                                                  .add(
+                                                    StatusTableEvent
+                                                        .statusTabel(
+                                                            newTableStatus),
                                                   );
+
                                               await showDialog(
                                                 context: context,
                                                 barrierDismissible: false,
                                                 builder: (context) =>
-                                                    SaveOrderDialog(
+                                                    SuccessPaymentDialog(
                                                   data: items,
                                                   totalQty: totalQty,
                                                   totalPrice: totalPriceFinal,
@@ -990,106 +929,36 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                       totalDiscount.toInt(),
                                                   subTotal: subTotal.toInt(),
                                                   normalPrice: price,
-                                                  table: widget.table!,
+                                                  totalService:
+                                                      totalServiceCharge
+                                                          .toInt(),
                                                   draftName:
                                                       customerController.text,
                                                 ),
                                               );
-                                            } else if (isPayNow) {
-                                              if (isCash) {
-                                                log("discountAmountValue: $totalDiscount");
-                                                context.read<OrderBloc>().add(
-                                                    OrderEvent.order(
-                                                        items,
-                                                        discount,
-                                                        totalDiscount.toInt(),
-                                                        finalTax.toInt(),
-                                                        0,
-                                                        totalPriceController
-                                                            .text
-                                                            .toIntegerFromText,
-                                                        customerController.text,
-                                                        0,
-                                                        'completed',
-                                                        'paid',
-                                                        'Cash',
-                                                        totalPriceFinal));
-                                                await showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (context) =>
-                                                      SuccessPaymentDialog(
-                                                    data: items,
-                                                    totalQty: totalQty,
-                                                    totalPrice: totalPriceFinal,
-                                                    totalTax: finalTax.toInt(),
-                                                    totalDiscount:
-                                                        totalDiscount.toInt(),
-                                                    subTotal: subTotal.toInt(),
-                                                    normalPrice: price,
-                                                    totalService:
-                                                        totalServiceCharge
-                                                            .toInt(),
-                                                    draftName:
-                                                        customerController.text,
-                                                  ),
-                                                );
-                                              } else {
-                                                log("discountAmountValue: $totalDiscount");
-                                                context.read<OrderBloc>().add(
-                                                    OrderEvent.order(
-                                                        items,
-                                                        discount,
-                                                        totalDiscount.toInt(),
-                                                        finalTax.toInt(),
-                                                        0,
-                                                        totalPriceController
-                                                            .text
-                                                            .toIntegerFromText,
-                                                        customerController.text,
-                                                        0,
-                                                        'completed',
-                                                        'paid',
-                                                        'QRIS',
-                                                        totalPriceFinal));
-                                                await showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (context) =>
-                                                      SuccessPaymentDialog(
-                                                    data: items,
-                                                    totalQty: totalQty,
-                                                    totalPrice: totalPriceFinal,
-                                                    totalTax: finalTax.toInt(),
-                                                    totalDiscount:
-                                                        totalDiscount.toInt(),
-                                                    subTotal: subTotal.toInt(),
-                                                    normalPrice: price,
-                                                    totalService:
-                                                        totalServiceCharge
-                                                            .toInt(),
-                                                    draftName:
-                                                        customerController.text,
-                                                  ),
-                                                );
-                                              }
                                             } else {
-                                              context.read<CheckoutBloc>().add(
-                                                    CheckoutEvent
-                                                        .saveDraftOrder(
-                                                      widget.isTable == true
-                                                          ? widget.table!.id!
-                                                          : selectTable!
-                                                              .tableNumber,
-                                                      customerController.text,
+                                              // For non-table orders
+                                              log("discountAmountValue: $totalDiscount");
+                                              context.read<OrderBloc>().add(
+                                                  OrderEvent.order(
+                                                      items,
+                                                      discount,
                                                       totalDiscount.toInt(),
-                                                    ),
-                                                  );
+                                                      finalTax.toInt(),
+                                                      0,
+                                                      totalPriceController.text
+                                                          .toIntegerFromText,
+                                                      customerController.text,
+                                                      0,
+                                                      'completed',
+                                                      'paid',
+                                                      isCash ? 'Cash' : 'QRIS',
+                                                      totalPriceFinal));
                                               await showDialog(
                                                 context: context,
                                                 barrierDismissible: false,
                                                 builder: (context) =>
-                                                    SaveOrderDialog(
+                                                    SuccessPaymentDialog(
                                                   data: items,
                                                   totalQty: totalQty,
                                                   totalPrice: totalPriceFinal,
@@ -1098,16 +967,16 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                       totalDiscount.toInt(),
                                                   subTotal: subTotal.toInt(),
                                                   normalPrice: price,
-                                                  table: selectTable!,
+                                                  totalService:
+                                                      totalServiceCharge
+                                                          .toInt(),
                                                   draftName:
                                                       customerController.text,
                                                 ),
                                               );
                                             }
                                           },
-                                          label: isPayNow
-                                              ? 'Bayar'
-                                              : 'Simpan Order',
+                                          label: 'Bayar',
                                         ),
                                       );
                                     },

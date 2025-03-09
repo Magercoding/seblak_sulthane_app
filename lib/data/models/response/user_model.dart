@@ -41,7 +41,41 @@ class UserModel {
     );
   }
 
+  // Add fromMap method that takes a Map<String, dynamic>
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] as int,
+      name: map['name'] as String,
+      email: map['email'] as String,
+      emailVerifiedAt: map['email_verified_at'] as String?,
+      twoFactorSecret: map['two_factor_secret'] as String?,
+      twoFactorRecoveryCodes: map['two_factor_recovery_codes'] as String?,
+      twoFactorConfirmedAt: map['two_factor_confirmed_at'] as String?,
+      createdAt: map['created_at'] as String,
+      updatedAt: map['updated_at'] as String,
+      role: map['role'] as String,
+      outletId: map['outlet_id'] as int,
+    );
+  }
+
   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'email_verified_at': emailVerifiedAt,
+      'two_factor_secret': twoFactorSecret,
+      'two_factor_recovery_codes': twoFactorRecoveryCodes,
+      'two_factor_confirmed_at': twoFactorConfirmedAt,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'role': role,
+      'outlet_id': outletId,
+    };
+  }
+
+  // Add toMap method for consistency
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,

@@ -44,6 +44,12 @@ class _HomePageState extends State<HomePage> {
     context
         .read<LocalProductBloc>()
         .add(const LocalProductEvent.getLocalProduct());
+
+    // Force dine in mode if this is a table order
+    if (widget.isTable) {
+      isTakeaway = false; // Set to Dine In if it's a table
+    }
+
     super.initState();
   }
 
@@ -307,29 +313,71 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Orders #1',
-                            style: TextStyle(
+                          // Updated text for table orders
+                          Text(
+                            widget.isTable
+                                ? 'Table ${widget.table?.tableNumber ?? ""} Order'
+                                : 'Orders #1',
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SpaceHeight(8.0),
+
+                          // Add visual indicator for table orders
+                          if (widget.isTable) ...[
+                            // Table indicator
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0, vertical: 8.0),
+                              margin: const EdgeInsets.only(bottom: 12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                    color: Colors.green.withOpacity(0.5),
+                                    width: 1.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.table_restaurant,
+                                      color: Colors.green),
+                                  const SpaceWidth(8.0),
+                                  Text(
+                                    'Table Order: ${widget.table?.tableNumber ?? "N/A"}',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+
+                          // Updated row with disabled Take Away button for tables
                           Row(
                             children: [
                               Expanded(
                                 child: Button.filled(
                                   height: 40,
-                                  onPressed: () {
-                                    setState(() {
-                                      isTakeaway = true; // Set ke Dine In
-                                    });
-                                  },
+                                  onPressed: widget.isTable
+                                      ? () {} // Use an empty function instead of null
+                                      : () {
+                                          setState(() {
+                                            isTakeaway = true;
+                                          });
+                                        },
                                   label: 'Take Away',
-                                  color: isTakeaway
-                                      ? AppColors.primary
-                                      : AppColors.grey, // Warna tombol aktif
+                                  color: widget.isTable
+                                      ? AppColors.grey.withOpacity(
+                                          0.6) // Grayed out for tables
+                                      : (isTakeaway
+                                          ? AppColors.primary
+                                          : AppColors.grey),
                                 ),
                               ),
                               const SpaceWidth(8.0),
@@ -338,13 +386,14 @@ class _HomePageState extends State<HomePage> {
                                   height: 40,
                                   onPressed: () {
                                     setState(() {
-                                      isTakeaway = false; // Set ke Take Away
+                                      isTakeaway =
+                                          false; // Force dine in for tables
                                     });
                                   },
                                   label: 'Dine In',
                                   color: !isTakeaway
                                       ? AppColors.primary
-                                      : AppColors.grey, // Warna tombol aktif
+                                      : AppColors.grey,
                                 ),
                               ),
                             ],
@@ -676,6 +725,11 @@ class _HomePageState extends State<HomePage> {
                               context.push(ConfirmPaymentPage(
                                 isTable: widget.isTable,
                                 table: widget.table,
+                                orderType: widget.isTable
+                                    ? 'dine_in' // Force dine_in for tables
+                                    : (isTakeaway
+                                        ? 'take_away'
+                                        : 'dine_in'), // Use selection for non-tables
                               ));
                             },
                             label: 'Lanjutkan Pembayaran',

@@ -25,10 +25,15 @@ import '../../../core/constants/colors.dart';
 class PaymentTablePage extends StatefulWidget {
   final DraftOrderModel? draftOrder;
   final TableModel? table;
+  final String orderType; // Add this parameter
+  final bool isTable;
+
   const PaymentTablePage({
     Key? key,
     this.draftOrder,
     this.table,
+    required this.isTable,
+    required this.orderType, // Add this parameter
   }) : super(key: key);
 
   @override
@@ -38,6 +43,8 @@ class PaymentTablePage extends StatefulWidget {
 class _PaymentTablePageState extends State<PaymentTablePage> {
   final totalPriceController = TextEditingController();
   final customerController = TextEditingController();
+  String orderTypeDisplay = ''; // Added to show order type in UI
+
   bool isCash = true;
   int totalPriceFinal = 0;
   int discountAmountFinal = 0;
@@ -46,6 +53,8 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
     context
         .read<GetTableStatusBloc>()
         .add(GetTableStatusEvent.getTablesStatus('available'));
+    orderTypeDisplay =
+        widget.orderType == 'take_away' ? 'Take Away' : 'Dine In';
     super.initState();
   }
 
@@ -88,7 +97,9 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                   ),
                                 ),
                                 Text(
-                                  'Orders Table ${widget.table?.tableNumber}',
+                                  widget.isTable
+                                      ? 'Orders Table ${widget.table?.tableNumber}'
+                                      : 'Orders #1 - $orderTypeDisplay',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -115,8 +126,44 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                             ),
                           ],
                         ),
-                        const SpaceHeight(8.0),
-                        const Divider(),
+                        if (!widget.isTable) ...[
+                          const SpaceHeight(12.0),
+                          Row(
+                            children: [
+                              const Text(
+                                'Tipe Pesanan:',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SpaceWidth(8.0),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 4.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: widget.orderType == 'take_away'
+                                      ? AppColors.primary.withOpacity(0.2)
+                                      : Colors.green.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Text(
+                                  orderTypeDisplay,
+                                  style: TextStyle(
+                                    color: widget.orderType == 'take_away'
+                                        ? AppColors.primary
+                                        : Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SpaceHeight(8.0),
+                          const Divider(),
+                        ],
                         const SpaceHeight(24.0),
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -542,17 +589,45 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Pembayaran',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                              if (widget.isTable != true) ...[
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Pembayaran',
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SpaceWidth(12.0),
+                                    // Order Type Badge
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 4.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: widget.orderType == 'take_away'
+                                            ? AppColors.primary.withOpacity(0.2)
+                                            : Colors.green.withOpacity(0.2),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Text(
+                                        orderTypeDisplay,
+                                        style: TextStyle(
+                                          color: widget.orderType == 'take_away'
+                                              ? AppColors.primary
+                                              : Colors.green,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SpaceHeight(16.0),
-                              const Divider(),
-                              const SpaceHeight(8.0),
+                                const SpaceHeight(16.0),
+                              ],
                               const Text(
                                 'Customer',
                                 style: TextStyle(
@@ -803,21 +878,25 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                       return Flexible(
                                         child: Button.filled(
                                           onPressed: () async {
-                                            context.read<OrderBloc>().add(
-                                                OrderEvent.order(
-                                                    items,
-                                                    discount,
-                                                    discountAmountFinal,
-                                                    finalTax.toInt(),
-                                                    0,
-                                                    totalPriceController
-                                                        .text.toIntegerFromText,
-                                                    customerController.text,
-                                                    widget.table?.id ?? 0,
-                                                    'completed',
-                                                    'paid',
-                                                    isCash ? 'Cash' : 'QRIS',
-                                                    totalPriceFinal));
+                                            context
+                                                .read<OrderBloc>()
+                                                .add(OrderEvent.order(
+                                                  items,
+                                                  discount,
+                                                  discountAmountFinal,
+                                                  finalTax.toInt(),
+                                                  0,
+                                                  totalPriceController
+                                                      .text.toIntegerFromText,
+                                                  customerController.text,
+                                                  widget.table?.id ?? 0,
+                                                  'completed',
+                                                  'paid',
+                                                  isCash ? 'Cash' : 'QRIS',
+                                                  totalPriceFinal,
+                                                  orderType:
+                                                      'dine_in', // Always use 'dine_in' for tables
+                                                ));
 
                                             await showDialog(
                                               context: context,
@@ -836,6 +915,8 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                                 totalService: 0,
                                                 draftName:
                                                     customerController.text,
+                                                orderType:
+                                                    'dine_in', // Add this missing parameter
                                               ),
                                             );
                                           },

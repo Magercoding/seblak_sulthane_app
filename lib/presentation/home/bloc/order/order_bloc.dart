@@ -22,7 +22,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   ) : super(const _Initial()) {
     on<_Order>((event, emit) async {
       emit(const _Loading());
-      log("Start 1");
+      log("Start Order Process - Payment Method: ${event.paymentMethod}, Amount: ${event.paymentAmount}");
 
       final subTotal = event.items.fold<int>(
           0,
@@ -35,15 +35,31 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
       final userData = await AuthLocalDataSource().getAuthData();
 
+      // Ensure valid payment amount
+      final paymentAmount =
+          event.paymentAmount > 0 ? event.paymentAmount : event.totalPriceFinal;
+
+      // Ensure valid payment method
+      final paymentMethod =
+          event.paymentMethod.isNotEmpty ? event.paymentMethod : 'Cash';
+
+      // Use provided order type, but default to table-based logic if not specified
+      final String orderType = event.orderType.isNotEmpty
+          ? event.orderType
+          : (event.tableNumber > 0 ? 'dine_in' : 'take_away');
+
+      log("Payment information to be saved:");
+      log("Method: $paymentMethod, Amount: $paymentAmount, Total: ${event.totalPriceFinal}, Order Type: $orderType");
+
       final dataInput = OrderModel(
         subTotal: subTotal,
-        paymentAmount: event.paymentAmount,
+        paymentAmount: paymentAmount,
         tax: event.tax,
         discount: event.discount,
         discountAmount: event.discountAmount,
         serviceCharge: event.serviceCharge,
         total: event.totalPriceFinal,
-        paymentMethod: event.paymentMethod,
+        paymentMethod: paymentMethod,
         totalItem: totalItem,
         idKasir: userData.user?.id ?? 1,
         namaKasir: userData.user?.name ?? 'Kasir A',
@@ -53,29 +69,66 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         status: event.status,
         paymentStatus: event.paymentStatus,
         isSync: 0,
+        orderType: orderType, // Add order type
         orderItems: event.items,
       );
-      log("Start 2");
 
-      int id = await ProductLocalDatasource.instance.saveOrder(dataInput);
+      try {
+        // Save to local database first
+        int id = await ProductLocalDatasource.instance.saveOrder(dataInput);
+        log("Data successfully saved to local database with ID: $id");
 
-      final newData = dataInput.copyWith(id: id);
-      final orderItem =
-          await ProductLocalDatasource.instance.getOrderItemByOrderId(id);
+        final newData = dataInput.copyWith(id: id);
+        final orderItem =
+            await ProductLocalDatasource.instance.getOrderItemByOrderId(id);
+        final newOrder = newData.copyWith(orderItems: orderItem);
 
-      final newOrder = newData.copyWith(orderItems: orderItem);
+        // Try to sync to server, but don't wait for success
+        try {
+          final value = await orderRemoteDatasource.saveOrder(newOrder);
+          if (value) {
+            await ProductLocalDatasource.instance.updateOrderIsSync(id);
+            log("Successfully synced to server");
+          } else {
+            log("Failed to sync to server, but local data is saved");
+          }
+        } catch (e) {
+          log("Error syncing to server: ${e.toString()}");
+          // Continue even if sync fails
+        }
 
-      final value = await orderRemoteDatasource.saveOrder(newOrder);
+        // Verify data before emitting
+        log("Data sent to UI - method: ${newOrder.paymentMethod}, amount: ${newOrder.paymentAmount}, order type: ${newOrder.orderType}");
+        emit(_Loaded(newOrder, id));
+      } catch (e) {
+        log("Error saving order: ${e.toString()}");
 
-      if (value) {
-        await ProductLocalDatasource.instance.updateOrderIsSync(id);
+        // Still emit data for UI display
+        final fallbackOrder = OrderModel(
+          id: 0,
+          subTotal: subTotal,
+          paymentAmount: paymentAmount,
+          tax: event.tax,
+          discount: event.discount,
+          discountAmount: event.discountAmount,
+          serviceCharge: event.serviceCharge,
+          total: event.totalPriceFinal,
+          paymentMethod: paymentMethod,
+          totalItem: totalItem,
+          idKasir: userData.user?.id ?? 1,
+          namaKasir: userData.user?.name ?? 'Kasir A',
+          transactionTime: DateTime.now().toIso8601String(),
+          customerName: event.customerName,
+          tableNumber: event.tableNumber,
+          status: event.status,
+          paymentStatus: event.paymentStatus,
+          isSync: 0,
+          orderType: orderType, // Add order type
+          orderItems: event.items,
+        );
+
+        emit(_Loaded(fallbackOrder, 0));
       }
-
-      log("ID: $id  | dataInput: ${newData.toMap()}");
-      emit(_Loaded(
-        newData,
-        id,
-      ));
     });
   }
 }

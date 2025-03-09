@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:intl/intl.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
@@ -30,6 +31,7 @@ class SuccessPaymentDialog extends StatefulWidget {
     required this.normalPrice,
     required this.totalService,
     required this.draftName,
+    required this.orderType, // Added required orderType parameter
   });
   final List<ProductQuantity> data;
   final int totalQty;
@@ -40,16 +42,30 @@ class SuccessPaymentDialog extends StatefulWidget {
   final int normalPrice;
   final int totalService;
   final String draftName;
+  final String orderType; // Order type field
 
   @override
   State<SuccessPaymentDialog> createState() => _SuccessPaymentDialogState();
 }
 
 class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
-  // Add a loading state to show during printing
   bool _isPrinting = false;
+  String _orderTypeDisplay = ''; // To store the human-readable order type
 
-  // Show print status dialog
+  @override
+  void initState() {
+    super.initState();
+    _orderTypeDisplay =
+        widget.orderType == 'take_away' ? 'Take Away' : 'Dine In';
+
+    final orderState = context.read<OrderBloc>().state;
+    orderState.maybeWhen(loaded: (model, orderId) {
+      log("OrderBloc state - paymentMethod: ${model.paymentMethod}, paymentAmount: ${model.paymentAmount}");
+    }, orElse: () {
+      log("OrderBloc state is not loaded");
+    });
+  }
+
   void _showPrintStatusDialog(bool isSuccess, String message) {
     showDialog(
       context: context,
@@ -109,13 +125,57 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               ),
             ),
             const SpaceHeight(20.0),
+            // Display Order Type if it's defined
+            if (widget.orderType.isNotEmpty) ...[
+              const Text('TIPE PESANAN'),
+              const SpaceHeight(5.0),
+              Row(
+                children: [
+                  Text(
+                    _orderTypeDisplay,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SpaceWidth(8.0),
+                  // Show a colored indicator based on order type
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 2.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: widget.orderType == 'take_away'
+                          ? AppColors.primary.withOpacity(0.2)
+                          : Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      _orderTypeDisplay,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: widget.orderType == 'take_away'
+                            ? AppColors.primary
+                            : Colors.green,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SpaceHeight(10.0),
+              const Divider(),
+              const SpaceHeight(8.0),
+            ],
             const Text('METODE BAYAR'),
             const SpaceHeight(5.0),
             BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {
                 final paymentMethod = state.maybeWhen(
-                  orElse: () => 'Cash',
-                  loaded: (model, orderId) => model.paymentMethod,
+                  orElse: () => 'Cash', // Default to Cash
+                  loaded: (model, orderId) => model.paymentMethod.isNotEmpty
+                      ? model.paymentMethod
+                      : 'Cash', // Use model data or default
                 );
                 return Text(
                   paymentMethod,
@@ -130,19 +190,11 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
             const SpaceHeight(8.0),
             const Text('TOTAL TAGIHAN'),
             const SpaceHeight(5.0),
-            BlocBuilder<OrderBloc, OrderState>(
-              builder: (context, state) {
-                final total = state.maybeWhen(
-                  orElse: () => 0,
-                  loaded: (model, orderId) => model.total,
-                );
-                return Text(
-                  widget.totalPrice.currencyFormatRp,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                  ),
-                );
-              },
+            Text(
+              widget.totalPrice.currencyFormatRp,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SpaceHeight(10.0),
             const Divider(),
@@ -151,10 +203,17 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
             const SpaceHeight(5.0),
             BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {
+                // Get payment amount, falling back to total price if needed
                 final paymentAmount = state.maybeWhen(
-                  orElse: () => 0,
-                  loaded: (model, orderId) => model.paymentAmount,
+                  orElse: () => widget.totalPrice,
+                  loaded: (model, orderId) => model.paymentAmount > 0
+                      ? model.paymentAmount
+                      : widget.totalPrice,
                 );
+
+                // Log for debugging
+                log("Displaying payment amount: $paymentAmount");
+
                 return Text(
                   paymentAmount.ceil().currencyFormatRp,
                   style: const TextStyle(
@@ -167,7 +226,9 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
               builder: (context, state) {
                 final paymentMethod = state.maybeWhen(
                   orElse: () => 'Cash',
-                  loaded: (model, orderId) => model.paymentMethod,
+                  loaded: (model, orderId) => model.paymentMethod.isNotEmpty
+                      ? model.paymentMethod
+                      : 'Cash',
                 );
 
                 // Only show kembalian section for Cash payments
@@ -181,18 +242,22 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                       const SpaceHeight(5.0),
                       BlocBuilder<OrderBloc, OrderState>(
                         builder: (context, state) {
+                          // Get payment amount with fallback
                           final paymentAmount = state.maybeWhen(
-                            orElse: () => 0,
-                            loaded: (model, orderId) => model.paymentAmount,
+                            orElse: () => widget.totalPrice,
+                            loaded: (model, orderId) => model.paymentAmount > 0
+                                ? model.paymentAmount
+                                : widget.totalPrice,
                           );
-                          final total = state.maybeWhen(
-                            orElse: () => 0,
-                            loaded: (model, orderId) => model.total,
-                          );
-                          final diff = paymentAmount - total;
-                          log("DIFF: $diff  paymentAmount: $paymentAmount  total: $total");
+
+                          // Calculate change - ensure it's not negative
+                          final diff = paymentAmount - widget.totalPrice;
+                          final change = diff > 0 ? diff : 0;
+
+                          log("Change calculation - payment: $paymentAmount, total: ${widget.totalPrice}, diff: $diff, change: $change");
+
                           return Text(
-                            diff.ceil().currencyFormatRp,
+                            change.ceil().currencyFormatRp,
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
@@ -239,29 +304,63 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                 Flexible(
                   child: BlocBuilder<OrderBloc, OrderState>(
                     builder: (context, state) {
-                      final paymentAmount = state.maybeWhen(
-                        orElse: () => 0,
-                        loaded: (model, orderId) => model.paymentAmount,
-                      );
-
+                      // Get payment method
                       final paymentMethod = state.maybeWhen(
                         orElse: () => 'Cash',
-                        loaded: (model, orderId) => model.paymentMethod,
+                        loaded: (model, orderId) =>
+                            model.paymentMethod.isNotEmpty
+                                ? model.paymentMethod
+                                : 'Cash',
                       );
 
+                      // Get payment amount with fallback
+                      final paymentAmount = state.maybeWhen(
+                        orElse: () => widget.totalPrice,
+                        loaded: (model, orderId) => model.paymentAmount > 0
+                            ? model.paymentAmount
+                            : widget.totalPrice,
+                      );
+
+                      // Calculate change
                       final kembalian = paymentMethod == 'Cash'
-                          ? paymentAmount - widget.totalPrice
+                          ? (paymentAmount > widget.totalPrice
+                              ? paymentAmount - widget.totalPrice
+                              : 0)
                           : 0;
 
-                      // Update the onPressed callback in SuccessPaymentDialog
+                      // Get cashier name
+                      final namaKasir = state.maybeWhen(
+                        orElse: () => 'Kasir',
+                        loaded: (model, orderId) => model.namaKasir.isNotEmpty
+                            ? model.namaKasir
+                            : 'Kasir',
+                      );
+
+                      // Get table number
+                      final tableNumber = state.maybeWhen(
+                        orElse: () => 0,
+                        loaded: (model, orderId) => model.tableNumber ?? 0,
+                      );
+
+                      final orderTypeFromState = state.maybeWhen(
+                        orElse: () => widget.orderType,
+                        loaded: (model, orderId) => model.orderType.isNotEmpty
+                            ? model.orderType
+                            : widget.orderType,
+                      );
+
                       return Button.filled(
                         onPressed: _isPrinting
-                            ? () {} // Empty function instead of null while printing
+                            ? () {} // Empty function instead of null
                             : () async {
                                 try {
                                   setState(() {
                                     _isPrinting = true;
                                   });
+
+                                  // Log for debugging
+                                  log("Print button pressed");
+                                  log("Print values - method: $paymentMethod, payment: $paymentAmount, total: ${widget.totalPrice}, change: $kembalian");
 
                                   // Get receipt size with error handling
                                   final sizeReceipt =
@@ -276,30 +375,6 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                                     log('Error parsing receipt size: $sizeReceipt');
                                     receiptSize = 80; // Default value
                                   }
-
-                                  final paymentMethod = state.maybeWhen(
-                                    orElse: () => 'Cash',
-                                    loaded: (model, orderId) =>
-                                        model.paymentMethod,
-                                  );
-
-                                  final paymentAmount = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (model, orderId) =>
-                                        model.paymentAmount,
-                                  );
-
-                                  final namaKasir = state.maybeWhen(
-                                    orElse: () => 'Kasir',
-                                    loaded: (model, orderId) => model.namaKasir,
-                                  );
-
-                                  // Get table number from order state if available, default to 0 (no table)
-                                  final tableNumber = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (model, orderId) =>
-                                        model.tableNumber ?? 0,
-                                  );
 
                                   // Generate receipt print bytes
                                   final receiptBytes = await PrintDataoutputs
@@ -318,6 +393,8 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                                     namaKasir, // namaKasir
                                     widget.draftName, // customerName
                                     receiptSize, // paper size
+                                    orderType:
+                                        orderTypeFromState, // Pass the order type
                                   );
 
                                   // Print the receipt first
@@ -346,10 +423,12 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                                       .instance
                                       .printChecker(
                                     widget.data,
-                                    tableNumber, // This can be 0 now and will be handled appropriately
+                                    tableNumber,
                                     widget.draftName,
                                     namaKasir,
                                     receiptSize,
+                                    orderType:
+                                        orderTypeFromState, // Pass the order type
                                   );
 
                                   // Print the checker

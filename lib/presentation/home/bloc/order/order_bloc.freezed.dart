@@ -31,7 +31,8 @@ mixin _$OrderEvent {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)
+            int totalPriceFinal,
+            String orderType)
         order,
   }) =>
       throw _privateConstructorUsedError;
@@ -50,7 +51,8 @@ mixin _$OrderEvent {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
   }) =>
       throw _privateConstructorUsedError;
@@ -69,7 +71,8 @@ mixin _$OrderEvent {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
     required TResult orElse(),
   }) =>
@@ -170,7 +173,8 @@ class _$StartedImpl implements _Started {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)
+            int totalPriceFinal,
+            String orderType)
         order,
   }) {
     return started();
@@ -192,7 +196,8 @@ class _$StartedImpl implements _Started {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
   }) {
     return started?.call();
@@ -214,7 +219,8 @@ class _$StartedImpl implements _Started {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
     required TResult orElse(),
   }) {
@@ -278,7 +284,8 @@ abstract class _$$OrderImplCopyWith<$Res> {
       String status,
       String paymentStatus,
       String paymentMethod,
-      int totalPriceFinal});
+      int totalPriceFinal,
+      String orderType});
 }
 
 /// @nodoc
@@ -306,6 +313,7 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? paymentStatus = null,
     Object? paymentMethod = null,
     Object? totalPriceFinal = null,
+    Object? orderType = null,
   }) {
     return _then(_$OrderImpl(
       null == items
@@ -356,6 +364,10 @@ class __$$OrderImplCopyWithImpl<$Res>
           ? _value.totalPriceFinal
           : totalPriceFinal // ignore: cast_nullable_to_non_nullable
               as int,
+      orderType: null == orderType
+          ? _value.orderType
+          : orderType // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -375,7 +387,8 @@ class _$OrderImpl implements _Order {
       this.status,
       this.paymentStatus,
       this.paymentMethod,
-      this.totalPriceFinal)
+      this.totalPriceFinal,
+      {this.orderType = 'dine_in'})
       : _items = items;
 
   final List<ProductQuantity> _items;
@@ -408,10 +421,13 @@ class _$OrderImpl implements _Order {
   final String paymentMethod;
   @override
   final int totalPriceFinal;
+  @override
+  @JsonKey()
+  final String orderType;
 
   @override
   String toString() {
-    return 'OrderEvent.order(items: $items, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, paymentAmount: $paymentAmount, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, paymentMethod: $paymentMethod, totalPriceFinal: $totalPriceFinal)';
+    return 'OrderEvent.order(items: $items, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, paymentAmount: $paymentAmount, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, paymentMethod: $paymentMethod, totalPriceFinal: $totalPriceFinal, orderType: $orderType)';
   }
 
   @override
@@ -439,7 +455,9 @@ class _$OrderImpl implements _Order {
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
             (identical(other.totalPriceFinal, totalPriceFinal) ||
-                other.totalPriceFinal == totalPriceFinal));
+                other.totalPriceFinal == totalPriceFinal) &&
+            (identical(other.orderType, orderType) ||
+                other.orderType == orderType));
   }
 
   @override
@@ -456,7 +474,8 @@ class _$OrderImpl implements _Order {
       status,
       paymentStatus,
       paymentMethod,
-      totalPriceFinal);
+      totalPriceFinal,
+      orderType);
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -482,7 +501,8 @@ class _$OrderImpl implements _Order {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)
+            int totalPriceFinal,
+            String orderType)
         order,
   }) {
     return order(
@@ -497,7 +517,8 @@ class _$OrderImpl implements _Order {
         status,
         paymentStatus,
         paymentMethod,
-        totalPriceFinal);
+        totalPriceFinal,
+        orderType);
   }
 
   @override
@@ -516,7 +537,8 @@ class _$OrderImpl implements _Order {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
   }) {
     return order?.call(
@@ -531,7 +553,8 @@ class _$OrderImpl implements _Order {
         status,
         paymentStatus,
         paymentMethod,
-        totalPriceFinal);
+        totalPriceFinal,
+        orderType);
   }
 
   @override
@@ -550,7 +573,8 @@ class _$OrderImpl implements _Order {
             String status,
             String paymentStatus,
             String paymentMethod,
-            int totalPriceFinal)?
+            int totalPriceFinal,
+            String orderType)?
         order,
     required TResult orElse(),
   }) {
@@ -567,7 +591,8 @@ class _$OrderImpl implements _Order {
           status,
           paymentStatus,
           paymentMethod,
-          totalPriceFinal);
+          totalPriceFinal,
+          orderType);
     }
     return orElse();
   }
@@ -617,7 +642,8 @@ abstract class _Order implements OrderEvent {
       final String status,
       final String paymentStatus,
       final String paymentMethod,
-      final int totalPriceFinal) = _$OrderImpl;
+      final int totalPriceFinal,
+      {final String orderType}) = _$OrderImpl;
 
   List<ProductQuantity> get items;
   int get discount;
@@ -631,6 +657,7 @@ abstract class _Order implements OrderEvent {
   String get paymentStatus;
   String get paymentMethod;
   int get totalPriceFinal;
+  String get orderType;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.

@@ -3,7 +3,8 @@ import 'dart:convert';
 class OutletModel {
   final int? id;
   final String? name;
-  final String? address;
+  final String? address1;
+  final String? address2;
   final String? phone;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -11,7 +12,8 @@ class OutletModel {
   OutletModel({
     this.id,
     this.name,
-    this.address,
+    this.address1,
+    this.address2,
     this.phone,
     this.createdAt,
     this.updatedAt,
@@ -21,7 +23,8 @@ class OutletModel {
     return {
       'id': id,
       'name': name,
-      'address': address,
+      'address1': address1,
+      'address2': address2,
       'phone': phone,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
@@ -32,7 +35,9 @@ class OutletModel {
     return OutletModel(
       id: map['id'],
       name: map['name'],
-      address: map['address'],
+      address1: map['address1'],
+            address2: map['address2'],
+
       phone: map['phone'],
       createdAt:
           map['created_at'] != null ? DateTime.parse(map['created_at']) : null,

@@ -43,7 +43,8 @@ class OrderRemoteDatasource {
           final outlet = OutletModel(
             id: outletData['id'],
             name: outletData['name'],
-            address: outletData['address'],
+            address1: outletData['address1'],
+            address2: outletData['address2'],
             phone: outletData['phone'],
             createdAt: outletData['created_at'] != null
                 ? DateTime.parse(outletData['created_at'])
@@ -102,7 +103,8 @@ class OrderRemoteDatasource {
             final outlet = OutletModel(
               id: outletData['id'],
               name: outletData['name'],
-              address: outletData['address'],
+              address1: outletData['address1'],
+              address2: outletData['address2'],
               phone: outletData['phone'],
               createdAt: outletData['created_at'] != null
                   ? DateTime.parse(outletData['created_at'])
@@ -182,7 +184,8 @@ class OrderRemoteDatasource {
             final outlet = OutletModel(
               id: outletData['id'],
               name: outletData['name'],
-              address: outletData['address'],
+              address1: outletData['address1'],
+              address2: outletData['address2'],
               phone: outletData['phone'],
               createdAt: outletData['created_at'] != null
                   ? DateTime.parse(outletData['created_at'])

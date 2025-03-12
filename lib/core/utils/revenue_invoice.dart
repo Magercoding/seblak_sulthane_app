@@ -45,17 +45,55 @@ class RevenueInvoice {
   static Future<String> _getOutletAddress(int outletId) async {
     try {
       final outletDataSource = OutletLocalDataSource();
-      final allOutlets = await outletDataSource.getAllOutlets();
-
       final outlet = await outletDataSource.getOutletById(outletId);
 
-      if (outlet == null && allOutlets.isNotEmpty) {
-        return allOutlets.first.address ?? 'Seblak Sulthane';
+      if (outlet != null) {
+        String address = '';
+
+        // Add address1 if available
+        if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+          address = outlet.address1!;
+        }
+
+        // Add address2 if available
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += outlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      return outlet?.address ?? 'Seblak Sulthane';
+      // If specific outlet not found, try to get the first outlet
+      final allOutlets = await outletDataSource.getAllOutlets();
+      if (allOutlets.isNotEmpty) {
+        String address = '';
+        final firstOutlet = allOutlets.first;
+
+        // Add address1 if available
+        if (firstOutlet.address1 != null && firstOutlet.address1!.isNotEmpty) {
+          address = firstOutlet.address1!;
+        }
+
+        // Add address2 if available
+        if (firstOutlet.address2 != null && firstOutlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += firstOutlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
+      }
+
+      return 'Seblak Sulthane'; // Default fallback
     } catch (e) {
-      return 'Seblak Sulthane';
+      print('Error fetching outlet address: $e');
+      return 'Seblak Sulthane'; // Default fallback on error
     }
   }
 

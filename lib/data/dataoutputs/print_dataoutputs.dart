@@ -200,7 +200,18 @@ class PrintDataoutputs {
     }
 
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
-    final String outletAddress = outlet?.address ?? 'OFFLINE';
+    String outletAddress = 'OFFLINE';
+
+// Combine address1 and address2 if both are available
+    if (outlet != null) {
+      if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+        outletAddress = outlet.address1!;
+
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          outletAddress += ', ${outlet.address2!}';
+        }
+      }
+    }
     final String outletPhone = outlet?.phone ?? 'Seblak Sulthane';
 
     if (orginalImage != null) {

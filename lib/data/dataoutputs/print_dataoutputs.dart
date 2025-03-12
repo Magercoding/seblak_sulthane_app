@@ -8,44 +8,41 @@ import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart'
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
+import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/user_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
+import 'package:seblak_sulthane_app/core/utils/date_formatter.dart';
 
 class PrintDataoutputs {
   PrintDataoutputs._init();
 
   static final PrintDataoutputs instance = PrintDataoutputs._init();
 
-  // Get user profile from remote first, then fall back to local if remote fails
   static Future<UserModel?> _getUserProfile() async {
     try {
-      // Try remote first
       final authRemoteDatasource = AuthRemoteDatasource();
       final result = await authRemoteDatasource.getProfile();
 
       UserModel? user;
       result.fold(
         (error) async {
-          // If remote fails, try local
           user = await _getUserProfileFromLocal();
         },
         (userData) {
           user = userData;
-          // Save to local for future offline use
+
           _saveUserProfileToLocal(userData);
         },
       );
 
       return user;
     } catch (e) {
-      // If any error occurs, try local
       return _getUserProfileFromLocal();
     }
   }
 
-  // Get user profile from local storage
   static Future<UserModel?> _getUserProfileFromLocal() async {
     try {
       final authLocalDataSource = AuthLocalDataSource();
@@ -55,20 +52,17 @@ class PrintDataoutputs {
     }
   }
 
-  // Save user profile to local storage
   static Future<void> _saveUserProfileToLocal(UserModel user) async {
     try {
       final authLocalDataSource = AuthLocalDataSource();
       await authLocalDataSource.saveUserData(user);
     } catch (e) {
-      // Just log error but continue
       print('Failed to save user profile to local: $e');
     }
   }
 
   static Future<int?> _fetchOutletIdFromProfile() async {
     try {
-      // Try to get profile from either remote or local
       final user = await _getUserProfile();
       return user?.outletId;
     } catch (e) {
@@ -76,11 +70,9 @@ class PrintDataoutputs {
     }
   }
 
-  // Get cashier name directly from local storage with debugging
   static Future<String> _getCashierNameFromProfile() async {
     print("⭐ Starting to get cashier name from profile");
     try {
-      // First try local storage for immediate offline support
       final authLocalDataSource = AuthLocalDataSource();
       try {
         print("📱 Attempting to get user data from local storage");
@@ -94,28 +86,24 @@ class PrintDataoutputs {
           print("⚠️ Name from local storage is empty");
         }
       } catch (localError) {
-        // If local storage fails, log error and continue to remote
         print('❌ Failed to get user name from local storage: $localError');
       }
 
-      // If local storage didn't work, try remote
       print("🌐 Attempting to get profile from remote");
       try {
         final authRemoteDatasource = AuthRemoteDatasource();
         final result = await authRemoteDatasource.getProfile();
 
-        String userName = "Cashier"; // Default
+        String userName = "Cashier";
         result.fold(
           (error) {
             print("❌ Remote profile error: $error");
-            // Remote failed, keep default
           },
           (userData) {
             if (userData.name.isNotEmpty) {
               userName = userData.name;
               print("✅ Using name from remote: ${userData.name}");
 
-              // Save to local for future offline use
               print("💾 Saving remote user data to local");
               _saveUserProfileToLocal(userData);
             } else {
@@ -127,11 +115,11 @@ class PrintDataoutputs {
         return userName;
       } catch (remoteError) {
         print("❌ Error accessing remote profile: $remoteError");
-        throw remoteError; // Propagate to outer catch block
+        throw remoteError;
       }
     } catch (e) {
       print("❌ Final error getting cashier name: $e");
-      return "Cashier"; // Default fallback
+      return "Cashier";
     }
   }
 
@@ -151,8 +139,6 @@ class PrintDataoutputs {
     }
   }
 
-  // Replace the cashier name handling code in printOrderV3 with this:
-
   Future<List<int>> printOrderV3(
       List<ProductQuantity> products,
       int totalQuantity,
@@ -164,8 +150,7 @@ class PrintDataoutputs {
       int discount,
       int subTotal,
       int serviceCharge,
-      String
-          namaKasir, // This parameter will be IGNORED and overridden with local data
+      String namaKasir,
       String customerName,
       int paper,
       {int? outletId,
@@ -202,7 +187,6 @@ class PrintDataoutputs {
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     String outletAddress = 'OFFLINE';
 
-// Combine address1 and address2 if both are available
     if (outlet != null) {
       if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
         outletAddress = outlet.address1!;
@@ -324,7 +308,7 @@ class PrintDataoutputs {
         ),
         PosColumn(
           text: '${product.product.price!.toIntegerFromText * product.quantity}'
-              .currencyFormatRpV2,
+              .currencyFormatRp,
           width: 4,
           styles: const PosStyles(bold: true, align: PosAlign.right),
         ),
@@ -362,7 +346,6 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Calculate tax percentage from the actual tax amount passed in and the subTotal
     double taxPercentage = 0;
     if (subTotal > 0) {
       taxPercentage = (tax / subTotal) * 100;
@@ -370,8 +353,7 @@ class PrintDataoutputs {
 
     bytes += generator.row([
       PosColumn(
-        text:
-            'Tax (${taxPercentage.toStringAsFixed(0)}%)', // Use the calculated percentage
+        text: 'Tax (${taxPercentage.toStringAsFixed(0)}%)',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -382,7 +364,6 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Calculate the service charge percentage based on the provided subTotal
     double serviceChargePercentage = 0;
     if (subTotal > 0) {
       serviceChargePercentage = (serviceCharge / subTotal) * 100;
@@ -431,7 +412,6 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Only show kembalian (change) if payment method is Cash
     if (paymentMethod == 'Cash') {
       bytes += generator.row([
         PosColumn(
@@ -485,16 +465,13 @@ class PrintDataoutputs {
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
     outletId ??= 1;
 
-    // IMPORTANT: Add logging to diagnose the issue
     print("📝 CHECKER - Cashier name parameter received: '$cashierName'");
 
-    // ALWAYS get cashier name from local storage regardless of what was passed in
     print("📝 CHECKER - Directly fetching cashier name from local storage");
     try {
       final authLocalDataSource = AuthLocalDataSource();
       final userData = await authLocalDataSource.getUserData();
       if (userData.name.isNotEmpty) {
-        // Force override any passed name
         cashierName = userData.name;
         print(
             "📝 CHECKER - Forced name from local storage: '${userData.name}'");
@@ -520,7 +497,6 @@ class PrintDataoutputs {
         ));
     bytes += generator.feed(1);
 
-    // Only print the table number if it's greater than 0
     if (tableNumber > 0) {
       bytes += generator.text(tableNumber.toString(),
           styles: const PosStyles(
@@ -574,7 +550,7 @@ class PrintDataoutputs {
     bytes += generator.row([
       PosColumn(
         text: 'Customer - $draftName',
-        width: 12, // Fixed width to 12 as per previous fix
+        width: 12,
         styles: const PosStyles(align: PosAlign.left),
       ),
     ]);
@@ -617,5 +593,639 @@ class PrintDataoutputs {
     bytes += generator.cut();
 
     return bytes;
+  }
+
+  Future<List<int>> printSummaryReport(
+      EnhancedSummaryData summary, String searchDateFormatted, int paper,
+      {int? outletId}) async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load();
+    final generator =
+        Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
+
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1;
+
+    final String cashierName = await _getCashierNameFromProfile();
+
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    String outletAddress = 'OFFLINE';
+
+    if (outlet != null) {
+      if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+        outletAddress = outlet.address1!;
+
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          outletAddress += ', ${outlet.address2!}';
+        }
+      }
+    }
+
+    final String outletPhone = outlet?.phone ?? 'Seblak Sulthane';
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+
+    try {
+      final ByteData data =
+          await rootBundle.load('assets/logo/seblak_sulthane.png');
+      final Uint8List bytesData = data.buffer.asUint8List();
+      final img.Image? originalImage = img.decodeImage(bytesData);
+
+      bytes += generator.reset();
+
+      if (originalImage != null) {
+        final img.Image grayscaleImage = img.grayscale(originalImage);
+        final img.Image resizedImage =
+            img.copyResize(grayscaleImage, width: 240);
+        bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
+        bytes += generator.feed(2);
+      }
+    } catch (e) {
+      log("Error loading logo: $e" as num);
+
+      bytes += generator.reset();
+    }
+
+    bytes += generator.text(outletName,
+        styles: const PosStyles(bold: true, align: PosAlign.center));
+    bytes += generator.text(outletAddress,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+    bytes += generator.text(outletPhone,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text(
+        paper == 80
+            ? '------------------------------------------------'
+            : '--------------------------------',
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text('SUMMARY REPORT',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.row([
+      PosColumn(
+        text: searchDateFormatted,
+        width: 12,
+        styles: const PosStyles(align: PosAlign.center),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Printed:',
+        width: 4,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: DateFormat('dd MMM yyyy HH:mm').format(DateTime.now()),
+        width: 8,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'By:',
+        width: 4,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: cashierName,
+        width: 8,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.text(
+        paper == 80
+            ? '------------------------------------------------'
+            : '--------------------------------',
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text('FINANCIAL SUMMARY',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.feed(1);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Revenue',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(double.parse(summary.totalRevenue))}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Subtotal',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(double.parse(summary.totalSubtotal))}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Tax',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(double.parse(summary.totalTax))}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Discount',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(double.parse(summary.totalDiscount))}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    final serviceCharge = summary.totalServiceCharge is num
+        ? (summary.totalServiceCharge as num).toDouble()
+        : summary.totalServiceCharge is String
+            ? double.parse(summary.totalServiceCharge as String)
+            : 0.0;
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Service Charge',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(serviceCharge)}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.text(
+        paper == 80
+            ? '------------------------------------------------'
+            : '--------------------------------',
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text('DAILY CASH FLOW',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.feed(1);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Opening Balance',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.openingBalance != null
+            ? 'Rp ${_formatCurrency(summary.openingBalance!.toDouble())}'
+            : 'Rp 0.00',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Expenses',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.expenses != null
+            ? 'Rp ${_formatCurrency(summary.expenses!.toDouble())}'
+            : 'Rp 0.00',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Cash Sales',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(summary.getCashSalesAsInt().toDouble())}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'QRIS Sales',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(summary.getQrisSalesAsInt().toDouble())}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Beverage Sales',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text:
+            'Rp ${_formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Closing Balance',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left, bold: true),
+      ),
+      PosColumn(
+        text: summary.closingBalance != null
+            ? 'Rp ${_formatCurrency(summary.closingBalance!.toDouble())}'
+            : 'Rp 0.00',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right, bold: true),
+      ),
+    ]);
+
+    bytes += generator.text(
+        paper == 80
+            ? '------------------------------------------------'
+            : '--------------------------------',
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    if (summary.paymentMethods != null) {
+      bytes += generator.text('PAYMENT METHODS',
+          styles: const PosStyles(align: PosAlign.center, bold: true));
+      bytes += generator.feed(1);
+
+      if (summary.paymentMethods?.cash != null) {
+        bytes += generator.row([
+          PosColumn(
+            text: 'Cash (${summary.paymentMethods!.cash!.count} txn)',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text:
+                'Rp ${_formatCurrency(summary.paymentMethods!.cash!.getTotalAsInt().toDouble())}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+
+      if (summary.paymentMethods?.qris != null) {
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS (${summary.paymentMethods!.qris!.count} txn)',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text:
+                'Rp ${_formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+
+      bytes += generator.text(
+          paper == 80
+              ? '------------------------------------------------'
+              : '--------------------------------',
+          styles: const PosStyles(bold: false, align: PosAlign.center));
+    }
+
+    if (summary.dailyBreakdown != null && summary.dailyBreakdown!.isNotEmpty) {
+      bytes += generator.text('DAILY BREAKDOWN',
+          styles: const PosStyles(align: PosAlign.center, bold: true));
+      bytes += generator.feed(1);
+
+      for (var i = 0; i < summary.dailyBreakdown!.length; i++) {
+        final day = summary.dailyBreakdown![i];
+
+        bytes += generator.text('Date: ${day.date}',
+            styles: const PosStyles(align: PosAlign.left, bold: true));
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Opening:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: day.openingBalance != null
+                ? 'Rp ${_formatCurrency(day.openingBalance!.toDouble())}'
+                : 'Rp 0.00',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Expenses:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: day.expenses != null
+                ? 'Rp ${_formatCurrency(day.expenses!.toDouble())}'
+                : 'Rp 0.00',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Cash Sales:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(day.getCashSalesAsInt().toDouble())}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS Sales:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(day.getQrisSalesAsInt().toDouble())}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Total Sales:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: day.totalSales != null
+                ? 'Rp ${_formatCurrency(day.totalSales!.toDouble())}'
+                : 'Rp 0.00',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Closing:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: day.closingBalance != null
+                ? 'Rp ${_formatCurrency(day.closingBalance!.toDouble())}'
+                : 'Rp 0.00',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
+
+        if (i < summary.dailyBreakdown!.length - 1) {
+          bytes += generator.text(
+              paper == 80 ? '----------------' : '------------',
+              styles: const PosStyles(bold: false, align: PosAlign.center));
+        }
+      }
+    }
+
+    bytes += generator.feed(3);
+    bytes += generator.cut();
+
+    return bytes;
+  }
+
+  String _formatCurrency(double value) {
+    return value.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+  }
+
+  Future<List<int>> printEndShift(
+      EnhancedSummaryData summary, String searchDateFormatted, int paper,
+      {int? outletId}) async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load();
+    final generator =
+        Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
+
+    final ByteData data =
+        await rootBundle.load('assets/logo/seblak_sulthane.png');
+    final Uint8List bytesData = data.buffer.asUint8List();
+    final img.Image? orginalImage = img.decodeImage(bytesData);
+    bytes += generator.reset();
+
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1;
+
+    final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+
+    if (orginalImage != null) {
+      final img.Image grayscalledImage = img.grayscale(orginalImage);
+      final img.Image resizedImage =
+          img.copyResize(grayscalledImage, width: 240);
+      bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
+      bytes += generator.feed(3);
+    }
+
+    bytes += generator.reset();
+
+    bytes += generator.text("END SHIFT",
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.text(
+        paper == 80
+            ? "================================================"
+            : "================================",
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text('Name: $outletName',
+        styles: const PosStyles(align: PosAlign.left, bold: true));
+
+    final singleDate = extractSingleDate(searchDateFormatted);
+    final formattedDate = formatDate(singleDate);
+
+    bytes += generator.text('Date: $formattedDate',
+        styles: const PosStyles(align: PosAlign.left, bold: true));
+
+    final DateTime now = DateTime.now();
+    final String endTime = DateFormat('dd/MM/yyyy HH:mm:ss').format(now);
+
+    bytes += generator.text('Printed: $endTime',
+        styles: const PosStyles(align: PosAlign.left, bold: true));
+
+    bytes += generator.text(
+        paper == 80
+            ? "================================================"
+            : "================================",
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Initial Cash",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.openingBalance != null
+            ? formatNumberWithoutDecimal(summary.openingBalance!.toDouble())
+            : "0",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Cash Payment",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text:
+            formatNumberWithoutDecimal(summary.getCashSalesAsInt().toDouble()),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Other Expenses",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.expenses != null
+            ? formatNumberWithoutDecimal(summary.expenses!.toDouble())
+            : "0",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    double totalFinalCash = (summary.openingBalance ?? 0).toDouble() +
+        summary.getCashSalesAsInt().toDouble() -
+        (summary.expenses ?? 0).toDouble();
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Total Final Cash",
+        width: 7,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(totalFinalCash),
+        width: 5,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Total Cash in Drawer",
+        width: 8,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(totalFinalCash),
+        width: 4,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Difference",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: "0",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: "Total Other Payment",
+        width: 8,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text:
+            formatNumberWithoutDecimal(summary.getQrisSalesAsInt().toDouble()),
+        width: 4,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.feed(3);
+    bytes += generator.cut();
+
+    return bytes;
+  }
+
+  String formatNumberWithoutDecimal(double value) {
+    final formatter = NumberFormat("#,###", "id_ID");
+    return formatter.format(value.round());
+  }
+
+  String extractSingleDate(String dateRange) {
+    final parts = dateRange.split(' to ');
+    return parts.isNotEmpty ? parts[0] : dateRange;
+  }
+
+  String formatDate(String dateString) {
+    final inputFormat = DateFormat('d MMMM yyyy', 'id_ID');
+    final outputFormat = DateFormat('yyyy-MM-dd');
+
+    try {
+      final date = inputFormat.parse(dateString);
+
+      return outputFormat.format(date);
+    } catch (e) {
+      return dateString;
+    }
   }
 }

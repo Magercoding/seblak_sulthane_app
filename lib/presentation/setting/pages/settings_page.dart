@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
+import 'package:seblak_sulthane_app/presentation/setting/pages/daily_cash_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/discount_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/profile_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/manage_printer_page.dart';
@@ -65,8 +66,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
                     leading: Assets.icons.profile.svg(),
-                    title: const Text('User Profile'),
-                    subtitle: const Text('View and manage your profile'),
+                    title: const Text('Profil Pengguna'),
+                    subtitle: const Text('Lihat informasi akun '),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 0
                         ? AppColors.blueLight
@@ -77,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     contentPadding: const EdgeInsets.all(12.0),
                     leading: Assets.icons.kelolaDiskon.svg(),
                     title: const Text('Kelola Diskon'),
-                    subtitle: const Text('Kelola Diskon Pelanggan'),
+                    subtitle: const Text('Kelola diskon pelanggan'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 1
                         ? AppColors.blueLight
@@ -88,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     contentPadding: const EdgeInsets.all(12.0),
                     leading: Assets.icons.member2.svg(),
                     title: const Text('Kelola Member'),
-                    subtitle: const Text('Kelola Member Pelanggan'),
+                    subtitle: const Text('Kelola member pelanggan'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 2
                         ? AppColors.blueLight
@@ -108,9 +109,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPrinter.svg(),
-                    title: const Text('Kelola Printer'),
-                    subtitle: const Text('Tambah atau hapus printer'),
+                    leading: Assets.icons.kelolaPajak.svg(),
+                    title: const Text('Kelola Uang Harian'),
+                    subtitle: const Text('Kelola cash harian'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 4
                         ? AppColors.blueLight
@@ -119,15 +120,26 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPajak.svg(),
-                    title: const Text('Sync Data'),
-                    subtitle:
-                        const Text('Sinkronisasi data dari dan ke server'),
+                    leading: Assets.icons.kelolaPrinter.svg(),
+                    title: const Text('Kelola Printer'),
+                    subtitle: const Text('Tambah atau hapus printer'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 5
                         ? AppColors.blueLight
                         : Colors.transparent,
                     onTap: () => indexValue(5),
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(12.0),
+                    leading: Assets.icons.kelolaPajak.svg(),
+                    title: const Text('Sync Data'),
+                    subtitle:
+                        const Text('Sinkronisasi data dari dan ke server'),
+                    textColor: AppColors.primary,
+                    tileColor: currentIndex == 6
+                        ? AppColors.blueLight
+                        : Colors.transparent,
+                    onTap: () => indexValue(6),
                   ),
                 ],
               ),
@@ -146,6 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     DiscountPage(),
                     MemberPage(),
                     TaxPage(),
+                    DailyCashPage(),
                     ManagePrinterPage(),
                     SyncDataPage(),
                   ],

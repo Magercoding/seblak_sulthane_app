@@ -43,7 +43,8 @@ class OrderRemoteDatasource {
           final outlet = OutletModel(
             id: outletData['id'],
             name: outletData['name'],
-            address: outletData['address'],
+            address1: outletData['address1'],
+            address2: outletData['address2'],
             phone: outletData['phone'],
             createdAt: outletData['created_at'] != null
                 ? DateTime.parse(outletData['created_at'])
@@ -102,7 +103,8 @@ class OrderRemoteDatasource {
             final outlet = OutletModel(
               id: outletData['id'],
               name: outletData['name'],
-              address: outletData['address'],
+              address1: outletData['address1'],
+              address2: outletData['address2'],
               phone: outletData['phone'],
               createdAt: outletData['created_at'] != null
                   ? DateTime.parse(outletData['created_at'])
@@ -139,7 +141,9 @@ class OrderRemoteDatasource {
     final authData = await AuthLocalDataSource().getAuthData();
     final token = authData.token ?? '';
 
-    final url = '$baseUrl/api/orders?start_date=$startDate&end_date=$endDate';
+    // Menggunakan endpoint baru untuk summary
+    final url =
+        '$baseUrl/api/summary?start_date=$startDate&end_date=$endDate&outlet_id=$outletId';
     final headers = {'Authorization': 'Bearer $token'};
 
     try {
@@ -149,71 +153,18 @@ class OrderRemoteDatasource {
       log('Response: ${response.body}');
 
       if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        final ordersData = responseData['data'] as List;
-
-        final filteredOrders = ordersData
-            .where((order) => order['outlet_id'] == outletId)
-            .toList();
-
-        if (filteredOrders.isEmpty) {
-          return Left('No summary data for this outlet');
+        try {
+          final responseData = jsonDecode(response.body);
+          return Right(SummaryResponseModel.fromJson(responseData));
+        } catch (e) {
+          log('Error parsing summary data: $e');
+          return Left('Error processing data: $e');
         }
-
-        double totalRevenue = 0;
-        double totalDiscount = 0;
-        double totalTax = 0;
-        double totalSubtotal = 0;
-        double totalServiceCharge = 0;
-        double total = 0;
-
-        for (var order in filteredOrders) {
-          totalRevenue += (order['payment_amount'] ?? 0).toDouble();
-          totalDiscount +=
-              double.tryParse(order['discount_amount']?.toString() ?? '0') ?? 0;
-          totalTax += (order['tax'] ?? 0).toDouble();
-          totalSubtotal += (order['sub_total'] ?? 0).toDouble();
-          totalServiceCharge += (order['service_charge'] ?? 0).toDouble();
-          total += (order['total'] ?? 0).toDouble();
-
-          if (order['outlet'] != null) {
-            final outletData = order['outlet'];
-
-            final outlet = OutletModel(
-              id: outletData['id'],
-              name: outletData['name'],
-              address: outletData['address'],
-              phone: outletData['phone'],
-              createdAt: outletData['created_at'] != null
-                  ? DateTime.parse(outletData['created_at'])
-                  : null,
-              updatedAt: outletData['updated_at'] != null
-                  ? DateTime.parse(outletData['updated_at'])
-                  : null,
-            );
-
-            await outletLocalDataSource.saveOutlet(outlet);
-          }
-        }
-
-        final summaryData = SummaryData(
-          totalRevenue: totalRevenue.toString(),
-          totalDiscount: totalDiscount.toStringAsFixed(2),
-          totalTax: totalTax.toString(),
-          totalSubtotal: totalSubtotal.toString(),
-          totalServiceCharge: totalServiceCharge,
-          total: total.round(),
-          outletId: outletId,
-        );
-
-        return Right(SummaryResponseModel(
-          status: 'success',
-          data: summaryData,
-        ));
       } else {
-        return Left('Failed to fetch summary data');
+        return Left('Failed to fetch summary data: ${response.statusCode}');
       }
     } catch (e) {
+      log('Error fetching summary: $e');
       return Left(e.toString());
     }
   }

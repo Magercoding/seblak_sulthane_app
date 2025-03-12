@@ -36,8 +36,9 @@ class ItemSales {
   final String updatedAt;
   final String productName;
   final int outletId;
+  String? categoryName; // New field for category name
 
-  const ItemSales({
+  ItemSales({
     required this.id,
     required this.orderId,
     required this.productId,
@@ -47,6 +48,7 @@ class ItemSales {
     required this.updatedAt,
     required this.productName,
     required this.outletId,
+    this.categoryName,
   });
 
   factory ItemSales.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,7 @@ class ItemSales {
       updatedAt: json['updated_at'],
       productName: json['product_name'],
       outletId: json['outlet_id'] ?? 0,
+      categoryName: json['category_name'],
     );
   }
 
@@ -73,5 +76,33 @@ class ItemSales {
         'updated_at': updatedAt,
         'product_name': productName,
         'outlet_id': outletId,
+        'category_name': categoryName,
       };
+
+  // Create a copy of this instance with optional changes
+  ItemSales copyWith({
+    int? id,
+    int? orderId,
+    int? productId,
+    int? quantity,
+    int? price,
+    String? createdAt,
+    String? updatedAt,
+    String? productName,
+    int? outletId,
+    String? categoryName,
+  }) {
+    return ItemSales(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      productId: productId ?? this.productId,
+      quantity: quantity ?? this.quantity,
+      price: price ?? this.price,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      productName: productName ?? this.productName,
+      outletId: outletId ?? this.outletId,
+      categoryName: categoryName ?? this.categoryName,
+    );
+  }
 }

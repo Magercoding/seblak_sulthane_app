@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/daily_cash_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_repository%20.dart';
@@ -21,6 +22,7 @@ import 'package:seblak_sulthane_app/presentation/home/bloc/online_checker/online
 import 'package:seblak_sulthane_app/presentation/home/bloc/outlet/outlet_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/status_table/status_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/report/blocs/daily_cash_bloc/daily_cash_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/item_sales_report/item_sales_report_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/product_sales/product_sales_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/summary/summary_bloc.dart';
@@ -45,11 +47,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/colors.dart';
 import 'presentation/auth/bloc/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart'; // Import untuk initializeDateFormatting
 
 import 'presentation/home/pages/dashboard_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting(
+      'id_ID', null); // Inisialisasi locale data untuk Indonesia
+
   runApp(const MyApp());
 }
 
@@ -160,6 +166,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => OutletBloc(OutletLocalDataSource()),
+        ),
+        BlocProvider(
+          create: (context) => DailyCashBloc(DailyCashRemoteDatasource()),
         ),
       ],
       child: MaterialApp(

@@ -7,7 +7,7 @@ extension StringExt on String {
     return parsedValue;
   }
 
-  String get currencyFormatRpV2 {
+  String get currencyFormatRp {
     final parsedValue = int.tryParse(this) ?? 0;
     return NumberFormat.currency(
       locale: 'id',

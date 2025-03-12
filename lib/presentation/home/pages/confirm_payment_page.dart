@@ -763,9 +763,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                     Button.filled(
                                       width: 150.0,
                                       onPressed: () {
-                                        totalPriceController.text = uangPas
-                                            .toString()
-                                            .currencyFormatRpV2;
+                                        totalPriceController.text =
+                                            uangPas.toString().currencyFormatRp;
                                         priceValue = uangPas;
                                       },
                                       label: 'UANG PAS',
@@ -776,12 +775,11 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                       onPressed: () {
                                         totalPriceController.text = uangPas2
                                             .toString()
-                                            .currencyFormatRpV2;
+                                            .currencyFormatRp;
                                         priceValue = uangPas2;
                                       },
-                                      label: uangPas2
-                                          .toString()
-                                          .currencyFormatRpV2,
+                                      label:
+                                          uangPas2.toString().currencyFormatRp,
                                     ),
                                     const SpaceWidth(20.0),
                                     Button.filled(
@@ -789,12 +787,11 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                       onPressed: () {
                                         totalPriceController.text = uangPas3
                                             .toString()
-                                            .currencyFormatRpV2;
+                                            .currencyFormatRp;
                                         priceValue = uangPas3;
                                       },
-                                      label: uangPas3
-                                          .toString()
-                                          .currencyFormatRpV2,
+                                      label:
+                                          uangPas3.toString().currencyFormatRp,
                                     ),
                                   ],
                                 );

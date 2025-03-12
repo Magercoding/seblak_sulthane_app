@@ -359,7 +359,7 @@ mixin _$SummaryState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(SummaryData summary) success,
+    required TResult Function(EnhancedSummaryData summary) success,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -367,7 +367,7 @@ mixin _$SummaryState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(SummaryData summary)? success,
+    TResult? Function(EnhancedSummaryData summary)? success,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -375,7 +375,7 @@ mixin _$SummaryState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(SummaryData summary)? success,
+    TResult Function(EnhancedSummaryData summary)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -471,7 +471,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(SummaryData summary) success,
+    required TResult Function(EnhancedSummaryData summary) success,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -482,7 +482,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(SummaryData summary)? success,
+    TResult? Function(EnhancedSummaryData summary)? success,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -493,7 +493,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(SummaryData summary)? success,
+    TResult Function(EnhancedSummaryData summary)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -588,7 +588,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(SummaryData summary) success,
+    required TResult Function(EnhancedSummaryData summary) success,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -599,7 +599,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(SummaryData summary)? success,
+    TResult? Function(EnhancedSummaryData summary)? success,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -610,7 +610,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(SummaryData summary)? success,
+    TResult Function(EnhancedSummaryData summary)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -668,7 +668,7 @@ abstract class _$$SuccessImplCopyWith<$Res> {
           _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
       __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({SummaryData summary});
+  $Res call({EnhancedSummaryData summary});
 }
 
 /// @nodoc
@@ -690,7 +690,7 @@ class __$$SuccessImplCopyWithImpl<$Res>
       null == summary
           ? _value.summary
           : summary // ignore: cast_nullable_to_non_nullable
-              as SummaryData,
+              as EnhancedSummaryData,
     ));
   }
 }
@@ -701,7 +701,7 @@ class _$SuccessImpl implements _Success {
   const _$SuccessImpl(this.summary);
 
   @override
-  final SummaryData summary;
+  final EnhancedSummaryData summary;
 
   @override
   String toString() {
@@ -732,7 +732,7 @@ class _$SuccessImpl implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(SummaryData summary) success,
+    required TResult Function(EnhancedSummaryData summary) success,
     required TResult Function(String message) error,
   }) {
     return success(summary);
@@ -743,7 +743,7 @@ class _$SuccessImpl implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(SummaryData summary)? success,
+    TResult? Function(EnhancedSummaryData summary)? success,
     TResult? Function(String message)? error,
   }) {
     return success?.call(summary);
@@ -754,7 +754,7 @@ class _$SuccessImpl implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(SummaryData summary)? success,
+    TResult Function(EnhancedSummaryData summary)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -803,9 +803,9 @@ class _$SuccessImpl implements _Success {
 }
 
 abstract class _Success implements SummaryState {
-  const factory _Success(final SummaryData summary) = _$SuccessImpl;
+  const factory _Success(final EnhancedSummaryData summary) = _$SuccessImpl;
 
-  SummaryData get summary;
+  EnhancedSummaryData get summary;
 
   /// Create a copy of SummaryState
   /// with the given fields replaced by the non-null parameter values.
@@ -884,7 +884,7 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(SummaryData summary) success,
+    required TResult Function(EnhancedSummaryData summary) success,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -895,7 +895,7 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(SummaryData summary)? success,
+    TResult? Function(EnhancedSummaryData summary)? success,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -906,7 +906,7 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(SummaryData summary)? success,
+    TResult Function(EnhancedSummaryData summary)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

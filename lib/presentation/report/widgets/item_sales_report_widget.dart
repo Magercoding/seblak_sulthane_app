@@ -9,11 +9,12 @@ import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/core/utils/item_sales_invoice.dart';
 import 'package:seblak_sulthane_app/core/utils/permession_handler.dart';
+import 'package:seblak_sulthane_app/data/datasources/product_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/item_sales_response_model.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ItemSalesReportWidget extends StatelessWidget {
+class ItemSalesReportWidget extends StatefulWidget {
   final String title;
   final String searchDateFormatted;
   final List<ItemSales> itemSales;
@@ -27,6 +28,64 @@ class ItemSalesReportWidget extends StatelessWidget {
     required this.headerWidgets,
   });
 
+  @override
+  State<ItemSalesReportWidget> createState() => _ItemSalesReportWidgetState();
+}
+
+class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
+  List<ItemSales> itemSalesWithCategories = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final productRemoteDataSource = ProductRemoteDatasource();
+      final productsResult = await productRemoteDataSource.getProducts();
+
+      Map<int, String> productCategories = {};
+
+      productsResult.fold(
+        (error) {
+          // On error, continue with uncategorized products
+        },
+        (productResponse) {
+          if (productResponse.data != null) {
+            for (var product in productResponse.data!) {
+              if (product.id != null && product.category?.name != null) {
+                productCategories[product.id!] = product.category!.name!;
+              }
+            }
+          }
+        },
+      );
+
+      // Add categories to item sales
+      final updatedSales = widget.itemSales.map((item) {
+        return item.copyWith(
+            categoryName: productCategories.containsKey(item.productId)
+                ? productCategories[item.productId]
+                : 'Uncategorized');
+      }).toList();
+
+      setState(() {
+        itemSalesWithCategories = updatedSales;
+        isLoading = false;
+      });
+    } catch (e) {
+      log('Error fetching categories: $e');
+      // On exception, continue with uncategorized products
+      setState(() {
+        itemSalesWithCategories = widget.itemSales;
+        isLoading = false;
+      });
+    }
+  }
+
   Future<void> _handleExport(
     BuildContext context,
     bool isPdf,
@@ -35,9 +94,10 @@ class ItemSalesReportWidget extends StatelessWidget {
     if (status) {
       try {
         final file = isPdf
-            ? await ItemSalesInvoice.generatePdf(itemSales, searchDateFormatted)
+            ? await ItemSalesInvoice.generatePdf(
+                itemSalesWithCategories, widget.searchDateFormatted)
             : await ItemSalesInvoice.generateExcel(
-                itemSales, searchDateFormatted);
+                itemSalesWithCategories, widget.searchDateFormatted);
 
         log("Generated file: $file");
 
@@ -90,6 +150,18 @@ class ItemSalesReportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create header widgets if not provided or if we need to update them for category
+    final List<Widget> headerWidgetsWithCategory = widget.headerWidgets ??
+        [
+          _getTitleItemWidget('ID', 80),
+          _getTitleItemWidget('Order', 60),
+          _getTitleItemWidget('Product', 160),
+          _getTitleItemWidget('Category', 120), // New category column
+          _getTitleItemWidget('Qty', 60),
+          _getTitleItemWidget('Price', 140),
+          _getTitleItemWidget('Total', 140),
+        ];
+
     return Card(
       color: const Color.fromARGB(255, 255, 255, 255),
       child: Column(
@@ -97,7 +169,7 @@ class ItemSalesReportWidget extends StatelessWidget {
           const SpaceHeight(24.0),
           Center(
             child: Text(
-              title,
+              widget.title,
               style:
                   const TextStyle(fontWeight: FontWeight.w800, fontSize: 16.0),
             ),
@@ -109,7 +181,7 @@ class ItemSalesReportWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  searchDateFormatted,
+                  widget.searchDateFormatted,
                   style: const TextStyle(fontSize: 16.0),
                 ),
                 Row(
@@ -160,92 +232,136 @@ class ItemSalesReportWidget extends StatelessWidget {
           ),
           const SpaceHeight(16.0),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: HorizontalDataTable(
-                  leftHandSideColumnWidth: 80,
-                  rightHandSideColumnWidth: 560,
-                  isFixedHeader: true,
-                  headerWidgets: headerWidgets,
-                  leftSideItemBuilder: (context, index) {
-                    return Container(
-                      width: 80,
-                      height: 52,
-                      alignment: Alignment.centerLeft,
-                      child:
-                          Center(child: Text(itemSales[index].id.toString())),
-                    );
-                  },
-                  rightSideItemBuilder: (context, index) {
-                    return Row(
-                      children: <Widget>[
-                        Container(
-                          width: 60,
-                          height: 52,
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(itemSales[index].orderId.toString()),
-                          ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: HorizontalDataTable(
+                        leftHandSideColumnWidth: 80,
+                        rightHandSideColumnWidth:
+                            680, // Increased width for the new column
+                        isFixedHeader: true,
+                        headerWidgets: headerWidgetsWithCategory,
+                        leftSideItemBuilder: (context, index) {
+                          return Container(
+                            width: 80,
+                            height: 52,
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text(itemSalesWithCategories[index]
+                                    .id
+                                    .toString())),
+                          );
+                        },
+                        rightSideItemBuilder: (context, index) {
+                          return Row(
+                            children: <Widget>[
+                              Container(
+                                width: 60,
+                                height: 52,
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(itemSalesWithCategories[index]
+                                      .orderId
+                                      .toString()),
+                                ),
+                              ),
+                              Container(
+                                width: 160,
+                                height: 52,
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(itemSalesWithCategories[index]
+                                      .productName),
+                                ),
+                              ),
+                              // New category column
+                              Container(
+                                width: 120,
+                                height: 52,
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(
+                                    itemSalesWithCategories[index]
+                                            .categoryName ??
+                                        'Uncategorized',
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 60,
+                                height: 52,
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(itemSalesWithCategories[index]
+                                      .quantity
+                                      .toString()),
+                                ),
+                              ),
+                              Container(
+                                width: 140,
+                                height: 52,
+                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(
+                                    (itemSalesWithCategories[index].price)
+                                        .currencyFormatRp,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 140,
+                                height: 52,
+                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Text(
+                                    (itemSalesWithCategories[index].price *
+                                            itemSalesWithCategories[index]
+                                                .quantity)
+                                        .currencyFormatRp,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: itemSalesWithCategories.length,
+                        rowSeparatorWidget: const Divider(
+                          color: Colors.black38,
+                          height: 1.0,
+                          thickness: 0.0,
                         ),
-                        Container(
-                          width: 160,
-                          height: 52,
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(itemSales[index].productName!),
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 52,
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(itemSales[index].quantity.toString()),
-                          ),
-                        ),
-                        Container(
-                          width: 140,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
-                              (itemSales[index].price!).currencyFormatRp,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 140,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
-                              (itemSales[index].price! *
-                                      itemSales[index].quantity!)
-                                  .currencyFormatRp,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  itemCount: itemSales.length,
-                  rowSeparatorWidget: const Divider(
-                    color: Colors.black38,
-                    height: 1.0,
-                    thickness: 0.0,
+                        leftHandSideColBackgroundColor: AppColors.white,
+                        rightHandSideColBackgroundColor: AppColors.white,
+                        itemExtent: 55,
+                      ),
+                    ),
                   ),
-                  leftHandSideColBackgroundColor: AppColors.white,
-                  rightHandSideColBackgroundColor: AppColors.white,
-                  itemExtent: 55,
-                ),
-              ),
-            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _getTitleItemWidget(String label, double width) {
+    return Container(
+      width: width,
+      height: 56,
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+      color: AppColors.white,
+      child: Center(
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

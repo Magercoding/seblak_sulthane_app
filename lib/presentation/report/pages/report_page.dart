@@ -30,7 +30,7 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   int selectedMenu = 0;
   String title = 'Summary Sales Report';
-  DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
+  DateTime fromDate = DateTime.now();
   DateTime toDate = DateTime.now();
   int? outletId;
   bool isLoading = true;
@@ -318,6 +318,7 @@ class _ReportPageState extends State<ReportPage> {
       _getTitleItemWidget('ID', 80),
       _getTitleItemWidget('Order', 60),
       _getTitleItemWidget('Product', 160),
+      _getTitleItemWidget('Category', 120), // New category column
       _getTitleItemWidget('Qty', 60),
       _getTitleItemWidget('Price', 140),
       _getTitleItemWidget('Total Price', 140),

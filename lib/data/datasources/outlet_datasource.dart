@@ -76,17 +76,54 @@ class OutletLocalDataSource {
 
   Future<String> getOutletAddress(int outletId) async {
     try {
-      final OutletLocalDataSource outletDataSource = OutletLocalDataSource();
-      final OutletModel? outlet =
-          await outletDataSource.getOutletById(outletId);
+      final outlet = await getOutletById(outletId);
 
-      if (outlet != null && outlet.address != null) {
-        return outlet.address!;
-      } else {
-        return 'Default Address, City, State, Zip';
+      if (outlet != null) {
+        String address = '';
+
+        // Add address1 if available
+        if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+          address = outlet.address1!;
+        }
+
+        // Add address2 if available
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += outlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
+
+      // If specific outlet not found, try to get the first outlet
+      final allOutlets = await getAllOutlets();
+      if (allOutlets.isNotEmpty) {
+        String address = '';
+        final firstOutlet = allOutlets.first;
+
+        // Add address1 if available
+        if (firstOutlet.address1 != null && firstOutlet.address1!.isNotEmpty) {
+          address = firstOutlet.address1!;
+        }
+
+        // Add address2 if available
+        if (firstOutlet.address2 != null && firstOutlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += firstOutlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
+      }
+
+      return 'Seblak Sulthane'; // Default fallback
     } catch (e) {
-      return 'Error getting address';
+      return 'Seblak Sulthane'; // Default fallback on error
     }
   }
 }

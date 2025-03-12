@@ -12,12 +12,11 @@ import 'package:seblak_sulthane_app/data/models/response/summary_response_model.
 import 'package:flutter/services.dart';
 
 import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
-import 'package:pdf/widgets.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
 
 class RevenueInvoice {
-  static late Font ttf;
+  static late pw.Font ttf;
 
   static Future<int?> _fetchOutletIdFromProfile() async {
     try {
@@ -45,24 +44,62 @@ class RevenueInvoice {
   static Future<String> _getOutletAddress(int outletId) async {
     try {
       final outletDataSource = OutletLocalDataSource();
-      final allOutlets = await outletDataSource.getAllOutlets();
-
       final outlet = await outletDataSource.getOutletById(outletId);
 
-      if (outlet == null && allOutlets.isNotEmpty) {
-        return allOutlets.first.address ?? 'Seblak Sulthane';
+      if (outlet != null) {
+        String address = '';
+
+        // Add address1 if available
+        if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+          address = outlet.address1!;
+        }
+
+        // Add address2 if available
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += outlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      return outlet?.address ?? 'Seblak Sulthane';
+      // If specific outlet not found, try to get the first outlet
+      final allOutlets = await outletDataSource.getAllOutlets();
+      if (allOutlets.isNotEmpty) {
+        String address = '';
+        final firstOutlet = allOutlets.first;
+
+        // Add address1 if available
+        if (firstOutlet.address1 != null && firstOutlet.address1!.isNotEmpty) {
+          address = firstOutlet.address1!;
+        }
+
+        // Add address2 if available
+        if (firstOutlet.address2 != null && firstOutlet.address2!.isNotEmpty) {
+          if (address.isNotEmpty) {
+            address += ', '; // Add separator if address1 was present
+          }
+          address += firstOutlet.address2!;
+        }
+
+        // Return the combined address or default if both are empty
+        return address.isNotEmpty ? address : 'Seblak Sulthane';
+      }
+
+      return 'Seblak Sulthane'; // Default fallback
     } catch (e) {
-      return 'Seblak Sulthane';
+      print('Error fetching outlet address: $e');
+      return 'Seblak Sulthane'; // Default fallback on error
     }
   }
 
   static Future<File> generatePdf(
-      SummaryData summaryModel, String searchDateFormatted,
+      EnhancedSummaryData summaryModel, String searchDateFormatted,
       {int? outletId}) async {
-    final pdf = Document();
+    final pdf = pw.Document();
 
     final ByteData dataImage = await rootBundle.load('assets/images/logo.png');
     final Uint8List bytes = dataImage.buffer.asUint8List();
@@ -75,13 +112,24 @@ class RevenueInvoice {
     final String outletAddress = await _getOutletAddress(outletId);
 
     pdf.addPage(
-      MultiPage(
+      pw.MultiPage(
         build: (context) => [
           buildHeader(summaryModel, image, searchDateFormatted),
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          buildTotal(summaryModel),
+          pw.SizedBox(height: 1 * PdfPageFormat.cm),
+          buildFinancialSummary(summaryModel),
+          pw.SizedBox(height: 1 * PdfPageFormat.cm),
+          buildCashFlowSummary(summaryModel),
+          if (summaryModel.paymentMethods != null) ...[
+            pw.SizedBox(height: 1 * PdfPageFormat.cm),
+            buildPaymentMethods(summaryModel),
+          ],
+          if (summaryModel.dailyBreakdown != null &&
+              summaryModel.dailyBreakdown!.isNotEmpty) ...[
+            pw.SizedBox(height: 1 * PdfPageFormat.cm),
+            buildDailyBreakdown(summaryModel),
+          ],
         ],
-        footer: (context) => buildFooter(summaryModel, outletAddress),
+        footer: (context) => buildFooter(outletAddress),
       ),
     );
 
@@ -92,35 +140,35 @@ class RevenueInvoice {
     );
   }
 
-  static Widget buildHeader(
-    SummaryData invoice,
-    MemoryImage image,
+  static pw.Widget buildHeader(
+    EnhancedSummaryData summary,
+    pw.MemoryImage image,
     String searchDateFormatted,
   ) =>
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 1 * PdfPageFormat.cm),
-            Text('Seblak Sulthane | Summary Sales Report',
-                style: TextStyle(
+            pw.SizedBox(height: 1 * PdfPageFormat.cm),
+            pw.Text('Seblak Sulthane | Summary Sales Report',
+                style: pw.TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: pw.FontWeight.bold,
                 )),
-            SizedBox(height: 0.2 * PdfPageFormat.cm),
-            Text(
+            pw.SizedBox(height: 0.2 * PdfPageFormat.cm),
+            pw.Text(
               "Data: $searchDateFormatted",
             ),
-            Text(
+            pw.Text(
               'Created At: ${DateTime.now().toFormattedDate3()}',
             ),
           ],
         ),
-        Image(
+        pw.Image(
           image,
           width: 80.0,
           height: 80.0,
-          fit: BoxFit.fill,
+          fit: pw.BoxFit.fill,
         ),
       ]);
 
@@ -136,125 +184,302 @@ class RevenueInvoice {
     }
   }
 
-  static Widget buildTotal(SummaryData summaryModel) {
-    return Container(
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildText(
-            title: 'Revenue',
-            value: safeParseInt(summaryModel.totalRevenue).currencyFormatRp,
-            unite: true,
-          ),
-          Divider(),
-          buildText(
-            title: 'Sub Total',
-            titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: safeParseInt(summaryModel.totalSubtotal).currencyFormatRp,
-            unite: true,
-          ),
-          buildText(
-            title: 'Discount',
-            titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value:
-                "- ${safeParseInt(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}",
-            unite: true,
-            textStyle: TextStyle(
-              color: PdfColor.fromHex('#FF0000'),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          buildText(
-            title: 'Tax',
-            titleStyle: TextStyle(fontWeight: FontWeight.normal),
-            value: "- ${safeParseInt(summaryModel.totalTax).currencyFormatRp}",
-            textStyle: TextStyle(
-              color: PdfColor.fromHex('#FF0000'),
-              fontWeight: FontWeight.bold,
-            ),
-            unite: true,
-          ),
-          buildText(
-            title: 'Service Charge',
-            titleStyle: TextStyle(
-              fontWeight: FontWeight.normal,
-            ),
-            value: safeParseInt(summaryModel.totalServiceCharge.toString())
-                .currencyFormatRp,
-            unite: true,
-          ),
-          Divider(),
-          buildText(
-            title: 'Total ',
-            titleStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            value: safeParseInt(summaryModel.total.toString()).currencyFormatRp,
-            unite: true,
-          ),
-          SizedBox(height: 2 * PdfPageFormat.mm),
-          Container(height: 1, color: PdfColors.grey400),
-          SizedBox(height: 0.5 * PdfPageFormat.mm),
-          Container(height: 1, color: PdfColors.grey400),
-        ],
-      ),
-    );
-  }
-
-  static Widget buildFooter(SummaryData summaryModel, String outletAddress) =>
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Divider(),
-          SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: 'Address', value: outletAddress),
-          SizedBox(height: 1 * PdfPageFormat.mm),
-        ],
-      );
-
-  static buildSimpleText({
-    required String title,
-    required String value,
-  }) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
+  static pw.Widget buildFinancialSummary(EnhancedSummaryData summary) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        Text(title, style: style),
-        SizedBox(width: 2 * PdfPageFormat.mm),
-        Text(value),
+        pw.Text('Financial Summary',
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            )),
+        pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
+        buildText(
+          title: 'Revenue',
+          value: safeParseInt(summary.totalRevenue).currencyFormatRp,
+          unite: true,
+        ),
+        pw.Divider(),
+        buildText(
+          title: 'Sub Total',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: safeParseInt(summary.totalSubtotal).currencyFormatRp,
+          unite: true,
+        ),
+        buildText(
+          title: 'Discount',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value:
+              "- ${safeParseInt(summary.totalDiscount.replaceAll('.00', '')).currencyFormatRp}",
+          unite: true,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+        buildText(
+          title: 'Tax',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: "- ${safeParseInt(summary.totalTax).currencyFormatRp}",
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+            fontWeight: pw.FontWeight.bold,
+          ),
+          unite: true,
+        ),
+        buildText(
+          title: 'Service Charge',
+          titleStyle: pw.TextStyle(
+            fontWeight: pw.FontWeight.normal,
+          ),
+          value: summary.totalServiceCharge is num
+              ? (summary.totalServiceCharge as num).toInt().currencyFormatRp
+              : summary.totalServiceCharge is String
+                  ? safeParseInt(summary.totalServiceCharge as String)
+                      .currencyFormatRp
+                  : '0'.currencyFormatRp,
+          unite: true,
+        ),
       ],
     );
   }
 
-  static buildText({
+  static pw.Widget buildCashFlowSummary(EnhancedSummaryData summary) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text('Daily Cash Flow',
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            )),
+        pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
+        buildText(
+          title: 'Opening Balance',
+          value: summary.openingBalance != null
+              ? summary.openingBalance.toString().currencyFormatRp
+              : '0'.currencyFormatRp,
+          unite: true,
+        ),
+        pw.Divider(),
+        buildText(
+          title: 'Expenses',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: summary.expenses != null
+              ? summary.expenses.toString().currencyFormatRp
+              : '0'.currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+          ),
+          unite: true,
+        ),
+        buildText(
+          title: 'Cash Sales',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: summary.getCashSalesAsInt().toString().currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
+        ),
+        buildText(
+          title: 'QRIS Sales',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: summary.getQrisSalesAsInt().toString().currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
+        ),
+        buildText(
+          title: 'Beverage Sales',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: summary.getBeverageSalesAsInt().toString().currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
+        ),
+        pw.Divider(),
+        buildText(
+          title: 'Closing Balance',
+          titleStyle: pw.TextStyle(
+            fontSize: 14,
+            fontWeight: pw.FontWeight.bold,
+          ),
+          value: summary.closingBalance != null
+              ? summary.closingBalance.toString().currencyFormatRp
+              : '0'.currencyFormatRp,
+          unite: true,
+        ),
+      ],
+    );
+  }
+
+  static pw.Widget buildPaymentMethods(EnhancedSummaryData summary) {
+    final paymentMethods = summary.paymentMethods;
+    if (paymentMethods == null) return pw.Container();
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text('Payment Methods',
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            )),
+        pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
+        if (paymentMethods.cash != null)
+          buildText(
+            title: 'Cash (${paymentMethods.cash!.count} transactions)',
+            value: paymentMethods.cash!
+                .getTotalAsInt()
+                .toString()
+                .currencyFormatRp,
+            unite: true,
+          ),
+        if (paymentMethods.cash != null && paymentMethods.qris != null)
+          pw.Divider(),
+        if (paymentMethods.qris != null)
+          buildText(
+            title: 'QRIS (${paymentMethods.qris!.count} transactions)',
+            value: paymentMethods.qris!
+                .getTotalAsInt()
+                .toString()
+                .currencyFormatRp,
+            unite: true,
+          ),
+      ],
+    );
+  }
+
+  static pw.Widget buildDailyBreakdown(EnhancedSummaryData summary) {
+    final dailyBreakdown = summary.dailyBreakdown;
+    if (dailyBreakdown == null || dailyBreakdown.isEmpty) return pw.Container();
+
+    final List<pw.Widget> breakdownWidgets = [];
+
+    breakdownWidgets.add(
+      pw.Text('Daily Breakdown',
+          style: pw.TextStyle(
+            fontSize: 16,
+            fontWeight: pw.FontWeight.bold,
+          )),
+    );
+    breakdownWidgets.add(pw.SizedBox(height: 0.5 * PdfPageFormat.cm));
+
+    for (int i = 0; i < dailyBreakdown.length; i++) {
+      final day = dailyBreakdown[i];
+
+      breakdownWidgets.add(
+        pw.Container(
+          padding: const pw.EdgeInsets.all(8),
+          decoration: pw.BoxDecoration(
+            border: pw.Border.all(color: PdfColors.grey300),
+            borderRadius: pw.BorderRadius.circular(5),
+          ),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Date: ${day.date}',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 4),
+              buildSimpleText(
+                title: 'Opening Balance:',
+                value: day.openingBalance != null
+                    ? day.openingBalance.toString().currencyFormatRp
+                    : '0'.currencyFormatRp,
+              ),
+              buildSimpleText(
+                title: 'Expenses:',
+                value: day.expenses != null
+                    ? day.expenses.toString().currencyFormatRp
+                    : '0'.currencyFormatRp,
+              ),
+              buildSimpleText(
+                title: 'Cash Sales:',
+                value: day.getCashSalesAsInt().toString().currencyFormatRp,
+              ),
+              buildSimpleText(
+                title: 'QRIS Sales:',
+                value: day.getQrisSalesAsInt().toString().currencyFormatRp,
+              ),
+              buildSimpleText(
+                title: 'Total Sales:',
+                value: day.totalSales != null
+                    ? day.totalSales.toString().currencyFormatRp
+                    : '0'.currencyFormatRp,
+              ),
+              buildSimpleText(
+                title: 'Closing Balance:',
+                value: day.closingBalance != null
+                    ? day.closingBalance.toString().currencyFormatRp
+                    : '0'.currencyFormatRp,
+              ),
+            ],
+          ),
+        ),
+      );
+
+      if (i < dailyBreakdown.length - 1) {
+        breakdownWidgets.add(pw.SizedBox(height: 0.3 * PdfPageFormat.cm));
+      }
+    }
+
+    return pw.Column(children: breakdownWidgets);
+  }
+
+  static pw.Widget buildFooter(String outletAddress) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: [
+          pw.Divider(),
+          pw.SizedBox(height: 2 * PdfPageFormat.mm),
+          buildSimpleText(title: 'Address', value: outletAddress),
+          pw.SizedBox(height: 1 * PdfPageFormat.mm),
+        ],
+      );
+
+  static pw.Widget buildSimpleText({
+    required String title,
+    required String value,
+  }) {
+    final style = pw.TextStyle(fontWeight: pw.FontWeight.bold);
+
+    return pw.Row(
+      mainAxisSize: pw.MainAxisSize.min,
+      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      children: [
+        pw.Text(title, style: style),
+        pw.SizedBox(width: 2 * PdfPageFormat.mm),
+        pw.Text(value),
+      ],
+    );
+  }
+
+  static pw.Widget buildText({
     required String title,
     required String value,
     double width = double.infinity,
-    TextStyle? titleStyle,
-    TextStyle? textStyle,
+    pw.TextStyle? titleStyle,
+    pw.TextStyle? textStyle,
     bool unite = false,
   }) {
-    final style = titleStyle ?? TextStyle(fontWeight: FontWeight.bold);
-    final style2 = textStyle ?? TextStyle(fontWeight: FontWeight.bold);
+    final style = titleStyle ?? pw.TextStyle(fontWeight: pw.FontWeight.bold);
+    final style2 = textStyle ?? pw.TextStyle(fontWeight: pw.FontWeight.bold);
 
-    return Container(
+    return pw.Container(
       width: width,
-      child: Row(
+      child: pw.Row(
         children: [
-          Expanded(child: Text(title, style: style)),
-          Text(value, style: style2),
+          pw.Expanded(child: pw.Text(title, style: style)),
+          pw.Text(value, style: style2),
         ],
       ),
     );
   }
 
   static Future<File> generateExcel(
-      SummaryData summaryModel, String searchDateFormatted,
+      EnhancedSummaryData summaryModel, String searchDateFormatted,
       {int? outletId}) async {
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Summary Sales Report'];
@@ -264,6 +489,7 @@ class RevenueInvoice {
 
     final String outletAddress = await _getOutletAddress(outletId);
 
+    // Title and metadata
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("B1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
     headerCell.value = TextCellValue('Seblak Sulthane | Summary Sales Report');
@@ -288,78 +514,298 @@ class RevenueInvoice {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    final startRow = 5;
+    // Financial Summary
+    int currentRow = 5;
 
-    final revenueCell = sheet.cell(CellIndex.indexByString("A$startRow"));
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final financialHeaderCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    financialHeaderCell.value = TextCellValue('Financial Summary');
+    financialHeaderCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 14,
+      horizontalAlign: HorizontalAlign.Left,
+    );
+    currentRow += 2;
+
+    // Revenue
+    final revenueCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     revenueCell.value = TextCellValue('Revenue');
     revenueCell.cellStyle = CellStyle(bold: true);
 
-    final revenueTotalCell = sheet.cell(CellIndex.indexByString("B$startRow"));
+    final revenueTotalCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
     revenueTotalCell.value =
         TextCellValue(safeParseInt(summaryModel.totalRevenue).currencyFormatRp);
     revenueTotalCell.cellStyle = CellStyle(bold: true);
+    currentRow++;
 
-    sheet.merge(CellIndex.indexByString("A${startRow + 1}"),
-        CellIndex.indexByString("B${startRow + 1}"));
-
-    final subtotalCell =
-        sheet.cell(CellIndex.indexByString("A${startRow + 2}"));
+    // Subtotal
+    final subtotalCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     subtotalCell.value = TextCellValue('Subtotal');
 
     final subtotalValueCell =
-        sheet.cell(CellIndex.indexByString("B${startRow + 2}"));
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
     subtotalValueCell.value = TextCellValue(
         safeParseInt(summaryModel.totalSubtotal).currencyFormatRp);
+    currentRow++;
 
-    final discountCell =
-        sheet.cell(CellIndex.indexByString("A${startRow + 3}"));
+    // Discount
+    final discountCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     discountCell.value = TextCellValue('Discount');
 
     final discountValueCell =
-        sheet.cell(CellIndex.indexByString("B${startRow + 3}"));
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
     discountValueCell.value = TextCellValue(
         "- ${safeParseInt(summaryModel.totalDiscount.replaceAll('.00', '')).currencyFormatRp}");
+    currentRow++;
 
-    final taxCell = sheet.cell(CellIndex.indexByString("A${startRow + 4}"));
+    // Tax
+    final taxCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     taxCell.value = TextCellValue('Tax');
 
-    final taxValueCell =
-        sheet.cell(CellIndex.indexByString("B${startRow + 4}"));
+    final taxValueCell = sheet.cell(CellIndex.indexByString("B$currentRow"));
     taxValueCell.value = TextCellValue(
         "- ${safeParseInt(summaryModel.totalTax).currencyFormatRp}");
+    currentRow++;
 
-    final serviceCell = sheet.cell(CellIndex.indexByString("A${startRow + 5}"));
+    // Service Charge
+    final serviceCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     serviceCell.value = TextCellValue('Service Charge');
 
     final serviceValueCell =
-        sheet.cell(CellIndex.indexByString("B${startRow + 5}"));
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
     serviceValueCell.value = TextCellValue(
-        safeParseInt(summaryModel.totalServiceCharge.toString())
-            .currencyFormatRp);
+        summaryModel.totalServiceCharge is num
+            ? (summaryModel.totalServiceCharge as num).toInt().currencyFormatRp
+            : summaryModel.totalServiceCharge is String
+                ? safeParseInt(summaryModel.totalServiceCharge as String)
+                    .currencyFormatRp
+                : '0'.currencyFormatRp);
+    currentRow += 2;
 
-    sheet.merge(CellIndex.indexByString("A${startRow + 6}"),
-        CellIndex.indexByString("B${startRow + 6}"));
-
-    final totalCell = sheet.cell(CellIndex.indexByString("A${startRow + 7}"));
-    totalCell.value = TextCellValue('TOTAL');
-    totalCell.cellStyle = CellStyle(bold: true);
-
-    final totalValueCell =
-        sheet.cell(CellIndex.indexByString("B${startRow + 7}"));
-    totalValueCell.value = TextCellValue(
-        safeParseInt(summaryModel.total.toString()).currencyFormatRp);
-    totalValueCell.cellStyle = CellStyle(bold: true);
-
-    final footerRow = startRow + 9;
-    sheet.merge(
-      CellIndex.indexByString("A$footerRow"),
-      CellIndex.indexByString("B$footerRow"),
+    // Daily Cash Flow
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final cashFlowHeaderCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    cashFlowHeaderCell.value = TextCellValue('Daily Cash Flow');
+    cashFlowHeaderCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 14,
+      horizontalAlign: HorizontalAlign.Left,
     );
-    final footerCell = sheet.cell(CellIndex.indexByString("A$footerRow"));
+    currentRow += 2;
+
+    // Opening Balance
+    final openingBalanceCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    openingBalanceCell.value = TextCellValue('Opening Balance');
+
+    final openingBalanceValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    openingBalanceValueCell.value = TextCellValue(
+        summaryModel.openingBalance != null
+            ? summaryModel.openingBalance.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+    currentRow++;
+
+    // Expenses
+    final expensesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    expensesCell.value = TextCellValue('Expenses');
+
+    final expensesValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    expensesValueCell.value = TextCellValue(summaryModel.expenses != null
+        ? summaryModel.expenses.toString().currencyFormatRp
+        : '0'.currencyFormatRp);
+    currentRow++;
+
+    // Cash Sales
+    final cashSalesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    cashSalesCell.value = TextCellValue('Cash Sales');
+
+    final cashSalesValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    cashSalesValueCell.value = TextCellValue(
+        summaryModel.getCashSalesAsInt().toString().currencyFormatRp);
+    currentRow++;
+
+    // QRIS Sales
+    final qrisSalesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    qrisSalesCell.value = TextCellValue('QRIS Sales');
+
+    final qrisSalesValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    qrisSalesValueCell.value = TextCellValue(
+        summaryModel.getQrisSalesAsInt().toString().currencyFormatRp);
+    currentRow++;
+
+    // Beverage Sales
+    final beverageSalesCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    beverageSalesCell.value = TextCellValue('Beverage Sales');
+
+    final beverageSalesValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    beverageSalesValueCell.value = TextCellValue(
+        summaryModel.getBeverageSalesAsInt().toString().currencyFormatRp);
+    currentRow++;
+
+    // Closing Balance
+    final closingBalanceCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    closingBalanceCell.value = TextCellValue('Closing Balance');
+    closingBalanceCell.cellStyle = CellStyle(bold: true);
+
+    final closingBalanceValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    closingBalanceValueCell.value = TextCellValue(
+        summaryModel.closingBalance != null
+            ? summaryModel.closingBalance.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+    closingBalanceValueCell.cellStyle = CellStyle(bold: true);
+    currentRow += 2;
+
+    // Payment Methods
+    if (summaryModel.paymentMethods != null) {
+      sheet.merge(CellIndex.indexByString("A$currentRow"),
+          CellIndex.indexByString("B$currentRow"));
+      final paymentMethodsHeaderCell =
+          sheet.cell(CellIndex.indexByString("A$currentRow"));
+      paymentMethodsHeaderCell.value = TextCellValue('Payment Methods');
+      paymentMethodsHeaderCell.cellStyle = CellStyle(
+        bold: true,
+        fontSize: 14,
+        horizontalAlign: HorizontalAlign.Left,
+      );
+      currentRow += 2;
+
+      if (summaryModel.paymentMethods?.cash != null) {
+        final cashCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+        cashCell.value = TextCellValue(
+            'Cash (${summaryModel.paymentMethods!.cash!.count} transactions)');
+
+        final cashValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        cashValueCell.value = TextCellValue(summaryModel.paymentMethods!.cash!
+            .getTotalAsInt()
+            .toString()
+            .currencyFormatRp);
+        currentRow++;
+      }
+
+      if (summaryModel.paymentMethods?.qris != null) {
+        final qrisCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+        qrisCell.value = TextCellValue(
+            'QRIS (${summaryModel.paymentMethods!.qris!.count} transactions)');
+
+        final qrisValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        qrisValueCell.value = TextCellValue(summaryModel.paymentMethods!.qris!
+            .getTotalAsInt()
+            .toString()
+            .currencyFormatRp);
+        currentRow++;
+      }
+
+      currentRow++;
+    }
+
+    // Daily Breakdown
+    if (summaryModel.dailyBreakdown != null &&
+        summaryModel.dailyBreakdown!.isNotEmpty) {
+      sheet.merge(CellIndex.indexByString("A$currentRow"),
+          CellIndex.indexByString("G$currentRow"));
+      final breakdownHeaderCell =
+          sheet.cell(CellIndex.indexByString("A$currentRow"));
+      breakdownHeaderCell.value = TextCellValue('Daily Breakdown');
+      breakdownHeaderCell.cellStyle = CellStyle(
+        bold: true,
+        fontSize: 14,
+        horizontalAlign: HorizontalAlign.Left,
+      );
+      currentRow += 2;
+
+      // Set headers for breakdown table
+      final headers = [
+        'Date',
+        'Opening',
+        'Expenses',
+        'Cash Sales',
+        'QRIS Sales',
+        'Total Sales',
+        'Closing'
+      ];
+      for (var i = 0; i < headers.length; i++) {
+        final headerCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: i, rowIndex: currentRow));
+        headerCell.value = TextCellValue(headers[i]);
+        headerCell.cellStyle = CellStyle(bold: true);
+      }
+      currentRow++;
+
+      // Add data for each day
+      for (var day in summaryModel.dailyBreakdown!) {
+        final dateCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: currentRow));
+        dateCell.value = TextCellValue(day.date);
+
+        final openingCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: currentRow));
+        openingCell.value = TextCellValue(day.openingBalance != null
+            ? day.openingBalance.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+
+        final expensesCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: currentRow));
+        expensesCell.value = TextCellValue(day.expenses != null
+            ? day.expenses.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+
+        final cashSalesCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: currentRow));
+        cashSalesCell.value =
+            TextCellValue(day.getCashSalesAsInt().toString().currencyFormatRp);
+
+        final qrisSalesCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: currentRow));
+        qrisSalesCell.value =
+            TextCellValue(day.getQrisSalesAsInt().toString().currencyFormatRp);
+
+        final totalSalesCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: currentRow));
+        totalSalesCell.value = TextCellValue(day.totalSales != null
+            ? day.totalSales.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+
+        final closingCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: currentRow));
+        closingCell.value = TextCellValue(day.closingBalance != null
+            ? day.closingBalance.toString().currencyFormatRp
+            : '0'.currencyFormatRp);
+
+        currentRow++;
+      }
+
+      currentRow++;
+    }
+
+    // Footer with address
+    sheet.merge(
+      CellIndex.indexByString("A$currentRow"),
+      CellIndex.indexByString("G$currentRow"),
+    );
+    final footerCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     footerCell.value = TextCellValue('Address: $outletAddress');
 
-    sheet.setColumnWidth(0, 25.0);
+    // Set column widths
+    sheet.setColumnWidth(0, 35.0);
     sheet.setColumnWidth(1, 25.0);
+    for (var i = 2; i < 7; i++) {
+      sheet.setColumnWidth(i, 20.0);
+    }
 
     return HelperExcelService.saveExcel(
       name:

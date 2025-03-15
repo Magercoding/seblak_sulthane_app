@@ -30,12 +30,13 @@ class EnhancedSummaryData {
   final String totalTax;
   final String totalSubtotal;
   final dynamic totalServiceCharge;
-  final int? openingBalance;
-  final int? expenses;
+  final double? openingBalance; // Changed from int? to double?
+  final double? expenses; // Changed from int? to double?
   final dynamic cashSales;
   final dynamic qrisSales;
+  final dynamic qrisFee; // Added missing field
   final dynamic beverageSales;
-  final int? closingBalance;
+  final double? closingBalance; // Changed from int? to double?
   final PaymentMethods? paymentMethods;
   final List<DailyBreakdown>? dailyBreakdown;
   final int outletId;
@@ -50,6 +51,7 @@ class EnhancedSummaryData {
     this.expenses,
     this.cashSales,
     this.qrisSales,
+    this.qrisFee, // Added parameter
     this.beverageSales,
     this.closingBalance,
     this.paymentMethods,
@@ -64,12 +66,13 @@ class EnhancedSummaryData {
       totalTax: json['total_tax'] ?? '0',
       totalSubtotal: json['total_subtotal'] ?? '0',
       totalServiceCharge: json['total_service_charge'] ?? 0,
-      openingBalance: json['opening_balance'],
-      expenses: json['expenses'],
+      openingBalance: _parseToDouble(json['opening_balance']),
+      expenses: _parseToDouble(json['expenses']),
       cashSales: json['cash_sales'],
       qrisSales: json['qris_sales'],
+      qrisFee: json['qris_fee'], // Parse qris_fee
       beverageSales: json['beverage_sales'],
-      closingBalance: json['closing_balance'],
+      closingBalance: _parseToDouble(json['closing_balance']),
       paymentMethods: json['payment_methods'] != null
           ? PaymentMethods.fromJson(json['payment_methods'])
           : null,
@@ -82,6 +85,21 @@ class EnhancedSummaryData {
     );
   }
 
+  // Helper method to safely parse numeric values to double
+  static double? _parseToDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      try {
+        return double.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
   Map<String, dynamic> toJson() => {
         'total_revenue': totalRevenue,
         'total_discount': totalDiscount,
@@ -92,6 +110,7 @@ class EnhancedSummaryData {
         'expenses': expenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
+        'qris_fee': qrisFee, // Include in JSON
         'beverage_sales': beverageSales,
         'closing_balance': closingBalance,
         'payment_methods': paymentMethods?.toJson(),
@@ -181,8 +200,8 @@ class EnhancedSummaryData {
   }
 
   // For backward compatibility with existing code
-  int getTotal() {
-    return closingBalance ?? 0;
+  double getTotal() {
+    return closingBalance ?? 0.0; // Changed return type to double
   }
 }
 
@@ -215,22 +234,26 @@ class PaymentMethods {
 class PaymentMethodDetail {
   final int count;
   final dynamic total;
+  final dynamic qrisFees; // Added the qris_fees field
 
   PaymentMethodDetail({
     required this.count,
     required this.total,
+    this.qrisFees, // Added parameter
   });
 
   factory PaymentMethodDetail.fromJson(Map<String, dynamic> json) {
     return PaymentMethodDetail(
       count: json['count'] ?? 0,
       total: json['total'],
+      qrisFees: json['qris_fees'], // Parse qris_fees
     );
   }
 
   Map<String, dynamic> toJson() => {
         'count': count,
         'total': total,
+        'qris_fees': qrisFees, // Include in JSON
       };
 
   int getTotalAsInt() {
@@ -260,12 +283,13 @@ class PaymentMethodDetail {
 
 class DailyBreakdown {
   final String date;
-  final int? openingBalance;
-  final int? expenses;
+  final double? openingBalance; // Changed from int? to double?
+  final double? expenses; // Changed from int? to double?
   final dynamic cashSales;
   final dynamic qrisSales;
-  final int? totalSales;
-  final int? closingBalance;
+  final dynamic qrisFee; // Added missing field
+  final dynamic totalSales; // Changed from int? to dynamic
+  final double? closingBalance; // Changed from int? to double?
 
   DailyBreakdown({
     required this.date,
@@ -273,6 +297,7 @@ class DailyBreakdown {
     this.expenses,
     this.cashSales,
     this.qrisSales,
+    this.qrisFee, // Added parameter
     this.totalSales,
     this.closingBalance,
   });
@@ -280,13 +305,29 @@ class DailyBreakdown {
   factory DailyBreakdown.fromJson(Map<String, dynamic> json) {
     return DailyBreakdown(
       date: json['date'] ?? '',
-      openingBalance: json['opening_balance'],
-      expenses: json['expenses'],
+      openingBalance: _parseToDouble(json['opening_balance']),
+      expenses: _parseToDouble(json['expenses']),
       cashSales: json['cash_sales'],
       qrisSales: json['qris_sales'],
+      qrisFee: json['qris_fee'], // Parse qris_fee
       totalSales: json['total_sales'],
-      closingBalance: json['closing_balance'],
+      closingBalance: _parseToDouble(json['closing_balance']),
     );
+  }
+
+  // Helper method to safely parse numeric values to double
+  static double? _parseToDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      try {
+        return double.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() => {
@@ -295,6 +336,7 @@ class DailyBreakdown {
         'expenses': expenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
+        'qris_fee': qrisFee, // Include in JSON
         'total_sales': totalSales,
         'closing_balance': closingBalance,
       };

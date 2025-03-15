@@ -96,6 +96,37 @@ class RevenueInvoice {
     }
   }
 
+  // Helper method to safely parse any numeric value to string with currency format
+  static String safeGetCurrencyFormat(dynamic value) {
+    if (value == null) return '0'.currencyFormatRp;
+
+    if (value is int) {
+      return value.toString().currencyFormatRp;
+    }
+
+    if (value is double) {
+      return value.toString().currencyFormatRp;
+    }
+
+    if (value is String) {
+      try {
+        // Try parsing as double first to handle decimal values
+        return double.parse(value).toString().currencyFormatRp;
+      } catch (e) {
+        try {
+          // If not a double, try as integer
+          return int.parse(value).toString().currencyFormatRp;
+        } catch (e) {
+          // If all parsing fails, return default
+          return '0'.currencyFormatRp;
+        }
+      }
+    }
+
+    // For any other type
+    return '0'.currencyFormatRp;
+  }
+
   static Future<File> generatePdf(
       EnhancedSummaryData summaryModel, String searchDateFormatted,
       {int? outletId}) async {
@@ -256,18 +287,14 @@ class RevenueInvoice {
         pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildText(
           title: 'Opening Balance',
-          value: summary.openingBalance != null
-              ? summary.openingBalance.toString().currencyFormatRp
-              : '0'.currencyFormatRp,
+          value: safeGetCurrencyFormat(summary.openingBalance),
           unite: true,
         ),
         pw.Divider(),
         buildText(
           title: 'Expenses',
           titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
-          value: summary.expenses != null
-              ? summary.expenses.toString().currencyFormatRp
-              : '0'.currencyFormatRp,
+          value: safeGetCurrencyFormat(summary.expenses),
           textStyle: pw.TextStyle(
             color: PdfColor.fromHex('#FF0000'),
           ),
@@ -291,6 +318,18 @@ class RevenueInvoice {
           ),
           unite: true,
         ),
+        // Add QRIS Fee
+        buildText(
+          title: 'QRIS Fee',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+          value: summary.qrisFee != null
+              ? "- ${safeGetCurrencyFormat(summary.qrisFee)}"
+              : "- Rp 0,00",
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+          ),
+          unite: true,
+        ),
         buildText(
           title: 'Beverage Sales',
           titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
@@ -307,9 +346,7 @@ class RevenueInvoice {
             fontSize: 14,
             fontWeight: pw.FontWeight.bold,
           ),
-          value: summary.closingBalance != null
-              ? summary.closingBalance.toString().currencyFormatRp
-              : '0'.currencyFormatRp,
+          value: safeGetCurrencyFormat(summary.closingBalance),
           unite: true,
         ),
       ],
@@ -329,7 +366,7 @@ class RevenueInvoice {
               fontWeight: pw.FontWeight.bold,
             )),
         pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
-        if (paymentMethods.cash != null)
+        if (paymentMethods.cash != null) ...[
           buildText(
             title: 'Cash (${paymentMethods.cash!.count} transactions)',
             value: paymentMethods.cash!
@@ -338,9 +375,18 @@ class RevenueInvoice {
                 .currencyFormatRp,
             unite: true,
           ),
+          // Add Cash QRIS Fees (usually 0)
+          buildText(
+            title: 'Cash QRIS Fees',
+            value: paymentMethods.cash!.qrisFees != null
+                ? safeGetCurrencyFormat(paymentMethods.cash!.qrisFees)
+                : "Rp 0,00",
+            unite: true,
+          ),
+        ],
         if (paymentMethods.cash != null && paymentMethods.qris != null)
           pw.Divider(),
-        if (paymentMethods.qris != null)
+        if (paymentMethods.qris != null) ...[
           buildText(
             title: 'QRIS (${paymentMethods.qris!.count} transactions)',
             value: paymentMethods.qris!
@@ -349,6 +395,15 @@ class RevenueInvoice {
                 .currencyFormatRp,
             unite: true,
           ),
+          // Add QRIS Fees
+          buildText(
+            title: 'QRIS Fees',
+            value: paymentMethods.qris!.qrisFees != null
+                ? safeGetCurrencyFormat(paymentMethods.qris!.qrisFees)
+                : "Rp 0,00",
+            unite: true,
+          ),
+        ],
       ],
     );
   }
@@ -386,15 +441,11 @@ class RevenueInvoice {
               pw.SizedBox(height: 4),
               buildSimpleText(
                 title: 'Opening Balance:',
-                value: day.openingBalance != null
-                    ? day.openingBalance.toString().currencyFormatRp
-                    : '0'.currencyFormatRp,
+                value: safeGetCurrencyFormat(day.openingBalance),
               ),
               buildSimpleText(
                 title: 'Expenses:',
-                value: day.expenses != null
-                    ? day.expenses.toString().currencyFormatRp
-                    : '0'.currencyFormatRp,
+                value: safeGetCurrencyFormat(day.expenses),
               ),
               buildSimpleText(
                 title: 'Cash Sales:',
@@ -404,17 +455,20 @@ class RevenueInvoice {
                 title: 'QRIS Sales:',
                 value: day.getQrisSalesAsInt().toString().currencyFormatRp,
               ),
+              // Add QRIS Fee
+              buildSimpleText(
+                title: 'QRIS Fee:',
+                value: day.qrisFee != null
+                    ? safeGetCurrencyFormat(day.qrisFee)
+                    : "Rp 0,00",
+              ),
               buildSimpleText(
                 title: 'Total Sales:',
-                value: day.totalSales != null
-                    ? day.totalSales.toString().currencyFormatRp
-                    : '0'.currencyFormatRp,
+                value: safeGetCurrencyFormat(day.totalSales),
               ),
               buildSimpleText(
                 title: 'Closing Balance:',
-                value: day.closingBalance != null
-                    ? day.closingBalance.toString().currencyFormatRp
-                    : '0'.currencyFormatRp,
+                value: safeGetCurrencyFormat(day.closingBalance),
               ),
             ],
           ),
@@ -605,10 +659,8 @@ class RevenueInvoice {
 
     final openingBalanceValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
-    openingBalanceValueCell.value = TextCellValue(
-        summaryModel.openingBalance != null
-            ? summaryModel.openingBalance.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+    openingBalanceValueCell.value =
+        TextCellValue(safeGetCurrencyFormat(summaryModel.openingBalance));
     currentRow++;
 
     // Expenses
@@ -617,9 +669,8 @@ class RevenueInvoice {
 
     final expensesValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
-    expensesValueCell.value = TextCellValue(summaryModel.expenses != null
-        ? summaryModel.expenses.toString().currencyFormatRp
-        : '0'.currencyFormatRp);
+    expensesValueCell.value =
+        TextCellValue(safeGetCurrencyFormat(summaryModel.expenses));
     currentRow++;
 
     // Cash Sales
@@ -642,6 +693,17 @@ class RevenueInvoice {
         summaryModel.getQrisSalesAsInt().toString().currencyFormatRp);
     currentRow++;
 
+    // QRIS Fee
+    final qrisFeeCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    qrisFeeCell.value = TextCellValue('QRIS Fee');
+
+    final qrisFeeValueCell =
+        sheet.cell(CellIndex.indexByString("B$currentRow"));
+    qrisFeeValueCell.value = TextCellValue(summaryModel.qrisFee != null
+        ? safeGetCurrencyFormat(summaryModel.qrisFee)
+        : "Rp 0,00");
+    currentRow++;
+
     // Beverage Sales
     final beverageSalesCell =
         sheet.cell(CellIndex.indexByString("A$currentRow"));
@@ -661,10 +723,8 @@ class RevenueInvoice {
 
     final closingBalanceValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
-    closingBalanceValueCell.value = TextCellValue(
-        summaryModel.closingBalance != null
-            ? summaryModel.closingBalance.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+    closingBalanceValueCell.value =
+        TextCellValue(safeGetCurrencyFormat(summaryModel.closingBalance));
     closingBalanceValueCell.cellStyle = CellStyle(bold: true);
     currentRow += 2;
 
@@ -694,8 +754,21 @@ class RevenueInvoice {
             .toString()
             .currencyFormatRp);
         currentRow++;
-      }
 
+        // Cash QRIS Fees
+        final cashFeesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        cashFeesCell.value = TextCellValue('Cash QRIS Fees');
+
+        final cashFeesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        cashFeesValueCell.value = TextCellValue(summaryModel
+                    .paymentMethods!.cash!.qrisFees !=
+                null
+            ? safeGetCurrencyFormat(summaryModel.paymentMethods!.cash!.qrisFees)
+            : "Rp 0,00");
+        currentRow++;
+      }
       if (summaryModel.paymentMethods?.qris != null) {
         final qrisCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
         qrisCell.value = TextCellValue(
@@ -708,6 +781,20 @@ class RevenueInvoice {
             .toString()
             .currencyFormatRp);
         currentRow++;
+
+        // QRIS Fees
+        final qrisFeesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        qrisFeesCell.value = TextCellValue('QRIS Fees');
+
+        final qrisFeesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        qrisFeesValueCell.value = TextCellValue(summaryModel
+                    .paymentMethods!.qris!.qrisFees !=
+                null
+            ? safeGetCurrencyFormat(summaryModel.paymentMethods!.qris!.qrisFees)
+            : "Rp 0,00");
+        currentRow++;
       }
 
       currentRow++;
@@ -717,7 +804,7 @@ class RevenueInvoice {
     if (summaryModel.dailyBreakdown != null &&
         summaryModel.dailyBreakdown!.isNotEmpty) {
       sheet.merge(CellIndex.indexByString("A$currentRow"),
-          CellIndex.indexByString("G$currentRow"));
+          CellIndex.indexByString("H$currentRow"));
       final breakdownHeaderCell =
           sheet.cell(CellIndex.indexByString("A$currentRow"));
       breakdownHeaderCell.value = TextCellValue('Daily Breakdown');
@@ -735,6 +822,7 @@ class RevenueInvoice {
         'Expenses',
         'Cash Sales',
         'QRIS Sales',
+        'QRIS Fee',
         'Total Sales',
         'Closing'
       ];
@@ -754,15 +842,12 @@ class RevenueInvoice {
 
         final openingCell = sheet.cell(
             CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: currentRow));
-        openingCell.value = TextCellValue(day.openingBalance != null
-            ? day.openingBalance.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+        openingCell.value =
+            TextCellValue(safeGetCurrencyFormat(day.openingBalance));
 
         final expensesCell = sheet.cell(
             CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: currentRow));
-        expensesCell.value = TextCellValue(day.expenses != null
-            ? day.expenses.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+        expensesCell.value = TextCellValue(safeGetCurrencyFormat(day.expenses));
 
         final cashSalesCell = sheet.cell(
             CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: currentRow));
@@ -774,17 +859,21 @@ class RevenueInvoice {
         qrisSalesCell.value =
             TextCellValue(day.getQrisSalesAsInt().toString().currencyFormatRp);
 
-        final totalSalesCell = sheet.cell(
+        final qrisFeeCell = sheet.cell(
             CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: currentRow));
-        totalSalesCell.value = TextCellValue(day.totalSales != null
-            ? day.totalSales.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+        qrisFeeCell.value = TextCellValue(day.qrisFee != null
+            ? safeGetCurrencyFormat(day.qrisFee)
+            : "Rp 0,00");
+
+        final totalSalesCell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: currentRow));
+        totalSalesCell.value =
+            TextCellValue(safeGetCurrencyFormat(day.totalSales));
 
         final closingCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: currentRow));
-        closingCell.value = TextCellValue(day.closingBalance != null
-            ? day.closingBalance.toString().currencyFormatRp
-            : '0'.currencyFormatRp);
+            CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: currentRow));
+        closingCell.value =
+            TextCellValue(safeGetCurrencyFormat(day.closingBalance));
 
         currentRow++;
       }
@@ -795,7 +884,7 @@ class RevenueInvoice {
     // Footer with address
     sheet.merge(
       CellIndex.indexByString("A$currentRow"),
-      CellIndex.indexByString("G$currentRow"),
+      CellIndex.indexByString("H$currentRow"),
     );
     final footerCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     footerCell.value = TextCellValue('Address: $outletAddress');
@@ -803,7 +892,7 @@ class RevenueInvoice {
     // Set column widths
     sheet.setColumnWidth(0, 35.0);
     sheet.setColumnWidth(1, 25.0);
-    for (var i = 2; i < 7; i++) {
+    for (var i = 2; i < 8; i++) {
       sheet.setColumnWidth(i, 20.0);
     }
 

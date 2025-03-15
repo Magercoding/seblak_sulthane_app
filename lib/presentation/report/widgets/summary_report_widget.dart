@@ -200,6 +200,24 @@ class SummaryReportWidget extends StatelessWidget {
     }
   }
 
+  // Helper method to safely parse any numeric value
+  double parseNumericValue(dynamic value) {
+    if (value == null) return 0.0;
+
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+
+    if (value is String) {
+      try {
+        return double.parse(value);
+      } catch (e) {
+        return 0.0;
+      }
+    }
+
+    return 0.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -406,14 +424,14 @@ class SummaryReportWidget extends StatelessWidget {
             SummaryItem(
               label: 'Opening Balance',
               value: summary.openingBalance != null
-                  ? 'Rp ${formatCurrency(summary.openingBalance!.toDouble())}'
+                  ? 'Rp ${formatCurrency(summary.openingBalance!)}'
                   : 'Rp 0.00',
             ),
             const Divider(),
             SummaryItem(
               label: 'Expenses',
               value: summary.expenses != null
-                  ? 'Rp ${formatCurrency(summary.expenses!.toDouble())}'
+                  ? 'Rp ${formatCurrency(summary.expenses!)}'
                   : 'Rp 0.00',
               textColor: Colors.red,
             ),
@@ -433,6 +451,14 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
+              label: 'QRIS Fee',
+              value: summary.qrisFee != null
+                  ? 'Rp ${formatCurrency(parseNumericValue(summary.qrisFee))}'
+                  : 'Rp 0.00',
+              textColor: Colors.red,
+            ),
+            const Divider(),
+            SummaryItem(
               label: 'Beverage Sales',
               value:
                   'Rp ${formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
@@ -442,7 +468,7 @@ class SummaryReportWidget extends StatelessWidget {
             SummaryItem(
               label: 'Closing Balance',
               value: summary.closingBalance != null
-                  ? 'Rp ${formatCurrency(summary.closingBalance!.toDouble())}'
+                  ? 'Rp ${formatCurrency(summary.closingBalance!)}'
                   : 'Rp 0.00',
               isTotal: true,
             ),
@@ -458,23 +484,41 @@ class SummaryReportWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              if (summary.paymentMethods?.cash != null)
+              if (summary.paymentMethods?.cash != null) ...[
                 SummaryItem(
                   label:
                       'Cash (${summary.paymentMethods!.cash!.count} transactions)',
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.cash!.getTotalAsInt().toDouble())}',
                 ),
+                // Add Cash QRIS Fees (usually 0)
+                SummaryItem(
+                  label: 'Cash QRIS Fees',
+                  value: summary.paymentMethods!.cash!.qrisFees != null
+                      ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.cash!.qrisFees))}'
+                      : 'Rp 0.00',
+                  textColor: Colors.red,
+                ),
+              ],
               if (summary.paymentMethods?.cash != null &&
                   summary.paymentMethods?.qris != null)
                 const Divider(),
-              if (summary.paymentMethods?.qris != null)
+              if (summary.paymentMethods?.qris != null) ...[
                 SummaryItem(
                   label:
                       'QRIS (${summary.paymentMethods!.qris!.count} transactions)',
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
                 ),
+                // Add QRIS Fees
+                SummaryItem(
+                  label: 'QRIS Fees',
+                  value: summary.paymentMethods!.qris!.qrisFees != null
+                      ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.qris!.qrisFees))}'
+                      : 'Rp 0.00',
+                  textColor: Colors.red,
+                ),
+              ],
             ],
 
             // Daily Breakdown Section
@@ -525,7 +569,7 @@ class SummaryReportWidget extends StatelessWidget {
               const Text('Opening:'),
               Text(
                 day.openingBalance != null
-                    ? 'Rp ${formatCurrency(day.openingBalance!.toDouble())}'
+                    ? 'Rp ${formatCurrency(day.openingBalance!)}'
                     : 'Rp 0.00',
               ),
             ],
@@ -537,7 +581,7 @@ class SummaryReportWidget extends StatelessWidget {
               const Text('Expenses:'),
               Text(
                 day.expenses != null
-                    ? 'Rp ${formatCurrency(day.expenses!.toDouble())}'
+                    ? 'Rp ${formatCurrency(day.expenses!)}'
                     : 'Rp 0.00',
                 style: const TextStyle(color: Colors.red),
               ),
@@ -569,10 +613,23 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const Text('QRIS Fee:'),
+              Text(
+                day.qrisFee != null
+                    ? 'Rp ${formatCurrency(parseNumericValue(day.qrisFee))}'
+                    : 'Rp 0.00',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               const Text('Total Sales:'),
               Text(
                 day.totalSales != null
-                    ? 'Rp ${formatCurrency(day.totalSales!.toDouble())}'
+                    ? 'Rp ${formatCurrency(parseNumericValue(day.totalSales))}'
                     : 'Rp 0.00',
                 style: const TextStyle(color: Colors.green),
               ),
@@ -585,7 +642,7 @@ class SummaryReportWidget extends StatelessWidget {
               const Text('Closing Balance:'),
               Text(
                 day.closingBalance != null
-                    ? 'Rp ${formatCurrency(day.closingBalance!.toDouble())}'
+                    ? 'Rp ${formatCurrency(day.closingBalance!)}'
                     : 'Rp 0.00',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),

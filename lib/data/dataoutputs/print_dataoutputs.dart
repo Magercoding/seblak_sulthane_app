@@ -595,6 +595,22 @@ class PrintDataoutputs {
     return bytes;
   }
 
+// Add this helper method to safely parse any numeric value to double
+  double _parseToDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      try {
+        return double.parse(value);
+      } catch (_) {
+        return 0.0;
+      }
+    }
+    return 0.0;
+  }
+
+// Updated printSummaryReport method to include QRIS fee
   Future<List<int>> printSummaryReport(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -843,6 +859,22 @@ class PrintDataoutputs {
       ),
     ]);
 
+    // Add QRIS Fee
+    bytes += generator.row([
+      PosColumn(
+        text: 'QRIS Fee',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.qrisFee != null
+            ? 'Rp ${_formatCurrency(_parseToDouble(summary.qrisFee))}'
+            : 'Rp 0.00',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
     bytes += generator.row([
       PosColumn(
         text: 'Beverage Sales',
@@ -897,6 +929,22 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
+
+        // Add Cash QRIS Fees (usually 0)
+        bytes += generator.row([
+          PosColumn(
+            text: 'Cash QRIS Fees',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: summary.paymentMethods!.cash!.qrisFees != null
+                ? 'Rp ${_formatCurrency(_parseToDouble(summary.paymentMethods!.cash!.qrisFees))}'
+                : 'Rp 0.00',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
       }
 
       if (summary.paymentMethods?.qris != null) {
@@ -909,6 +957,22 @@ class PrintDataoutputs {
           PosColumn(
             text:
                 'Rp ${_formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Add QRIS Fees
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS Fees',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: summary.paymentMethods!.qris!.qrisFees != null
+                ? 'Rp ${_formatCurrency(_parseToDouble(summary.paymentMethods!.qris!.qrisFees))}'
+                : 'Rp 0.00',
             width: 6,
             styles: const PosStyles(align: PosAlign.right),
           ),
@@ -989,6 +1053,22 @@ class PrintDataoutputs {
           ),
         ]);
 
+        // Add QRIS Fee
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS Fee:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: day.qrisFee != null
+                ? 'Rp ${_formatCurrency(_parseToDouble(day.qrisFee))}'
+                : 'Rp 0.00',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
         bytes += generator.row([
           PosColumn(
             text: 'Total Sales:',
@@ -997,7 +1077,7 @@ class PrintDataoutputs {
           ),
           PosColumn(
             text: day.totalSales != null
-                ? 'Rp ${_formatCurrency(day.totalSales!.toDouble())}'
+                ? 'Rp ${_formatCurrency(_parseToDouble(day.totalSales))}'
                 : 'Rp 0.00',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
@@ -1033,11 +1113,7 @@ class PrintDataoutputs {
     return bytes;
   }
 
-  String _formatCurrency(double value) {
-    return value.toStringAsFixed(2).replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
-  }
-
+// Updated printEndShift method to include QRIS fee
   Future<List<int>> printEndShift(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -1143,9 +1219,29 @@ class PrintDataoutputs {
       ),
     ]);
 
+    // Add QRIS Fee as an expense
+    bytes += generator.row([
+      PosColumn(
+        text: "QRIS Fee",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: summary.qrisFee != null
+            ? formatNumberWithoutDecimal(_parseToDouble(summary.qrisFee))
+            : "0",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Calculate final cash including QRIS fee
+    double qrisFeeAmount =
+        summary.qrisFee != null ? _parseToDouble(summary.qrisFee) : 0.0;
     double totalFinalCash = (summary.openingBalance ?? 0).toDouble() +
         summary.getCashSalesAsInt().toDouble() -
-        (summary.expenses ?? 0).toDouble();
+        (summary.expenses ?? 0).toDouble() -
+        qrisFeeAmount;
 
     bytes += generator.row([
       PosColumn(
@@ -1204,6 +1300,11 @@ class PrintDataoutputs {
     bytes += generator.cut();
 
     return bytes;
+  }
+
+  String _formatCurrency(double value) {
+    return value.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
   }
 
   String formatNumberWithoutDecimal(double value) {

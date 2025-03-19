@@ -130,6 +130,9 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ),
+                            // Replace the category filtering parts in your HomePage with this safer implementation
+
+// For the "Makanan" tab (Category ID 1):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -148,42 +151,42 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 1)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 1)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
-                                            ),
-                                            itemBuilder: (context, index) =>
-                                                ProductCard(
-                                              data: products
-                                                  .where((element) =>
-                                                      element.category!.id! ==
-                                                      1)
-                                                  .toList()[index],
-                                              onCartButton: () {},
-                                            ),
-                                          );
+
+                                    // Safely filter products by category
+                                    final foodProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 1)
+                                        .toList();
+
+                                    if (foodProducts.isEmpty) {
+                                      return const _IsEmpty();
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: foodProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: foodProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),
                             ),
+
+// For the "Minuman" tab (Category ID 2):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -202,43 +205,42 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 2)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 2)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              return ProductCard(
-                                                data: products
-                                                    .where((element) =>
-                                                        element.category!.id! ==
-                                                        2)
-                                                    .toList()[index],
-                                                onCartButton: () {},
-                                              );
-                                            },
-                                          );
+
+                                    // Safely filter products by category
+                                    final drinkProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 2)
+                                        .toList();
+
+                                    if (drinkProducts.isEmpty) {
+                                      return const _IsEmpty();
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: drinkProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: drinkProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),
                             ),
+
+// For the "Snack" tab (Category ID 3):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -257,39 +259,36 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 3)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 3)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              return ProductCard(
-                                                data: products
-                                                    .where((element) =>
-                                                        element.category!.id! ==
-                                                        3)
-                                                    .toList()[index],
-                                                onCartButton: () {},
-                                              );
-                                            },
-                                          );
+
+                                    // Safely filter products by category
+                                    final snackProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 3)
+                                        .toList();
+
+                                    if (snackProducts.isEmpty) {
+                                      return const _IsEmpty();
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: snackProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: snackProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),

@@ -71,783 +71,789 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Hero(
-        tag: 'confirmation_screen',
-        child: Scaffold(
-          body: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+      child: Scaffold(
+        body: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Konfirmasi',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                widget.isTable
+                                    ? 'Orders Table ${widget.table?.tableNumber}'
+                                    : 'Orders #1 - $orderTypeDisplay', // Show order type for take away
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              height: 60.0,
+                              width: 60.0,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(8.0),
+                      const Divider(),
+                      if (!widget.isTable) ...[
+                        const SpaceHeight(12.0),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            const Text(
+                              'Tipe Pesanan:',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SpaceWidth(8.0),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: widget.orderType == 'take_away'
+                                    ? AppColors.primary.withOpacity(0.2)
+                                    : Colors.green.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Text(
+                                orderTypeDisplay,
+                                style: TextStyle(
+                                  color: widget.orderType == 'take_away'
+                                      ? AppColors.primary
+                                      : Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SpaceHeight(8.0),
+                        const Divider(),
+                      ],
+                      const SpaceHeight(24.0),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Item',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 160,
+                          ),
+                          SizedBox(
+                            width: 50.0,
+                            child: Text(
+                              'Qty',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Text(
+                              'Price',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(8),
+                      const Divider(),
+                      const SpaceHeight(8),
+                      BlocBuilder<CheckoutBloc, CheckoutState>(
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            orElse: () => const Center(
+                              child: Text('No Items'),
+                            ),
+                            loaded: (products,
+                                discountModel,
+                                discount,
+                                discountAmount,
+                                tax,
+                                serviceCharge,
+                                totalQuantity,
+                                totalPrice,
+                                draftName) {
+                              if (products.isEmpty) {
+                                return const Center(
+                                  child: Text('No Items'),
+                                );
+                              }
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    OrderMenu(data: products[index]),
+                                separatorBuilder: (context, index) =>
+                                    const SpaceHeight(12.0),
+                                itemCount: products.length,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      const SpaceHeight(8.0),
+                      const Divider(),
+                      const SpaceHeight(4.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Sub total',
+                            style: TextStyle(color: AppColors.grey),
+                          ),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              final price = state.maybeWhen(
+                                  orElse: () => 0,
+                                  loaded: (products,
+                                          discountModel,
+                                          discount,
+                                          discountAmount,
+                                          tax,
+                                          serviceCharge,
+                                          totalQuantity,
+                                          totalPrice,
+                                          draftName) =>
+                                      products.fold(
+                                        0,
+                                        (previousValue, element) =>
+                                            previousValue +
+                                            (element.product.price!
+                                                    .toIntegerFromText *
+                                                element.quantity),
+                                      ));
+                              return Text(
+                                price.currencyFormatRp,
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(4.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Diskon',
+                            style: TextStyle(color: AppColors.grey),
+                          ),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              final discount = state.maybeWhen(
+                                  orElse: () => 0,
+                                  loaded: (products,
+                                      discountModel,
+                                      discount,
+                                      discountAmount,
+                                      tax,
+                                      serviceCharge,
+                                      totalQuantity,
+                                      totalPrice,
+                                      draftName) {
+                                    if (discountModel.isEmpty) {
+                                      return 0;
+                                    }
+                                    return discount;
+                                  });
+
+                              final subTotal = state.maybeWhen(
+                                  orElse: () => 0,
+                                  loaded: (products,
+                                          discountModel,
+                                          discount,
+                                          discountAmount,
+                                          tax,
+                                          serviceCharge,
+                                          totalQuantity,
+                                          totalPrice,
+                                          draftName) =>
+                                      products.fold(
+                                        0,
+                                        (previousValue, element) =>
+                                            previousValue +
+                                            (element.product.price!
+                                                    .toIntegerFromText *
+                                                element.quantity),
+                                      ));
+
+                              final finalDiscount = discount / 100 * subTotal;
+                              discountAmount = finalDiscount.toInt();
+                              return Text(
+                                '$discount % (${finalDiscount.toInt().currencyFormatRp})',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(4.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Pajak',
+                            style: TextStyle(color: AppColors.grey),
+                          ),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              final tax = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    tax,
+                              );
+                              final price = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    products.fold(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue +
+                                      (element.product.price!
+                                              .toIntegerFromText *
+                                          element.quantity),
+                                ),
+                              );
+
+                              final discount = state.maybeWhen(
+                                  orElse: () => 0,
+                                  loaded: (products,
+                                      discountModel,
+                                      discount,
+                                      discountAmount,
+                                      tax,
+                                      serviceCharge,
+                                      totalQuantity,
+                                      totalPrice,
+                                      draftName) {
+                                    if (discountModel.isEmpty) {
+                                      return 0;
+                                    }
+                                    return discount;
+                                  });
+
+                              final subTotal = price - (discount / 100 * price);
+                              final finalTax = subTotal * (tax / 100);
+                              final finalDiscount = discount / 100 * subTotal;
+
+                              return Text(
+                                '$tax % (${finalTax.toInt().currencyFormatRp})',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(4.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Biaya Layanan',
+                            style: TextStyle(color: AppColors.grey),
+                          ),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              final serviceCharge = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    serviceCharge,
+                              );
+
+                              final price = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    products.fold(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue +
+                                      (element.product.price!
+                                              .toIntegerFromText *
+                                          element.quantity),
+                                ),
+                              );
+
+                              final nominalServiceCharge =
+                                  (serviceCharge / 100) *
+                                      (price - discountAmount);
+
+                              return Text(
+                                '$serviceCharge % (${nominalServiceCharge.toInt().currencyFormatRp})',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SpaceHeight(10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total',
+                            style: TextStyle(
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              final price = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    products.fold(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue +
+                                      (element.product.price!
+                                              .toIntegerFromText *
+                                          element.quantity),
+                                ),
+                              );
+
+                              final discount = state.maybeWhen(
+                                  orElse: () => 0,
+                                  loaded: (products,
+                                      discountModel,
+                                      discount,
+                                      discountAmount,
+                                      tax,
+                                      serviceCharge,
+                                      totalQuantity,
+                                      totalPrice,
+                                      draftName) {
+                                    if (discountModel.isEmpty) {
+                                      return 0;
+                                    }
+                                    return discount;
+                                  });
+
+                              final tax = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    tax,
+                              );
+
+                              final serviceCharge = state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (products,
+                                        discountModel,
+                                        discount,
+                                        discountAmount,
+                                        tax,
+                                        serviceCharge,
+                                        totalQuantity,
+                                        totalPrice,
+                                        draftName) =>
+                                    serviceCharge,
+                              );
+
+                              final subTotal = price - (discount / 100 * price);
+                              final finalTax = subTotal * (tax / 100);
+                              final service = (serviceCharge / 100) * subTotal;
+                              final total = subTotal + finalTax + service;
+
+                              totalPriceController.text =
+                                  total.ceil().currencyFormatRpV2;
+                              uangPas = total.ceil();
+                              uangPas2 = uangPas ~/ 50000 * 50000 + 50000;
+                              uangPas3 = uangPas ~/ 50000 * 50000 + 100000;
+                              totalPriceFinal = total.ceil();
+
+                              return Text(
+                                total.ceil().currencyFormatRp,
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ListView(
+                  children: [
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (widget.isTable != true) ...[
+                            Row(
                               children: [
-                                Text(
-                                  'Konfirmasi',
+                                const Text(
+                                  'Pembayaran',
                                   style: TextStyle(
                                     color: AppColors.primary,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(
-                                  widget.isTable
-                                      ? 'Orders Table ${widget.table?.tableNumber}'
-                                      : 'Orders #1 - $orderTypeDisplay', // Show order type for take away
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                const SpaceWidth(12.0),
+                                // Order Type Badge
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 4.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: widget.orderType == 'take_away'
+                                        ? AppColors.primary.withOpacity(0.2)
+                                        : Colors.green.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Text(
+                                    orderTypeDisplay,
+                                    style: TextStyle(
+                                      color: widget.orderType == 'take_away'
+                                          ? AppColors.primary
+                                          : Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                height: 60.0,
-                                width: 60.0,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ),
+                            const SpaceHeight(16.0),
                           ],
-                        ),
-                        const SpaceHeight(8.0),
-                        const Divider(),
-                        if (!widget.isTable) ...[
+                          const SpaceHeight(8.0),
+                          const Divider(),
+                          const SpaceHeight(8.0),
+                          const Text(
+                            'Customer',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SpaceHeight(12.0),
+                          TextFormField(
+                            controller: customerController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              hintText: 'Nama Customer',
+                            ),
+                            textCapitalization: TextCapitalization.words,
+                          ),
+                          const SpaceHeight(8.0),
+                          const Divider(),
+                          const SpaceHeight(8.0),
+                          const Text(
+                            'Metode Bayar',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SpaceHeight(12.0),
                           Row(
                             children: [
-                              const Text(
-                                'Tipe Pesanan:',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                              isCash
+                                  ? Button.filled(
+                                      width: 120.0,
+                                      height: 50.0,
+                                      onPressed: () {
+                                        isCash = true;
+                                        setState(() {});
+                                      },
+                                      label: 'Cash',
+                                    )
+                                  : Button.outlined(
+                                      width: 120.0,
+                                      height: 50.0,
+                                      onPressed: () {
+                                        isCash = true;
+                                        setState(() {});
+                                      },
+                                      label: 'Cash',
+                                    ),
                               const SpaceWidth(8.0),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 4.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: widget.orderType == 'take_away'
-                                      ? AppColors.primary.withOpacity(0.2)
-                                      : Colors.green.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Text(
-                                  orderTypeDisplay,
-                                  style: TextStyle(
-                                    color: widget.orderType == 'take_away'
-                                        ? AppColors.primary
-                                        : Colors.green,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
+                              isCash
+                                  ? Button.outlined(
+                                      width: 120.0,
+                                      height: 50.0,
+                                      onPressed: () {
+                                        isCash = false;
+                                        setState(() {});
+                                      },
+                                      label: 'QRIS',
+                                    )
+                                  : Button.filled(
+                                      width: 120.0,
+                                      height: 50.0,
+                                      onPressed: () {
+                                        isCash = false;
+                                        setState(() {});
+                                      },
+                                      label: 'QRIS',
+                                    ),
                             ],
                           ),
                           const SpaceHeight(8.0),
                           const Divider(),
-                        ],
-                        const SpaceHeight(24.0),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Item',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          const SpaceHeight(8.0),
+                          const Text(
+                            'Total Bayar',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
-                            SizedBox(
-                              width: 160,
-                            ),
-                            SizedBox(
-                              width: 50.0,
-                              child: Text(
-                                'Qty',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                          ),
+                          const SpaceHeight(12.0),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              return TextFormField(
+                                controller: totalPriceController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  hintText: 'Total harga',
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SpaceHeight(8),
-                        const Divider(),
-                        const SpaceHeight(8),
-                        BlocBuilder<CheckoutBloc, CheckoutState>(
-                          builder: (context, state) {
-                            return state.maybeWhen(
-                              orElse: () => const Center(
-                                child: Text('No Items'),
-                              ),
-                              loaded: (products,
-                                  discountModel,
-                                  discount,
-                                  discountAmount,
-                                  tax,
-                                  serviceCharge,
-                                  totalQuantity,
-                                  totalPrice,
-                                  draftName) {
-                                if (products.isEmpty) {
-                                  return const Center(
-                                    child: Text('No Items'),
-                                  );
-                                }
-                                return ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) =>
-                                      OrderMenu(data: products[index]),
-                                  separatorBuilder: (context, index) =>
-                                      const SpaceHeight(12.0),
-                                  itemCount: products.length,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        const SpaceHeight(8.0),
-                        const Divider(),
-                        const SpaceHeight(4.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Sub total',
-                              style: TextStyle(color: AppColors.grey),
-                            ),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                final price = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (products,
-                                            discountModel,
-                                            discount,
-                                            discountAmount,
-                                            tax,
-                                            serviceCharge,
-                                            totalQuantity,
-                                            totalPrice,
-                                            draftName) =>
-                                        products.fold(
-                                          0,
-                                          (previousValue, element) =>
-                                              previousValue +
-                                              (element.product.price!
-                                                      .toIntegerFromText *
-                                                  element.quantity),
-                                        ));
-                                return Text(
-                                  price.currencyFormatRp,
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SpaceHeight(4.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Diskon',
-                              style: TextStyle(color: AppColors.grey),
-                            ),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                final discount = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (products,
-                                        discountModel,
-                                        discount,
-                                        discountAmount,
-                                        tax,
-                                        serviceCharge,
-                                        totalQuantity,
-                                        totalPrice,
-                                        draftName) {
-                                      if (discountModel.isEmpty) {
-                                        return 0;
-                                      }
-                                      return discount;
-                                    });
-
-                                final subTotal = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (products,
-                                            discountModel,
-                                            discount,
-                                            discountAmount,
-                                            tax,
-                                            serviceCharge,
-                                            totalQuantity,
-                                            totalPrice,
-                                            draftName) =>
-                                        products.fold(
-                                          0,
-                                          (previousValue, element) =>
-                                              previousValue +
-                                              (element.product.price!
-                                                      .toIntegerFromText *
-                                                  element.quantity),
-                                        ));
-
-                                final finalDiscount = discount / 100 * subTotal;
-                                discountAmount = finalDiscount.toInt();
-                                return Text(
-                                  '$discount % (${finalDiscount.toInt().currencyFormatRp})',
-                                  style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SpaceHeight(4.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Pajak',
-                              style: TextStyle(color: AppColors.grey),
-                            ),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                final tax = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      tax,
-                                );
-                                final price = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      products.fold(
-                                    0,
-                                    (previousValue, element) =>
-                                        previousValue +
-                                        (element.product.price!
-                                                .toIntegerFromText *
-                                            element.quantity),
-                                  ),
-                                );
-
-                                final discount = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (products,
-                                        discountModel,
-                                        discount,
-                                        discountAmount,
-                                        tax,
-                                        serviceCharge,
-                                        totalQuantity,
-                                        totalPrice,
-                                        draftName) {
-                                      if (discountModel.isEmpty) {
-                                        return 0;
-                                      }
-                                      return discount;
-                                    });
-
-                                final subTotal =
-                                    price - (discount / 100 * price);
-                                final finalTax = subTotal * (tax / 100);
-                                final finalDiscount = discount / 100 * subTotal;
-
-                                return Text(
-                                  '$tax % (${finalTax.toInt().currencyFormatRp})',
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SpaceHeight(4.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Biaya Layanan',
-                              style: TextStyle(color: AppColors.grey),
-                            ),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                final serviceCharge = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      serviceCharge,
-                                );
-
-                                final price = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      products.fold(
-                                    0,
-                                    (previousValue, element) =>
-                                        previousValue +
-                                        (element.product.price!
-                                                .toIntegerFromText *
-                                            element.quantity),
-                                  ),
-                                );
-
-                                final nominalServiceCharge =
-                                    (serviceCharge / 100) *
-                                        (price - discountAmount);
-
-                                return Text(
-                                  '$serviceCharge % (${nominalServiceCharge.toInt().currencyFormatRp})',
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SpaceHeight(10.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total',
-                              style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                final price = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      products.fold(
-                                    0,
-                                    (previousValue, element) =>
-                                        previousValue +
-                                        (element.product.price!
-                                                .toIntegerFromText *
-                                            element.quantity),
-                                  ),
-                                );
-
-                                final discount = state.maybeWhen(
-                                    orElse: () => 0,
-                                    loaded: (products,
-                                        discountModel,
-                                        discount,
-                                        discountAmount,
-                                        tax,
-                                        serviceCharge,
-                                        totalQuantity,
-                                        totalPrice,
-                                        draftName) {
-                                      if (discountModel.isEmpty) {
-                                        return 0;
-                                      }
-                                      return discount;
-                                    });
-
-                                final tax = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      tax,
-                                );
-
-                                final serviceCharge = state.maybeWhen(
-                                  orElse: () => 0,
-                                  loaded: (products,
-                                          discountModel,
-                                          discount,
-                                          discountAmount,
-                                          tax,
-                                          serviceCharge,
-                                          totalQuantity,
-                                          totalPrice,
-                                          draftName) =>
-                                      serviceCharge,
-                                );
-
-                                final subTotal =
-                                    price - (discount / 100 * price);
-                                final finalTax = subTotal * (tax / 100);
-                                final service =
-                                    (serviceCharge / 100) * subTotal;
-                                final total = subTotal + finalTax + service;
-
-                                totalPriceController.text =
-                                    total.ceil().currencyFormatRpV2;
-                                uangPas = total.ceil();
-                                uangPas2 = uangPas ~/ 50000 * 50000 + 50000;
-                                uangPas3 = uangPas ~/ 50000 * 50000 + 100000;
-                                totalPriceFinal = total.ceil();
-
-                                return Text(
-                                  total.ceil().currencyFormatRp,
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: ListView(
-                    children: [
-                      SingleChildScrollView(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (widget.isTable != true) ...[
-                              Row(
+                                onChanged: (value) {
+                                  priceValue = value.toIntegerFromText;
+                                  final int newValue = value.toIntegerFromText;
+                                  totalPriceController.text =
+                                      newValue.currencyFormatRp;
+                                  totalPriceController.selection =
+                                      TextSelection.fromPosition(TextPosition(
+                                          offset: totalPriceController
+                                              .text.length));
+                                },
+                              );
+                            },
+                          ),
+                          const SpaceHeight(20.0),
+                          BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              return Row(
                                 children: [
-                                  const Text(
-                                    'Pembayaran',
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  Button.filled(
+                                    width: 150.0,
+                                    onPressed: () {
+                                      totalPriceController.text =
+                                          uangPas.toString().currencyFormatRp;
+                                      priceValue = uangPas;
+                                    },
+                                    label: 'UANG PAS',
                                   ),
-                                  const SpaceWidth(12.0),
-                                  // Order Type Badge
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 4.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: widget.orderType == 'take_away'
-                                          ? AppColors.primary.withOpacity(0.2)
-                                          : Colors.green.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Text(
-                                      orderTypeDisplay,
-                                      style: TextStyle(
-                                        color: widget.orderType == 'take_away'
-                                            ? AppColors.primary
-                                            : Colors.green,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                                  const SpaceWidth(20.0),
+                                  Button.filled(
+                                    width: 150.0,
+                                    onPressed: () {
+                                      totalPriceController.text =
+                                          uangPas2.toString().currencyFormatRp;
+                                      priceValue = uangPas2;
+                                    },
+                                    label: uangPas2.toString().currencyFormatRp,
+                                  ),
+                                  const SpaceWidth(20.0),
+                                  Button.filled(
+                                    width: 150.0,
+                                    onPressed: () {
+                                      totalPriceController.text =
+                                          uangPas3.toString().currencyFormatRp;
+                                      priceValue = uangPas3;
+                                    },
+                                    label: uangPas3.toString().currencyFormatRp,
                                   ),
                                 ],
-                              ),
-                              const SpaceHeight(16.0),
-                            ],
-                            const SpaceHeight(8.0),
-                            const Divider(),
-                            const SpaceHeight(8.0),
-                            const Text(
-                              'Customer',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SpaceHeight(12.0),
-                            TextFormField(
-                              controller: customerController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                hintText: 'Nama Customer',
-                              ),
-                              textCapitalization: TextCapitalization.words,
-                            ),
-                            const SpaceHeight(8.0),
-                            const Divider(),
-                            const SpaceHeight(8.0),
-                            const Text(
-                              'Metode Bayar',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SpaceHeight(12.0),
-                            Row(
-                              children: [
-                                isCash
-                                    ? Button.filled(
-                                        width: 120.0,
-                                        height: 50.0,
-                                        onPressed: () {
-                                          isCash = true;
-                                          setState(() {});
-                                        },
-                                        label: 'Cash',
-                                      )
-                                    : Button.outlined(
-                                        width: 120.0,
-                                        height: 50.0,
-                                        onPressed: () {
-                                          isCash = true;
-                                          setState(() {});
-                                        },
-                                        label: 'Cash',
-                                      ),
-                                const SpaceWidth(8.0),
-                                isCash
-                                    ? Button.outlined(
-                                        width: 120.0,
-                                        height: 50.0,
-                                        onPressed: () {
-                                          isCash = false;
-                                          setState(() {});
-                                        },
-                                        label: 'QRIS',
-                                      )
-                                    : Button.filled(
-                                        width: 120.0,
-                                        height: 50.0,
-                                        onPressed: () {
-                                          isCash = false;
-                                          setState(() {});
-                                        },
-                                        label: 'QRIS',
-                                      ),
-                              ],
-                            ),
-                            const SpaceHeight(8.0),
-                            const Divider(),
-                            const SpaceHeight(8.0),
-                            const Text(
-                              'Total Bayar',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SpaceHeight(12.0),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                return TextFormField(
-                                  controller: totalPriceController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    hintText: 'Total harga',
-                                  ),
-                                  onChanged: (value) {
-                                    priceValue = value.toIntegerFromText;
-                                    final int newValue =
-                                        value.toIntegerFromText;
-                                    totalPriceController.text =
-                                        newValue.currencyFormatRp;
-                                    totalPriceController.selection =
-                                        TextSelection.fromPosition(TextPosition(
-                                            offset: totalPriceController
-                                                .text.length));
-                                  },
-                                );
-                              },
-                            ),
-                            const SpaceHeight(20.0),
-                            BlocBuilder<CheckoutBloc, CheckoutState>(
-                              builder: (context, state) {
-                                return Row(
-                                  children: [
-                                    Button.filled(
-                                      width: 150.0,
-                                      onPressed: () {
-                                        totalPriceController.text =
-                                            uangPas.toString().currencyFormatRp;
-                                        priceValue = uangPas;
-                                      },
-                                      label: 'UANG PAS',
-                                    ),
-                                    const SpaceWidth(20.0),
-                                    Button.filled(
-                                      width: 150.0,
-                                      onPressed: () {
-                                        totalPriceController.text = uangPas2
-                                            .toString()
-                                            .currencyFormatRp;
-                                        priceValue = uangPas2;
-                                      },
-                                      label:
-                                          uangPas2.toString().currencyFormatRp,
-                                    ),
-                                    const SpaceWidth(20.0),
-                                    Button.filled(
-                                      width: 150.0,
-                                      onPressed: () {
-                                        totalPriceController.text = uangPas3
-                                            .toString()
-                                            .currencyFormatRp;
-                                        priceValue = uangPas3;
-                                      },
-                                      label:
-                                          uangPas3.toString().currencyFormatRp,
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: ColoredBox(
-                          color: AppColors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24.0, vertical: 16.0),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Button.outlined(
-                                    onPressed: () => context.pop(),
-                                    label: 'Kembali',
-                                  ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ColoredBox(
+                        color: AppColors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 16.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Button.outlined(
+                                  onPressed: () => context.pop(),
+                                  label: 'Kembali',
                                 ),
-                                const SpaceWidth(8.0),
-                                BlocListener<CheckoutBloc, CheckoutState>(
-                                  listener: (context, state) {
-                                    state.maybeWhen(
-                                        orElse: () {},
-                                        savedDraftOrder: (orderDraftId) {
-                                          final newTabel = TableModel(
-                                            id: widget.isTable
-                                                ? widget.table!.id
-                                                : selectTable?.id,
-                                            tableNumber: widget.isTable
-                                                ? widget.table!.tableNumber
-                                                : selectTable?.tableNumber ?? 0,
-                                            status: 'occupied',
-                                            paymentAmount: priceValue,
-                                            orderId: orderDraftId,
-                                            startTime: DateTime.now()
-                                                .toIso8601String(),
-                                          );
-                                          log('new tabel: ${newTabel.toMap()}');
-                                          context
-                                              .read<StatusTableBloc>()
-                                              .add(StatusTableEvent.statusTabel(
-                                                newTabel,
-                                              ));
+                              ),
+                              const SpaceWidth(8.0),
+                              BlocListener<CheckoutBloc, CheckoutState>(
+                                listener: (context, state) {
+                                  state.maybeWhen(
+                                      orElse: () {},
+                                      savedDraftOrder: (orderDraftId) {
+                                        final newTabel = TableModel(
+                                          id: widget.isTable
+                                              ? widget.table!.id
+                                              : selectTable?.id,
+                                          tableNumber: widget.isTable
+                                              ? widget.table!.tableNumber
+                                              : selectTable?.tableNumber ?? 0,
+                                          status: 'occupied',
+                                          paymentAmount: priceValue,
+                                          orderId: orderDraftId,
+                                          startTime:
+                                              DateTime.now().toIso8601String(),
+                                        );
+                                        log('new tabel: ${newTabel.toMap()}');
+                                        context
+                                            .read<StatusTableBloc>()
+                                            .add(StatusTableEvent.statusTabel(
+                                              newTabel,
+                                            ));
+                                      });
+                                },
+                                child: BlocBuilder<CheckoutBloc, CheckoutState>(
+                                  builder: (context, state) {
+                                    final discount = state.maybeWhen(
+                                        orElse: () => 0,
+                                        loaded: (products,
+                                            discountModel,
+                                            discount,
+                                            discountAmount,
+                                            tax,
+                                            serviceCharge,
+                                            totalQuantity,
+                                            totalPrice,
+                                            draftName) {
+                                          if (discountModel.isEmpty) {
+                                            return 0;
+                                          }
+                                          return discount;
                                         });
-                                  },
-                                  child:
-                                      BlocBuilder<CheckoutBloc, CheckoutState>(
-                                    builder: (context, state) {
-                                      final discount = state.maybeWhen(
-                                          orElse: () => 0,
-                                          loaded: (products,
+
+                                    final price = state.maybeWhen(
+                                      orElse: () => 0,
+                                      loaded: (products,
                                               discountModel,
                                               discount,
                                               discountAmount,
@@ -855,219 +861,196 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                               serviceCharge,
                                               totalQuantity,
                                               totalPrice,
-                                              draftName) {
-                                            if (discountModel.isEmpty) {
-                                              return 0;
-                                            }
-                                            return discount;
-                                          });
-
-                                      final price = state.maybeWhen(
-                                        orElse: () => 0,
-                                        loaded: (products,
-                                                discountModel,
-                                                discount,
-                                                discountAmount,
-                                                tax,
-                                                serviceCharge,
-                                                totalQuantity,
-                                                totalPrice,
-                                                draftName) =>
-                                            products.fold(
-                                          0,
-                                          (previousValue, element) =>
-                                              previousValue +
-                                              (element.product.price!
-                                                      .toIntegerFromText *
-                                                  element.quantity),
-                                        ),
-                                      );
-
-                                      final tax = state.maybeWhen(
-                                        orElse: () => 0,
-                                        loaded: (products,
-                                                discountModel,
-                                                discount,
-                                                discountAmount,
-                                                tax,
-                                                serviceCharge,
-                                                totalQuantity,
-                                                totalPrice,
-                                                draftName) =>
-                                            tax,
-                                      );
-
-                                      final serviceCharge = state.maybeWhen(
-                                        orElse: () => 0,
-                                        loaded: (products,
-                                                discountModel,
-                                                discount,
-                                                discountAmount,
-                                                tax,
-                                                serviceCharge,
-                                                totalQuantity,
-                                                totalPrice,
-                                                draftName) =>
-                                            serviceCharge,
-                                      );
-
-                                      final subTotal =
-                                          price - (discount / 100 * price);
-                                      final totalDiscount =
-                                          discount / 100 * price;
-                                      final finalTax = subTotal * (tax / 100);
-                                      final totalServiceCharge =
-                                          (serviceCharge / 100) * price;
-
-                                      List<ProductQuantity> items =
-                                          state.maybeWhen(
-                                        orElse: () => [],
-                                        loaded: (products,
-                                                discountModel,
-                                                discount,
-                                                discountAmount,
-                                                tax,
-                                                serviceCharge,
-                                                totalQuantity,
-                                                totalPrice,
-                                                draftName) =>
-                                            products,
-                                      );
-                                      final totalQty = items.fold(
+                                              draftName) =>
+                                          products.fold(
                                         0,
                                         (previousValue, element) =>
-                                            previousValue + element.quantity,
-                                      );
+                                            previousValue +
+                                            (element.product.price!
+                                                    .toIntegerFromText *
+                                                element.quantity),
+                                      ),
+                                    );
 
-                                      return Flexible(
-                                        child: Button.filled(
-                                          // 1. First, in your ConfirmPaymentPage, update the onPressed handler for the payment button:
+                                    final tax = state.maybeWhen(
+                                      orElse: () => 0,
+                                      loaded: (products,
+                                              discountModel,
+                                              discount,
+                                              discountAmount,
+                                              tax,
+                                              serviceCharge,
+                                              totalQuantity,
+                                              totalPrice,
+                                              draftName) =>
+                                          tax,
+                                    );
+
+                                    final serviceCharge = state.maybeWhen(
+                                      orElse: () => 0,
+                                      loaded: (products,
+                                              discountModel,
+                                              discount,
+                                              discountAmount,
+                                              tax,
+                                              serviceCharge,
+                                              totalQuantity,
+                                              totalPrice,
+                                              draftName) =>
+                                          serviceCharge,
+                                    );
+
+                                    final subTotal =
+                                        price - (discount / 100 * price);
+                                    final totalDiscount =
+                                        discount / 100 * price;
+                                    final finalTax = subTotal * (tax / 100);
+                                    final totalServiceCharge =
+                                        (serviceCharge / 100) * price;
+
+                                    List<ProductQuantity> items =
+                                        state.maybeWhen(
+                                      orElse: () => [],
+                                      loaded: (products,
+                                              discountModel,
+                                              discount,
+                                              discountAmount,
+                                              tax,
+                                              serviceCharge,
+                                              totalQuantity,
+                                              totalPrice,
+                                              draftName) =>
+                                          products,
+                                    );
+                                    final totalQty = items.fold(
+                                      0,
+                                      (previousValue, element) =>
+                                          previousValue + element.quantity,
+                                    );
+
+                                    return Flexible(
+                                      child: Button.filled(
+                                        // 1. First, in your ConfirmPaymentPage, update the onPressed handler for the payment button:
 // Look for the final payment button logic and make sure after showing SuccessPaymentDialog, it updates the table status
 
-                                          onPressed: () async {
-                                            if (widget.isTable) {
-                                              // For table orders - show SuccessPaymentDialog
-                                              log("discountAmountValue: $totalDiscount");
-                                              context.read<OrderBloc>().add(
-                                                  OrderEvent.order(
-                                                      items,
-                                                      discount,
-                                                      totalDiscount.toInt(),
-                                                      finalTax.toInt(),
-                                                      0,
-                                                      totalPriceController.text
-                                                          .toIntegerFromText,
-                                                      customerController.text,
-                                                      widget.table!
-                                                          .id!, // Use table ID
-                                                      'completed',
-                                                      'paid',
-                                                      isCash ? 'Cash' : 'QRIS',
-                                                      totalPriceFinal,
-                                                      orderType: 'dine_in'));
+                                        onPressed: () async {
+                                          if (widget.isTable) {
+                                            // For table orders - show SuccessPaymentDialog
+                                            log("discountAmountValue: $totalDiscount");
+                                            context.read<OrderBloc>().add(
+                                                OrderEvent.order(
+                                                    items,
+                                                    discount,
+                                                    totalDiscount.toInt(),
+                                                    finalTax.toInt(),
+                                                    0,
+                                                    totalPriceController
+                                                        .text.toIntegerFromText,
+                                                    customerController.text,
+                                                    widget.table!
+                                                        .id!, // Use table ID
+                                                    'completed',
+                                                    'paid',
+                                                    isCash ? 'Cash' : 'QRIS',
+                                                    totalPriceFinal,
+                                                    orderType: 'dine_in'));
 
-                                              // Update table status to 'closed' after payment
-                                              final newTableStatus = TableModel(
-                                                id: widget.table!.id,
-                                                tableNumber:
-                                                    widget.table!.tableNumber,
-                                                status:
-                                                    'closed', // Change status to 'closed' instead of 'occupied'
-                                                paymentAmount: priceValue,
-                                                orderId: widget.table!.orderId,
-                                                startTime:
-                                                    widget.table!.startTime,
-                                              );
+                                            // Update table status to 'closed' after payment
+                                            final newTableStatus = TableModel(
+                                              id: widget.table!.id,
+                                              tableNumber:
+                                                  widget.table!.tableNumber,
+                                              status:
+                                                  'closed', // Change status to 'closed' instead of 'occupied'
+                                              paymentAmount: priceValue,
+                                              orderId: widget.table!.orderId,
+                                              startTime:
+                                                  widget.table!.startTime,
+                                            );
 
-                                              context
-                                                  .read<StatusTableBloc>()
-                                                  .add(
-                                                    StatusTableEvent
-                                                        .statusTabel(
-                                                            newTableStatus),
-                                                  );
+                                            context.read<StatusTableBloc>().add(
+                                                  StatusTableEvent.statusTabel(
+                                                      newTableStatus),
+                                                );
 
-                                              await showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) =>
-                                                    SuccessPaymentDialog(
-                                                  data: items,
-                                                  totalQty: totalQty,
-                                                  totalPrice: totalPriceFinal,
-                                                  totalTax: finalTax.toInt(),
-                                                  totalDiscount:
-                                                      totalDiscount.toInt(),
-                                                  subTotal: subTotal.toInt(),
-                                                  normalPrice: price,
-                                                  totalService:
-                                                      totalServiceCharge
-                                                          .toInt(),
-                                                  draftName:
-                                                      customerController.text,
-                                                  orderType: 'dine_in',
-                                                ),
-                                              );
-                                            } else {
-                                              // For non-table orders
-                                              log("discountAmountValue: $totalDiscount");
-                                              context.read<OrderBloc>().add(
-                                                  OrderEvent.order(
-                                                      items,
-                                                      discount,
-                                                      totalDiscount.toInt(),
-                                                      finalTax.toInt(),
-                                                      0,
-                                                      totalPriceController.text
-                                                          .toIntegerFromText,
-                                                      customerController.text,
-                                                      0,
-                                                      'completed',
-                                                      'paid',
-                                                      isCash ? 'Cash' : 'QRIS',
-                                                      totalPriceFinal,
-                                                      orderType:
-                                                          widget.orderType));
-                                              await showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) =>
-                                                    SuccessPaymentDialog(
-                                                  data: items,
-                                                  totalQty: totalQty,
-                                                  totalPrice: totalPriceFinal,
-                                                  totalTax: finalTax.toInt(),
-                                                  totalDiscount:
-                                                      totalDiscount.toInt(),
-                                                  subTotal: subTotal.toInt(),
-                                                  normalPrice: price,
-                                                  totalService:
-                                                      totalServiceCharge
-                                                          .toInt(),
-                                                  draftName:
-                                                      customerController.text,
-                                                  orderType: widget.orderType,
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          label: 'Bayar',
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                            await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) =>
+                                                  SuccessPaymentDialog(
+                                                data: items,
+                                                totalQty: totalQty,
+                                                totalPrice: totalPriceFinal,
+                                                totalTax: finalTax.toInt(),
+                                                totalDiscount:
+                                                    totalDiscount.toInt(),
+                                                subTotal: subTotal.toInt(),
+                                                normalPrice: price,
+                                                totalService:
+                                                    totalServiceCharge.toInt(),
+                                                draftName:
+                                                    customerController.text,
+                                                orderType: 'dine_in',
+                                              ),
+                                            );
+                                          } else {
+                                            // For non-table orders
+                                            log("discountAmountValue: $totalDiscount");
+                                            context.read<OrderBloc>().add(
+                                                OrderEvent.order(
+                                                    items,
+                                                    discount,
+                                                    totalDiscount.toInt(),
+                                                    finalTax.toInt(),
+                                                    0,
+                                                    totalPriceController
+                                                        .text.toIntegerFromText,
+                                                    customerController.text,
+                                                    0,
+                                                    'completed',
+                                                    'paid',
+                                                    isCash ? 'Cash' : 'QRIS',
+                                                    totalPriceFinal,
+                                                    orderType:
+                                                        widget.orderType));
+                                            await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) =>
+                                                  SuccessPaymentDialog(
+                                                data: items,
+                                                totalQty: totalQty,
+                                                totalPrice: totalPriceFinal,
+                                                totalTax: finalTax.toInt(),
+                                                totalDiscount:
+                                                    totalDiscount.toInt(),
+                                                subTotal: subTotal.toInt(),
+                                                normalPrice: price,
+                                                totalService:
+                                                    totalServiceCharge.toInt(),
+                                                draftName:
+                                                    customerController.text,
+                                                orderType: widget.orderType,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        label: 'Bayar',
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

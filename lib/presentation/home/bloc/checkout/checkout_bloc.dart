@@ -18,7 +18,8 @@ part 'checkout_state.dart';
 part 'checkout_bloc.freezed.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
-  CheckoutBloc() : super(const _Loaded([], [], 0, 0, 10, 5, 0, 0, '')) {
+  // Changed default values to 0 for tax and service charge
+  CheckoutBloc() : super(const _Loaded([], [], 0, 0, 0, 0, 0, 0, '')) {
     on<_AddItem>((event, emit) {
       var currentState = state as _Loaded;
       List<ProductQuantity> items = [...currentState.items];
@@ -70,7 +71,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     });
 
     on<_Started>((event, emit) {
-      emit(const _Loaded([], [], 11, 0, 0, 0, 0, 0, ''));
+      // Changed discount from 11 to 0 and kept tax and service charge at 0
+      emit(const _Loaded([], [], 0, 0, 0, 0, 0, 0, ''));
     });
 
     on<_AddDiscount>((event, emit) {
@@ -113,6 +115,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         currentState.draftName,
       ));
     });
+
+    // Rest of the code remains the same...
     on<_RemoveDiscount>((event, emit) {
       var currentState = state as _Loaded;
       List<Discount> currentDiscounts = [...currentState.discounts];

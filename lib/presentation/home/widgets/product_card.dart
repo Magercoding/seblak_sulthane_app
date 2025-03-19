@@ -49,22 +49,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(40.0)),
-                    child: Image.network(
-                      data.image!.contains('http')
-                          ? data.image!
-                          : '${Variables.baseUrl}/${data.image}',
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 60,
-                          height: 60,
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.image_not_supported),
-                        );
-                      },
-                    ),
+                    child: _buildProductImage(),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -96,15 +81,7 @@ class ProductCard extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 1,
-                      child: Text(
-                        data.price!.toIntegerFromText.currencyFormatRp,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: _buildProductPrice(),
                     ),
                   ],
                 ),
@@ -163,5 +140,76 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Safely build product image widget
+  Widget _buildProductImage() {
+    // Check if image is null or empty
+    if (data.image == null || data.image!.isEmpty) {
+      return Container(
+        width: 60,
+        height: 60,
+        color: Colors.grey[300],
+        child: const Icon(Icons.image_not_supported),
+      );
+    }
+
+    // Build image with proper URL handling
+    return Image.network(
+      data.image!.contains('http')
+          ? data.image!
+          : '${Variables.baseUrl}/${data.image}',
+      width: 60,
+      height: 60,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: 60,
+          height: 60,
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
+        );
+      },
+    );
+  }
+
+  // Safely build product price widget
+  Widget _buildProductPrice() {
+    try {
+      // Check if price is null
+      if (data.price == null) {
+        return const Text(
+          'Price not available',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+        );
+      }
+
+      // Try to convert price to integer
+      return Text(
+        data.price!.toIntegerFromText.currencyFormatRp,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+        textAlign: TextAlign.end,
+        overflow: TextOverflow.ellipsis,
+      );
+    } catch (e) {
+      // Handle any conversion errors
+      return const Text(
+        'Invalid price',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+        textAlign: TextAlign.end,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
   }
 }

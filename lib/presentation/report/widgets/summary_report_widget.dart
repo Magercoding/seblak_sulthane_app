@@ -99,7 +99,7 @@ class SummaryReportWidget extends StatelessWidget {
     }
   }
 
-// Helper method to show print status dialog
+  // Helper method to show print status dialog
   void _showPrintStatusDialog(
       BuildContext context, bool isSuccess, String message) {
     showDialog(
@@ -380,33 +380,32 @@ class SummaryReportWidget extends StatelessWidget {
             // Revenue Section
             SummaryItem(
               label: 'Total Revenue',
-              value: 'Rp ${formatCurrency(double.parse(summary.totalRevenue))}',
+              value:
+                  'Rp ${formatCurrency(parseNumericValue(summary.totalRevenue))}',
             ),
             const Divider(),
             SummaryItem(
               label: 'Total Subtotal',
               value:
-                  'Rp ${formatCurrency(double.parse(summary.totalSubtotal))}',
+                  'Rp ${formatCurrency(parseNumericValue(summary.totalSubtotal))}',
             ),
             const Divider(),
             SummaryItem(
               label: 'Total Tax',
-              value: 'Rp ${formatCurrency(double.parse(summary.totalTax))}',
+              value:
+                  'Rp ${formatCurrency(parseNumericValue(summary.totalTax))}',
             ),
             const Divider(),
             SummaryItem(
               label: 'Total Discount',
               value:
-                  'Rp ${formatCurrency(double.parse(summary.totalDiscount))}',
+                  'Rp ${formatCurrency(parseNumericValue(summary.totalDiscount))}',
             ),
             const Divider(),
             SummaryItem(
               label: 'Service Charge',
-              value: summary.totalServiceCharge is num
-                  ? 'Rp ${formatCurrency((summary.totalServiceCharge as num).toDouble())}'
-                  : summary.totalServiceCharge is String
-                      ? 'Rp ${formatCurrency(double.parse(summary.totalServiceCharge as String))}'
-                      : 'Rp 0.00',
+              value:
+                  'Rp ${formatCurrency(parseNumericValue(summary.totalServiceCharge))}',
             ),
             const Divider(),
 
@@ -499,10 +498,14 @@ class SummaryReportWidget extends StatelessWidget {
                       : 'Rp 0.00',
                   textColor: Colors.red,
                 ),
+              ] else ...[
+                // Show no cash transactions if cash is null
+                const SummaryItem(
+                  label: 'Cash (0 transactions)',
+                  value: 'Rp 0.00',
+                ),
               ],
-              if (summary.paymentMethods?.cash != null &&
-                  summary.paymentMethods?.qris != null)
-                const Divider(),
+              const Divider(),
               if (summary.paymentMethods?.qris != null) ...[
                 SummaryItem(
                   label:
@@ -518,7 +521,28 @@ class SummaryReportWidget extends StatelessWidget {
                       : 'Rp 0.00',
                   textColor: Colors.red,
                 ),
+              ] else ...[
+                // Show no QRIS transactions if qris is null
+                const SummaryItem(
+                  label: 'QRIS (0 transactions)',
+                  value: 'Rp 0.00',
+                ),
               ],
+            ] else ...[
+              // Show a message when there are no payment methods at all
+              const SizedBox(height: 20),
+              const Text(
+                'Payment Methods',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SummaryItem(
+                label: 'No payment methods data available',
+                value: '',
+              ),
             ],
 
             // Daily Breakdown Section

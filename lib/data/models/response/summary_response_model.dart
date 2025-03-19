@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 class SummaryResponseModel {
   final String? status;
@@ -25,18 +26,18 @@ class SummaryResponseModel {
 }
 
 class EnhancedSummaryData {
-  final String totalRevenue;
-  final String totalDiscount;
-  final String totalTax;
-  final String totalSubtotal;
+  final dynamic totalRevenue;
+  final dynamic totalDiscount;
+  final dynamic totalTax;
+  final dynamic totalSubtotal;
   final dynamic totalServiceCharge;
-  final double? openingBalance; // Changed from int? to double?
-  final double? expenses; // Changed from int? to double?
+  final double? openingBalance;
+  final double? expenses;
   final dynamic cashSales;
   final dynamic qrisSales;
-  final dynamic qrisFee; // Added missing field
+  final dynamic qrisFee;
   final dynamic beverageSales;
-  final double? closingBalance; // Changed from int? to double?
+  final double? closingBalance;
   final PaymentMethods? paymentMethods;
   final List<DailyBreakdown>? dailyBreakdown;
   final int outletId;
@@ -51,7 +52,7 @@ class EnhancedSummaryData {
     this.expenses,
     this.cashSales,
     this.qrisSales,
-    this.qrisFee, // Added parameter
+    this.qrisFee,
     this.beverageSales,
     this.closingBalance,
     this.paymentMethods,
@@ -60,22 +61,40 @@ class EnhancedSummaryData {
   });
 
   factory EnhancedSummaryData.fromJson(Map<String, dynamic> json) {
+    // Handle payment_methods that could be an empty array or a map
+    PaymentMethods? paymentMethodsObj;
+    try {
+      if (json['payment_methods'] != null) {
+        if (json['payment_methods'] is Map) {
+          paymentMethodsObj = PaymentMethods.fromJson(json['payment_methods']);
+        } else if (json['payment_methods'] is List &&
+            (json['payment_methods'] as List).isEmpty) {
+          // Handle empty array case
+          paymentMethodsObj = null;
+        } else {
+          log("Unexpected payment_methods format: ${json['payment_methods']}");
+          paymentMethodsObj = null;
+        }
+      }
+    } catch (e) {
+      log("Error parsing payment_methods: $e");
+      paymentMethodsObj = null;
+    }
+
     return EnhancedSummaryData(
-      totalRevenue: json['total_revenue'] ?? '0',
-      totalDiscount: json['total_discount'] ?? '0.00',
-      totalTax: json['total_tax'] ?? '0',
-      totalSubtotal: json['total_subtotal'] ?? '0',
+      totalRevenue: json['total_revenue'] ?? 0,
+      totalDiscount: json['total_discount'] ?? 0,
+      totalTax: json['total_tax'] ?? 0,
+      totalSubtotal: json['total_subtotal'] ?? 0,
       totalServiceCharge: json['total_service_charge'] ?? 0,
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
-      cashSales: json['cash_sales'],
-      qrisSales: json['qris_sales'],
-      qrisFee: json['qris_fee'], // Parse qris_fee
-      beverageSales: json['beverage_sales'],
+      cashSales: json['cash_sales'] ?? 0,
+      qrisSales: json['qris_sales'] ?? 0,
+      qrisFee: json['qris_fee'] ?? '0.00',
+      beverageSales: json['beverage_sales'] ?? 0,
       closingBalance: _parseToDouble(json['closing_balance']),
-      paymentMethods: json['payment_methods'] != null
-          ? PaymentMethods.fromJson(json['payment_methods'])
-          : null,
+      paymentMethods: paymentMethodsObj,
       dailyBreakdown: json['daily_breakdown'] != null
           ? (json['daily_breakdown'] as List)
               .map((i) => DailyBreakdown.fromJson(i))
@@ -110,7 +129,7 @@ class EnhancedSummaryData {
         'expenses': expenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
-        'qris_fee': qrisFee, // Include in JSON
+        'qris_fee': qrisFee,
         'beverage_sales': beverageSales,
         'closing_balance': closingBalance,
         'payment_methods': paymentMethods?.toJson(),
@@ -118,13 +137,36 @@ class EnhancedSummaryData {
         'outlet_id': outletId,
       };
 
-  // Helper methods to safely parse values
+  String getTotalRevenueAsString() {
+    return totalRevenue?.toString() ?? '0';
+  }
+
+  String getTotalSubtotalAsString() {
+    return totalSubtotal?.toString() ?? '0';
+  }
+
+  String getTotalDiscountAsString() {
+    return totalDiscount?.toString() ?? '0';
+  }
+
+  String getTotalTaxAsString() {
+    return totalTax?.toString() ?? '0';
+  }
+
   int getTotalRevenueAsInt() {
-    try {
-      return int.parse(totalRevenue);
-    } catch (e) {
-      return 0;
+    if (totalRevenue == null) return 0;
+    if (totalRevenue is int) return totalRevenue as int;
+    if (totalRevenue is String) {
+      try {
+        return int.parse(totalRevenue);
+      } catch (e) {
+        return 0;
+      }
     }
+    if (totalRevenue is double) {
+      return totalRevenue.toInt();
+    }
+    return 0;
   }
 
   int getCashSalesAsInt() {
@@ -201,7 +243,7 @@ class EnhancedSummaryData {
 
   // For backward compatibility with existing code
   double getTotal() {
-    return closingBalance ?? 0.0; // Changed return type to double
+    return closingBalance ?? 0.0;
   }
 }
 
@@ -215,45 +257,49 @@ class PaymentMethods {
   });
 
   factory PaymentMethods.fromJson(Map<String, dynamic> json) {
+    // Handle case insensitive keys
+    final cashKey = json.containsKey('Cash') ? 'Cash' : 'cash';
+    final qrisKey = json.containsKey('QRIS') ? 'QRIS' : 'qris';
+
     return PaymentMethods(
-      cash: json['cash'] != null
-          ? PaymentMethodDetail.fromJson(json['cash'])
+      cash: json.containsKey(cashKey) && json[cashKey] != null
+          ? PaymentMethodDetail.fromJson(json[cashKey])
           : null,
-      qris: json['qris'] != null
-          ? PaymentMethodDetail.fromJson(json['qris'])
+      qris: json.containsKey(qrisKey) && json[qrisKey] != null
+          ? PaymentMethodDetail.fromJson(json[qrisKey])
           : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'cash': cash?.toJson(),
-        'qris': qris?.toJson(),
+        'Cash': cash?.toJson(),
+        'QRIS': qris?.toJson(),
       };
 }
 
 class PaymentMethodDetail {
   final int count;
   final dynamic total;
-  final dynamic qrisFees; // Added the qris_fees field
+  final dynamic qrisFees;
 
   PaymentMethodDetail({
     required this.count,
     required this.total,
-    this.qrisFees, // Added parameter
+    this.qrisFees,
   });
 
   factory PaymentMethodDetail.fromJson(Map<String, dynamic> json) {
     return PaymentMethodDetail(
       count: json['count'] ?? 0,
-      total: json['total'],
-      qrisFees: json['qris_fees'], // Parse qris_fees
+      total: json['total'] ?? 0,
+      qrisFees: json['qris_fees'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'count': count,
         'total': total,
-        'qris_fees': qrisFees, // Include in JSON
+        'qris_fees': qrisFees,
       };
 
   int getTotalAsInt() {
@@ -283,13 +329,13 @@ class PaymentMethodDetail {
 
 class DailyBreakdown {
   final String date;
-  final double? openingBalance; // Changed from int? to double?
-  final double? expenses; // Changed from int? to double?
+  final double? openingBalance;
+  final double? expenses;
   final dynamic cashSales;
   final dynamic qrisSales;
-  final dynamic qrisFee; // Added missing field
-  final dynamic totalSales; // Changed from int? to dynamic
-  final double? closingBalance; // Changed from int? to double?
+  final dynamic qrisFee;
+  final dynamic totalSales;
+  final double? closingBalance;
 
   DailyBreakdown({
     required this.date,
@@ -297,7 +343,7 @@ class DailyBreakdown {
     this.expenses,
     this.cashSales,
     this.qrisSales,
-    this.qrisFee, // Added parameter
+    this.qrisFee,
     this.totalSales,
     this.closingBalance,
   });
@@ -307,10 +353,10 @@ class DailyBreakdown {
       date: json['date'] ?? '',
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
-      cashSales: json['cash_sales'],
-      qrisSales: json['qris_sales'],
-      qrisFee: json['qris_fee'], // Parse qris_fee
-      totalSales: json['total_sales'],
+      cashSales: json['cash_sales'] ?? 0,
+      qrisSales: json['qris_sales'] ?? 0,
+      qrisFee: json['qris_fee'] ?? '0.00',
+      totalSales: json['total_sales'] ?? 0,
       closingBalance: _parseToDouble(json['closing_balance']),
     );
   }
@@ -336,7 +382,7 @@ class DailyBreakdown {
         'expenses': expenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
-        'qris_fee': qrisFee, // Include in JSON
+        'qris_fee': qrisFee,
         'total_sales': totalSales,
         'closing_balance': closingBalance,
       };

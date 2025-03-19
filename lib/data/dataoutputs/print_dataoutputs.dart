@@ -595,6 +595,28 @@ class PrintDataoutputs {
     return bytes;
   }
 
+  // Improved helper method to safely parse any numeric value to double
+  double _parseToDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      try {
+        // Remove any currency symbols or formatting
+        String cleanValue = value
+            .replaceAll('Rp', '')
+            .replaceAll('.', '') // Remove thousand separators
+            .replaceAll(',', '.') // Convert comma to decimal point
+            .trim();
+        return double.parse(cleanValue);
+      } catch (_) {
+        return 0.0;
+      }
+    }
+    return 0.0;
+  }
+
+  // Updated printSummaryReport method with improved value parsing and formatting
   Future<List<int>> printSummaryReport(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -641,8 +663,7 @@ class PrintDataoutputs {
         bytes += generator.feed(2);
       }
     } catch (e) {
-      log("Error loading logo: $e" as num);
-
+      print("Error loading logo: $e");
       bytes += generator.reset();
     }
 
@@ -706,6 +727,8 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.feed(1);
 
+    // Parse total revenue as double, handling various input formats
+    double totalRevenue = _parseToDouble(summary.totalRevenue);
     bytes += generator.row([
       PosColumn(
         text: 'Total Revenue',
@@ -713,12 +736,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(double.parse(summary.totalRevenue))}',
+        text: 'Rp ${_formatCurrency(totalRevenue)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Parse total subtotal as double, handling various input formats
+    double totalSubtotal = _parseToDouble(summary.totalSubtotal);
     bytes += generator.row([
       PosColumn(
         text: 'Total Subtotal',
@@ -726,12 +751,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(double.parse(summary.totalSubtotal))}',
+        text: 'Rp ${_formatCurrency(totalSubtotal)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Parse total tax as double, handling various input formats
+    double totalTax = _parseToDouble(summary.totalTax);
     bytes += generator.row([
       PosColumn(
         text: 'Total Tax',
@@ -739,12 +766,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(double.parse(summary.totalTax))}',
+        text: 'Rp ${_formatCurrency(totalTax)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Parse total discount as double, handling various input formats
+    double totalDiscount = _parseToDouble(summary.totalDiscount);
     bytes += generator.row([
       PosColumn(
         text: 'Total Discount',
@@ -752,17 +781,19 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(double.parse(summary.totalDiscount))}',
+        text: 'Rp ${_formatCurrency(totalDiscount)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
-    final serviceCharge = summary.totalServiceCharge is num
-        ? (summary.totalServiceCharge as num).toDouble()
-        : summary.totalServiceCharge is String
-            ? double.parse(summary.totalServiceCharge as String)
-            : 0.0;
+    // Parse service charge, handling various input formats
+    double serviceCharge = 0.0;
+    if (summary.totalServiceCharge is num) {
+      serviceCharge = (summary.totalServiceCharge as num).toDouble();
+    } else if (summary.totalServiceCharge is String) {
+      serviceCharge = _parseToDouble(summary.totalServiceCharge as String);
+    }
 
     bytes += generator.row([
       PosColumn(
@@ -787,6 +818,8 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.feed(1);
 
+    // Opening Balance
+    double openingBalance = summary.openingBalance?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
         text: 'Opening Balance',
@@ -794,14 +827,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: summary.openingBalance != null
-            ? 'Rp ${_formatCurrency(summary.openingBalance!.toDouble())}'
-            : 'Rp 0.00',
+        text: 'Rp ${_formatCurrency(openingBalance)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Expenses
+    double expenses = summary.expenses?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
         text: 'Expenses',
@@ -809,14 +842,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: summary.expenses != null
-            ? 'Rp ${_formatCurrency(summary.expenses!.toDouble())}'
-            : 'Rp 0.00',
+        text: '- Rp ${_formatCurrency(expenses)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Cash Sales
+    double cashSales = summary.getCashSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
         text: 'Cash Sales',
@@ -824,12 +857,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(summary.getCashSalesAsInt().toDouble())}',
+        text: 'Rp ${_formatCurrency(cashSales)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // QRIS Sales
+    double qrisSales = summary.getQrisSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
         text: 'QRIS Sales',
@@ -837,12 +872,29 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'Rp ${_formatCurrency(summary.getQrisSalesAsInt().toDouble())}',
+        text: 'Rp ${_formatCurrency(qrisSales)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // QRIS Fee
+    double qrisFee = _parseToDouble(summary.qrisFee);
+    bytes += generator.row([
+      PosColumn(
+        text: 'QRIS Fee',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: '- Rp ${_formatCurrency(qrisFee)}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Beverage Sales
+    double beverageSales = summary.getBeverageSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
         text: 'Beverage Sales',
@@ -850,13 +902,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text:
-            'Rp ${_formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
+        text: 'Rp ${_formatCurrency(beverageSales)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Closing Balance
+    double closingBalance = summary.closingBalance?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
         text: 'Closing Balance',
@@ -864,9 +917,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left, bold: true),
       ),
       PosColumn(
-        text: summary.closingBalance != null
-            ? 'Rp ${_formatCurrency(summary.closingBalance!.toDouble())}'
-            : 'Rp 0.00',
+        text: 'Rp ${_formatCurrency(closingBalance)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right, bold: true),
       ),
@@ -897,6 +948,22 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
+
+        // Add Cash QRIS Fees
+        double cashQrisFees =
+            _parseToDouble(summary.paymentMethods!.cash!.qrisFees);
+        bytes += generator.row([
+          PosColumn(
+            text: 'Cash QRIS Fees',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: '- Rp ${_formatCurrency(cashQrisFees)}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
       }
 
       if (summary.paymentMethods?.qris != null) {
@@ -909,6 +976,22 @@ class PrintDataoutputs {
           PosColumn(
             text:
                 'Rp ${_formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Add QRIS Fees
+        double qrisFees =
+            _parseToDouble(summary.paymentMethods!.qris!.qrisFees);
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS Fees',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: '- Rp ${_formatCurrency(qrisFees)}',
             width: 6,
             styles: const PosStyles(align: PosAlign.right),
           ),
@@ -933,6 +1016,8 @@ class PrintDataoutputs {
         bytes += generator.text('Date: ${day.date}',
             styles: const PosStyles(align: PosAlign.left, bold: true));
 
+        // Opening Balance
+        double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
             text: 'Opening:',
@@ -940,14 +1025,14 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: day.openingBalance != null
-                ? 'Rp ${_formatCurrency(day.openingBalance!.toDouble())}'
-                : 'Rp 0.00',
+            text: 'Rp ${_formatCurrency(dayOpeningBalance)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
 
+        // Expenses
+        double dayExpenses = day.expenses?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
             text: 'Expenses:',
@@ -955,14 +1040,14 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: day.expenses != null
-                ? 'Rp ${_formatCurrency(day.expenses!.toDouble())}'
-                : 'Rp 0.00',
+            text: '- Rp ${_formatCurrency(dayExpenses)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
 
+        // Cash Sales
+        double dayCashSales = day.getCashSalesAsInt().toDouble();
         bytes += generator.row([
           PosColumn(
             text: 'Cash Sales:',
@@ -970,12 +1055,14 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: 'Rp ${_formatCurrency(day.getCashSalesAsInt().toDouble())}',
+            text: 'Rp ${_formatCurrency(dayCashSales)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
 
+        // QRIS Sales
+        double dayQrisSales = day.getQrisSalesAsInt().toDouble();
         bytes += generator.row([
           PosColumn(
             text: 'QRIS Sales:',
@@ -983,12 +1070,29 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: 'Rp ${_formatCurrency(day.getQrisSalesAsInt().toDouble())}',
+            text: 'Rp ${_formatCurrency(dayQrisSales)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
 
+        // QRIS Fee
+        double dayQrisFee = _parseToDouble(day.qrisFee);
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS Fee:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: '- Rp ${_formatCurrency(dayQrisFee)}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Total Sales
+        double dayTotalSales = _parseToDouble(day.totalSales);
         bytes += generator.row([
           PosColumn(
             text: 'Total Sales:',
@@ -996,14 +1100,14 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: day.totalSales != null
-                ? 'Rp ${_formatCurrency(day.totalSales!.toDouble())}'
-                : 'Rp 0.00',
+            text: 'Rp ${_formatCurrency(dayTotalSales)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right),
           ),
         ]);
 
+        // Closing Balance
+        double dayClosingBalance = day.closingBalance?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
             text: 'Closing:',
@@ -1011,9 +1115,7 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: day.closingBalance != null
-                ? 'Rp ${_formatCurrency(day.closingBalance!.toDouble())}'
-                : 'Rp 0.00',
+            text: 'Rp ${_formatCurrency(dayClosingBalance)}',
             width: 7,
             styles: const PosStyles(align: PosAlign.right, bold: true),
           ),
@@ -1033,11 +1135,7 @@ class PrintDataoutputs {
     return bytes;
   }
 
-  String _formatCurrency(double value) {
-    return value.toStringAsFixed(2).replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
-  }
-
+  // Updated printEndShift method with improved formatting and handling of negative values
   Future<List<int>> printEndShift(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -1099,6 +1197,8 @@ class PrintDataoutputs {
             : "================================",
         styles: const PosStyles(align: PosAlign.center));
 
+    // Initial Cash (Opening Balance)
+    double openingBalance = summary.openingBalance?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
         text: "Initial Cash",
@@ -1106,14 +1206,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: summary.openingBalance != null
-            ? formatNumberWithoutDecimal(summary.openingBalance!.toDouble())
-            : "0",
+        text: formatNumberWithoutDecimal(openingBalance),
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Cash Payment
+    double cashSales = summary.getCashSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
         text: "Cash Payment",
@@ -1121,13 +1221,14 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text:
-            formatNumberWithoutDecimal(summary.getCashSalesAsInt().toDouble()),
+        text: formatNumberWithoutDecimal(cashSales),
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
+    // Other Expenses
+    double expenses = summary.expenses?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
         text: "Other Expenses",
@@ -1135,17 +1236,30 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: summary.expenses != null
-            ? formatNumberWithoutDecimal(summary.expenses!.toDouble())
-            : "0",
+        text: formatNumberWithoutDecimal(expenses),
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
 
-    double totalFinalCash = (summary.openingBalance ?? 0).toDouble() +
-        summary.getCashSalesAsInt().toDouble() -
-        (summary.expenses ?? 0).toDouble();
+    // Add QRIS Fee as an expense
+    double qrisFeeAmount = _parseToDouble(summary.qrisFee);
+    bytes += generator.row([
+      PosColumn(
+        text: "QRIS Fee",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(qrisFeeAmount),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Calculate final cash including QRIS fee
+    double totalFinalCash =
+        openingBalance + cashSales - expenses - qrisFeeAmount;
 
     bytes += generator.row([
       PosColumn(
@@ -1186,6 +1300,8 @@ class PrintDataoutputs {
       ),
     ]);
 
+    // QRIS Sales (Other Payment)
+    double qrisSales = summary.getQrisSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
         text: "Total Other Payment",
@@ -1193,8 +1309,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text:
-            formatNumberWithoutDecimal(summary.getQrisSalesAsInt().toDouble()),
+        text: formatNumberWithoutDecimal(qrisSales),
         width: 4,
         styles: const PosStyles(align: PosAlign.right),
       ),
@@ -1204,6 +1319,11 @@ class PrintDataoutputs {
     bytes += generator.cut();
 
     return bytes;
+  }
+
+  String _formatCurrency(double value) {
+    return value.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
   }
 
   String formatNumberWithoutDecimal(double value) {
@@ -1222,7 +1342,6 @@ class PrintDataoutputs {
 
     try {
       final date = inputFormat.parse(dateString);
-
       return outputFormat.format(date);
     } catch (e) {
       return dateString;

@@ -38,6 +38,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
   bool isTakeaway = true; // State untuk menyimpan status pemesanan
+  String searchQuery = ''; // Add this to store search query
 
   @override
   void initState() {
@@ -55,8 +56,15 @@ class _HomePageState extends State<HomePage> {
 
   void onCategoryTap(int index) {
     searchController.clear();
-
+    searchQuery = ''; // Reset search query when category changes
     setState(() {});
+  }
+
+  // This function will handle the search
+  void onSearchChanged(String value) {
+    setState(() {
+      searchQuery = value.toLowerCase();
+    });
   }
 
   @override
@@ -78,7 +86,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         HomeTitle(
                           controller: searchController,
-                          onChanged: (value) {},
+                          onChanged:
+                              onSearchChanged, // Connect to search handler
                         ),
                         const SizedBox(height: 24),
                         CustomTabBar(
@@ -108,9 +117,41 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
+
+                                    // Apply search filter
+                                    final filteredProducts = searchQuery.isEmpty
+                                        ? products
+                                        : products
+                                            .where((product) =>
+                                                product.name
+                                                    ?.toLowerCase()
+                                                    .contains(searchQuery) ??
+                                                false)
+                                            .toList();
+
+                                    if (filteredProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              'Tidak ada produk dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+
                                     return GridView.builder(
                                       shrinkWrap: true,
-                                      itemCount: products.length,
+                                      itemCount: filteredProducts.length,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       gridDelegate:
@@ -122,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       itemBuilder: (context, index) =>
                                           ProductCard(
-                                        data: products[index],
+                                        data: filteredProducts[index],
                                         onCartButton: () {},
                                       ),
                                     );
@@ -130,6 +171,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ),
+                            // For the "Makanan" tab (Category ID 1):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -148,42 +190,71 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 1)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 1)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
+
+                                    // First filter by category
+                                    var foodProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 1)
+                                        .toList();
+
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      foodProducts = foodProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
+
+                                    if (foodProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Makanan'
+                                                  : 'Tidak ada makanan dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
                                             ),
-                                            itemBuilder: (context, index) =>
-                                                ProductCard(
-                                              data: products
-                                                  .where((element) =>
-                                                      element.category!.id! ==
-                                                      1)
-                                                  .toList()[index],
-                                              onCartButton: () {},
-                                            ),
-                                          );
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: foodProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: foodProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),
                             ),
+
+                            // For the "Minuman" tab (Category ID 2):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -202,43 +273,71 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 2)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 2)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
+
+                                    // First filter by category
+                                    var drinkProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 2)
+                                        .toList();
+
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      drinkProducts = drinkProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
+
+                                    if (drinkProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Minuman'
+                                                  : 'Tidak ada minuman dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
                                             ),
-                                            itemBuilder: (context, index) {
-                                              return ProductCard(
-                                                data: products
-                                                    .where((element) =>
-                                                        element.category!.id! ==
-                                                        2)
-                                                    .toList()[index],
-                                                onCartButton: () {},
-                                              );
-                                            },
-                                          );
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: drinkProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: drinkProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),
                             ),
+
+                            // For the "Snack" tab (Category ID 3):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
@@ -257,39 +356,65 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('No Items'),
                                       );
                                     }
-                                    return (products
-                                            .where((element) =>
-                                                element.category!.id! == 3)
-                                            .toList()
-                                            .isEmpty)
-                                        ? const _IsEmpty()
-                                        : GridView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: products
-                                                .where((element) =>
-                                                    element.category!.id! == 3)
-                                                .toList()
-                                                .length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 0.85,
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 30.0,
-                                              mainAxisSpacing: 30.0,
+
+                                    // First filter by category
+                                    var snackProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 3)
+                                        .toList();
+
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      snackProducts = snackProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
+
+                                    if (snackProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Snack'
+                                                  : 'Tidak ada snack dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
                                             ),
-                                            itemBuilder: (context, index) {
-                                              return ProductCard(
-                                                data: products
-                                                    .where((element) =>
-                                                        element.category!.id! ==
-                                                        3)
-                                                    .toList()[index],
-                                                onCartButton: () {},
-                                              );
-                                            },
-                                          );
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: snackProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: snackProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
                                   });
                                 },
                               ),
@@ -302,6 +427,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            // Rest of your HomePage implementation (right side panel)
             Expanded(
               flex: 2,
               child: Align(
@@ -398,6 +524,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
+
+                          // Rest of your right panel code remains the same
                           const SpaceHeight(16.0),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,6 +601,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
+                          // More code follows...
                           const SpaceHeight(8.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

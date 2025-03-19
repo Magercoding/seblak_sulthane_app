@@ -20,7 +20,6 @@ class CustomTabBar extends StatefulWidget {
 
 class _CustomTabBarState extends State<CustomTabBar> {
   late int _selectedIndex;
-
   @override
   void initState() {
     super.initState();

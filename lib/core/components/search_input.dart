@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constants/colors.dart';
 
 class SearchInput extends StatelessWidget {
@@ -7,7 +6,6 @@ class SearchInput extends StatelessWidget {
   final Function(String value)? onChanged;
   final VoidCallback? onTap;
   final String hintText;
-
   const SearchInput({
     super.key,
     required this.controller,
@@ -15,7 +13,6 @@ class SearchInput extends StatelessWidget {
     this.onTap,
     this.hintText = 'Cari di sini',
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(

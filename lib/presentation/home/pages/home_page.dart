@@ -38,8 +38,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
   bool isTakeaway = true; // State untuk menyimpan status pemesanan
-  String searchQuery = ''; // Track search query
-  int currentTabIndex = 0; // Track current tab index
+  String searchQuery = ''; // Add this to store search query
 
   @override
   void initState() {
@@ -55,67 +54,17 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
   void onCategoryTap(int index) {
-    setState(() {
-      currentTabIndex = index;
-      // Clear search when changing categories
-      searchController.clear();
-      searchQuery = '';
-    });
+    searchController.clear();
+    searchQuery = ''; // Reset search query when category changes
+    setState(() {});
   }
 
-  // Filter products based on search query and current tab
-  // This function uses dynamic typing to handle different product types
-  List<dynamic> filterProducts(List products, int categoryIndex) {
-    if (products.isEmpty) return [];
-
-    // First filter by category if not "All" tab
-    List filteredByCategory;
-
-    if (categoryIndex == 0) {
-      // "All" category - no filtering needed
-      filteredByCategory = products;
-    } else if (categoryIndex >= 1 && categoryIndex <= 3) {
-      // Handle different category filtering based on product type
-      filteredByCategory = products.where((product) {
-        // Check if the product has a category property
-        if (product.category == null) return false;
-
-        // Use a safe way to check category - adapt to your actual model structure
-        // Assuming category has some property/method to identify it
-        if (categoryIndex == 1) {
-          // Food category
-          return product.category.toString().toLowerCase().contains('food') ||
-              product.category.toString().toLowerCase().contains('makanan');
-        } else if (categoryIndex == 2) {
-          // Drink category
-          return product.category.toString().toLowerCase().contains('drink') ||
-              product.category.toString().toLowerCase().contains('minuman');
-        } else {
-          // Snack category
-          return product.category.toString().toLowerCase().contains('snack');
-        }
-      }).toList();
-    } else {
-      filteredByCategory = products;
-    }
-
-    // Then filter by search query if it's not empty
-    if (searchQuery.isEmpty) {
-      return filteredByCategory;
-    }
-
-    // Search by product name, case insensitive
-    return filteredByCategory
-        .where((product) =>
-            product.name.toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+  // This function will handle the search
+  void onSearchChanged(String value) {
+    setState(() {
+      searchQuery = value.toLowerCase();
+    });
   }
 
   @override
@@ -137,12 +86,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         HomeTitle(
                           controller: searchController,
-                          onChanged: (value) {
-                            // Update search query and refresh UI
-                            setState(() {
-                              searchQuery = value;
-                            });
-                          },
+                          onChanged:
+                              onSearchChanged, // Connect to search handler
                         ),
                         const SizedBox(height: 24),
                         CustomTabBar(
@@ -152,218 +97,325 @@ class _HomePageState extends State<HomePage> {
                             'Minuman',
                             'Snack'
                           ],
-                          initialTabIndex: currentTabIndex,
-                          onTap: onCategoryTap,
+                          initialTabIndex: 0,
                           tabViews: [
-                            // All Products Tab (Index 0)
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
                                 builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
+                                  return state.maybeWhen(orElse: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loading: () => const Center(
+                                    );
+                                  }, loading: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                          child: Text('No Items'),
-                                        );
-                                      }
+                                    );
+                                  }, loaded: (products) {
+                                    if (products.isEmpty) {
+                                      return const Center(
+                                        child: Text('No Items'),
+                                      );
+                                    }
 
-                                      // Apply search filtering for all products
-                                      final filteredProducts =
-                                          filterProducts(products, 0);
+                                    // Apply search filter
+                                    final filteredProducts = searchQuery.isEmpty
+                                        ? products
+                                        : products
+                                            .where((product) =>
+                                                product.name
+                                                    ?.toLowerCase()
+                                                    .contains(searchQuery) ??
+                                                false)
+                                            .toList();
 
-                                      if (filteredProducts.isEmpty) {
-                                        return searchQuery.isNotEmpty
-                                            ? _buildNoSearchResults()
-                                            : const Center(
-                                                child: Text('No Items'));
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
+                                    if (filteredProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              'Tidak ada produk dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       );
-                                    },
-                                  );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: filteredProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: filteredProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
+                                  });
+                                },
+                              ),
+                            ),
+                            // For the "Makanan" tab (Category ID 1):
+                            SizedBox(
+                              child: BlocBuilder<LocalProductBloc,
+                                  LocalProductState>(
+                                builder: (context, state) {
+                                  return state.maybeWhen(orElse: () {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }, loading: () {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }, loaded: (products) {
+                                    if (products.isEmpty) {
+                                      return const Center(
+                                        child: Text('No Items'),
+                                      );
+                                    }
+
+                                    // First filter by category
+                                    var foodProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 1)
+                                        .toList();
+
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      foodProducts = foodProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
+
+                                    if (foodProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Makanan'
+                                                  : 'Tidak ada makanan dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: foodProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: foodProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
+                                  });
                                 },
                               ),
                             ),
 
-                            // Food Products Tab (Index 1)
+                            // For the "Minuman" tab (Category ID 2):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
                                 builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
+                                  return state.maybeWhen(orElse: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loading: () => const Center(
+                                    );
+                                  }, loading: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                          child: Text('No Items'),
-                                        );
-                                      }
+                                    );
+                                  }, loaded: (products) {
+                                    if (products.isEmpty) {
+                                      return const Center(
+                                        child: Text('No Items'),
+                                      );
+                                    }
 
-                                      // Apply search filtering for food category
-                                      final filteredProducts =
-                                          filterProducts(products, 1);
+                                    // First filter by category
+                                    var drinkProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 2)
+                                        .toList();
 
-                                      if (filteredProducts.isEmpty) {
-                                        return searchQuery.isNotEmpty
-                                            ? _buildNoSearchResults()
-                                            : const _IsEmpty();
-                                      }
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      drinkProducts = drinkProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
 
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
+                                    if (drinkProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Minuman'
+                                                  : 'Tidak ada minuman dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       );
-                                    },
-                                  );
+                                    }
+
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: drinkProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: drinkProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
+                                  });
                                 },
                               ),
                             ),
 
-                            // Drink Products Tab (Index 2)
+                            // For the "Snack" tab (Category ID 3):
                             SizedBox(
                               child: BlocBuilder<LocalProductBloc,
                                   LocalProductState>(
                                 builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
+                                  return state.maybeWhen(orElse: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loading: () => const Center(
+                                    );
+                                  }, loading: () {
+                                    return const Center(
                                       child: CircularProgressIndicator(),
-                                    ),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                          child: Text('No Items'),
-                                        );
-                                      }
+                                    );
+                                  }, loaded: (products) {
+                                    if (products.isEmpty) {
+                                      return const Center(
+                                        child: Text('No Items'),
+                                      );
+                                    }
 
-                                      // Apply search filtering for drink category
-                                      final filteredProducts =
-                                          filterProducts(products, 2);
+                                    // First filter by category
+                                    var snackProducts = products
+                                        .where((element) =>
+                                            element.category != null &&
+                                            element.category?.id == 3)
+                                        .toList();
 
-                                      if (filteredProducts.isEmpty) {
-                                        return searchQuery.isNotEmpty
-                                            ? _buildNoSearchResults()
-                                            : const _IsEmpty();
-                                      }
+                                    // Then apply search filter
+                                    if (searchQuery.isNotEmpty) {
+                                      snackProducts = snackProducts
+                                          .where((product) =>
+                                              product.name
+                                                  ?.toLowerCase()
+                                                  .contains(searchQuery) ??
+                                              false)
+                                          .toList();
+                                    }
 
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
+                                    if (snackProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SpaceHeight(40),
+                                            Assets.icons.noProduct.svg(),
+                                            const SizedBox(height: 40.0),
+                                            Text(
+                                              searchQuery.isEmpty
+                                                  ? 'Belum Ada Produk Snack'
+                                                  : 'Tidak ada snack dengan nama "$searchQuery"',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
+                                    }
 
-                            // Snack Products Tab (Index 3)
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    loading: () => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                          child: Text('No Items'),
-                                        );
-                                      }
-
-                                      // Apply search filtering for snack category
-                                      final filteredProducts =
-                                          filterProducts(products, 3);
-
-                                      if (filteredProducts.isEmpty) {
-                                        return searchQuery.isNotEmpty
-                                            ? _buildNoSearchResults()
-                                            : const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
+                                    return GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: snackProducts.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 0.85,
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 30.0,
+                                        mainAxisSpacing: 30.0,
+                                      ),
+                                      itemBuilder: (context, index) =>
+                                          ProductCard(
+                                        data: snackProducts[index],
+                                        onCartButton: () {},
+                                      ),
+                                    );
+                                  });
                                 },
                               ),
                             ),
@@ -375,6 +427,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            // Rest of your HomePage implementation (right side panel)
             Expanded(
               flex: 2,
               child: Align(
@@ -471,6 +524,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
+
+                          // Rest of your right panel code remains the same
                           const SpaceHeight(16.0),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -546,6 +601,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
+                          // More code follows...
                           const SpaceHeight(8.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -819,37 +875,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // Widget to show when search returns no results
-  Widget _buildNoSearchResults() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SpaceHeight(40),
-        const Icon(
-          Icons.search_off,
-          size: 80,
-          color: Colors.grey,
-        ),
-        const SizedBox(height: 20.0),
-        Text(
-          'Tidak ada hasil untuk "$searchQuery"',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16),
-        ),
-        const SizedBox(height: 8.0),
-        TextButton(
-          onPressed: () {
-            setState(() {
-              searchController.clear();
-              searchQuery = '';
-            });
-          },
-          child: const Text('Hapus pencarian'),
-        ),
-      ],
-    );
-  }
 }
 
 class _IsEmpty extends StatelessWidget {
@@ -860,7 +885,7 @@ class _IsEmpty extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SpaceHeight(40),
+        SpaceHeight(40),
         Assets.icons.noProduct.svg(),
         const SizedBox(height: 40.0),
         const Text(

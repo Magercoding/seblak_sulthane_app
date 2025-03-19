@@ -1,88 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:seblak_sulthane_app/core/constants/colors.dart';
+
+import '../../../core/constants/colors.dart';
 
 class CustomTabBar extends StatefulWidget {
   final List<String> tabTitles;
-  final List<Widget> tabViews;
   final int initialTabIndex;
-  final Function(int)? onTap; // Added onTap callback
+  final List<Widget> tabViews;
 
   const CustomTabBar({
-    Key? key,
+    super.key,
     required this.tabTitles,
+    required this.initialTabIndex,
     required this.tabViews,
-    this.initialTabIndex = 0,
-    this.onTap, // Optional callback for tab selection
-  })  : assert(tabTitles.length == tabViews.length,
-            'Tab titles and views count must match'),
-        super(key: key);
+  });
 
   @override
   State<CustomTabBar> createState() => _CustomTabBarState();
 }
 
-class _CustomTabBarState extends State<CustomTabBar>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
+class _CustomTabBarState extends State<CustomTabBar> {
+  late int _selectedIndex;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: widget.tabTitles.length,
-      vsync: this,
-      initialIndex: widget.initialTabIndex,
-    );
-
-    // Listen for tab changes and invoke callback
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        widget.onTap?.call(_tabController.index);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(CustomTabBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Update the controller if the initial tab index changes
-    if (widget.initialTabIndex != oldWidget.initialTabIndex) {
-      _tabController.index = widget.initialTabIndex;
-    }
+    _selectedIndex = widget.initialTabIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          labelColor: AppColors.primary,
-          labelStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
+        Row(
+          children: List.generate(
+            widget.tabTitles.length,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                margin: const EdgeInsets.only(right: 32),
+                decoration: BoxDecoration(
+                  border: _selectedIndex == index
+                      ? const Border(
+                          bottom: BorderSide(
+                            width: 3.0,
+                            color: AppColors.primary,
+                          ),
+                        )
+                      : null,
+                ),
+                child: Text(
+                  widget.tabTitles[index],
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
-          unselectedLabelColor: AppColors.grey,
-          indicatorColor: AppColors.primary,
-          tabs: widget.tabTitles
-              .map((title) => Tab(
-                    text: title,
-                  ))
-              .toList(),
         ),
-        const SizedBox(height: 16.0),
-        SizedBox(
-          child: IndexedStack(
-            index: _tabController.index,
-            children: widget.tabViews,
-          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18.0),
+          child: widget.tabViews[_selectedIndex],
         ),
       ],
     );

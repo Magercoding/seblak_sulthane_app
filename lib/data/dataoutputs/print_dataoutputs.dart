@@ -616,7 +616,6 @@ class PrintDataoutputs {
     return 0.0;
   }
 
-  // Updated printSummaryReport method with improved value parsing and formatting
   Future<List<int>> printSummaryReport(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -680,7 +679,7 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
-    bytes += generator.text('SUMMARY REPORT',
+    bytes += generator.text('LAPORAN RINGKASAN',
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
     bytes += generator.row([
@@ -693,7 +692,7 @@ class PrintDataoutputs {
 
     bytes += generator.row([
       PosColumn(
-        text: 'Printed:',
+        text: 'Dicetak:',
         width: 4,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -706,7 +705,7 @@ class PrintDataoutputs {
 
     bytes += generator.row([
       PosColumn(
-        text: 'By:',
+        text: 'Oleh:',
         width: 4,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -723,7 +722,7 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
-    bytes += generator.text('FINANCIAL SUMMARY',
+    bytes += generator.text('RINGKASAN KEUANGAN',
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.feed(1);
 
@@ -731,7 +730,7 @@ class PrintDataoutputs {
     double totalRevenue = _parseToDouble(summary.totalRevenue);
     bytes += generator.row([
       PosColumn(
-        text: 'Total Revenue',
+        text: 'Total Pendapatan',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -761,7 +760,7 @@ class PrintDataoutputs {
     double totalTax = _parseToDouble(summary.totalTax);
     bytes += generator.row([
       PosColumn(
-        text: 'Total Tax',
+        text: 'Total Pajak',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -776,7 +775,7 @@ class PrintDataoutputs {
     double totalDiscount = _parseToDouble(summary.totalDiscount);
     bytes += generator.row([
       PosColumn(
-        text: 'Total Discount',
+        text: 'Total Diskon',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -797,7 +796,7 @@ class PrintDataoutputs {
 
     bytes += generator.row([
       PosColumn(
-        text: 'Service Charge',
+        text: 'Biaya Layanan',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -814,15 +813,15 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
-    bytes += generator.text('DAILY CASH FLOW',
+    bytes += generator.text('ARUS KAS HARIAN',
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.feed(1);
 
-    // Opening Balance
+    // Saldo Awal
     double openingBalance = summary.openingBalance?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
-        text: 'Opening Balance',
+        text: 'Saldo Awal',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -833,11 +832,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Expenses
+    // Pengeluaran
     double expenses = summary.expenses?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
-        text: 'Expenses',
+        text: 'Pengeluaran',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -848,11 +847,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Cash Sales
+    // Penjualan Tunai
     double cashSales = summary.getCashSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
-        text: 'Cash Sales',
+        text: 'Penjualan Tunai',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -863,11 +862,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // QRIS Sales
+    // Penjualan QRIS
     double qrisSales = summary.getQrisSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
-        text: 'QRIS Sales',
+        text: 'Penjualan QRIS',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -878,11 +877,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // QRIS Fee
+    // Biaya QRIS
     double qrisFee = _parseToDouble(summary.qrisFee);
     bytes += generator.row([
       PosColumn(
-        text: 'QRIS Fee',
+        text: 'Biaya QRIS',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -893,11 +892,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Beverage Sales
+    // Penjualan Minuman
     double beverageSales = summary.getBeverageSalesAsInt().toDouble();
     bytes += generator.row([
       PosColumn(
-        text: 'Beverage Sales',
+        text: 'Penjualan Minuman',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -908,11 +907,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Closing Balance
+    // Saldo Penutup
     double closingBalance = summary.closingBalance?.toDouble() ?? 0.0;
     bytes += generator.row([
       PosColumn(
-        text: 'Closing Balance',
+        text: 'Saldo Penutup',
         width: 6,
         styles: const PosStyles(align: PosAlign.left, bold: true),
       ),
@@ -930,14 +929,14 @@ class PrintDataoutputs {
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
     if (summary.paymentMethods != null) {
-      bytes += generator.text('PAYMENT METHODS',
+      bytes += generator.text('METODE PEMBAYARAN',
           styles: const PosStyles(align: PosAlign.center, bold: true));
       bytes += generator.feed(1);
 
       if (summary.paymentMethods?.cash != null) {
         bytes += generator.row([
           PosColumn(
-            text: 'Cash (${summary.paymentMethods!.cash!.count} txn)',
+            text: 'Tunai (${summary.paymentMethods!.cash!.count} transaksi)',
             width: 6,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -949,12 +948,12 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Add Cash QRIS Fees
+        // Biaya QRIS Tunai
         double cashQrisFees =
             _parseToDouble(summary.paymentMethods!.cash!.qrisFees);
         bytes += generator.row([
           PosColumn(
-            text: 'Cash QRIS Fees',
+            text: 'Biaya QRIS Tunai',
             width: 6,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -969,7 +968,7 @@ class PrintDataoutputs {
       if (summary.paymentMethods?.qris != null) {
         bytes += generator.row([
           PosColumn(
-            text: 'QRIS (${summary.paymentMethods!.qris!.count} txn)',
+            text: 'QRIS (${summary.paymentMethods!.qris!.count} transaksi)',
             width: 6,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -981,12 +980,12 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Add QRIS Fees
+        // Biaya QRIS
         double qrisFees =
             _parseToDouble(summary.paymentMethods!.qris!.qrisFees);
         bytes += generator.row([
           PosColumn(
-            text: 'QRIS Fees',
+            text: 'Biaya QRIS',
             width: 6,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1006,21 +1005,21 @@ class PrintDataoutputs {
     }
 
     if (summary.dailyBreakdown != null && summary.dailyBreakdown!.isNotEmpty) {
-      bytes += generator.text('DAILY BREAKDOWN',
+      bytes += generator.text('RINCIAN HARIAN',
           styles: const PosStyles(align: PosAlign.center, bold: true));
       bytes += generator.feed(1);
 
       for (var i = 0; i < summary.dailyBreakdown!.length; i++) {
         final day = summary.dailyBreakdown![i];
 
-        bytes += generator.text('Date: ${day.date}',
+        bytes += generator.text('Tanggal: ${day.date}',
             styles: const PosStyles(align: PosAlign.left, bold: true));
 
-        // Opening Balance
+        // Saldo Awal
         double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
-            text: 'Opening:',
+            text: 'Saldo Awal:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1031,11 +1030,11 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Expenses
+        // Pengeluaran
         double dayExpenses = day.expenses?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
-            text: 'Expenses:',
+            text: 'Pengeluaran:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1046,11 +1045,11 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Cash Sales
+        // Penjualan Tunai
         double dayCashSales = day.getCashSalesAsInt().toDouble();
         bytes += generator.row([
           PosColumn(
-            text: 'Cash Sales:',
+            text: 'Penjualan Tunai:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1061,11 +1060,11 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // QRIS Sales
+        // Penjualan QRIS
         double dayQrisSales = day.getQrisSalesAsInt().toDouble();
         bytes += generator.row([
           PosColumn(
-            text: 'QRIS Sales:',
+            text: 'Penjualan QRIS:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1076,11 +1075,11 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // QRIS Fee
+        // Biaya QRIS
         double dayQrisFee = _parseToDouble(day.qrisFee);
         bytes += generator.row([
           PosColumn(
-            text: 'QRIS Fee:',
+            text: 'Biaya QRIS:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1091,11 +1090,11 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Total Sales
+        // Total Penjualan
         double dayTotalSales = _parseToDouble(day.totalSales);
         bytes += generator.row([
           PosColumn(
-            text: 'Total Sales:',
+            text: 'Total Penjualan:',
             width: 5,
             styles: const PosStyles(align: PosAlign.left),
           ),
@@ -1106,13 +1105,13 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Closing Balance
+        // Saldo Penutup
         double dayClosingBalance = day.closingBalance?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
-            text: 'Closing:',
+            text: 'Saldo Penutup:',
             width: 5,
-            styles: const PosStyles(align: PosAlign.left),
+            styles: const PosStyles(align: PosAlign.left, bold: true),
           ),
           PosColumn(
             text: 'Rp ${_formatCurrency(dayClosingBalance)}',
@@ -1135,7 +1134,6 @@ class PrintDataoutputs {
     return bytes;
   }
 
-  // Updated printEndShift method with improved formatting and handling of negative values
   Future<List<int>> printEndShift(
       EnhancedSummaryData summary, String searchDateFormatted, int paper,
       {int? outletId}) async {
@@ -1167,7 +1165,7 @@ class PrintDataoutputs {
 
     bytes += generator.reset();
 
-    bytes += generator.text("END SHIFT",
+    bytes += generator.text("AKHIR SHIFT",
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
     bytes += generator.text(
@@ -1176,19 +1174,19 @@ class PrintDataoutputs {
             : "================================",
         styles: const PosStyles(align: PosAlign.center));
 
-    bytes += generator.text('Name: $outletName',
+    bytes += generator.text('Nama: $outletName',
         styles: const PosStyles(align: PosAlign.left, bold: true));
 
     final singleDate = extractSingleDate(searchDateFormatted);
     final formattedDate = formatDate(singleDate);
 
-    bytes += generator.text('Date: $formattedDate',
+    bytes += generator.text('Tanggal: $formattedDate',
         styles: const PosStyles(align: PosAlign.left, bold: true));
 
     final DateTime now = DateTime.now();
     final String endTime = DateFormat('dd/MM/yyyy HH:mm:ss').format(now);
 
-    bytes += generator.text('Printed: $endTime',
+    bytes += generator.text('Dicetak: $endTime',
         styles: const PosStyles(align: PosAlign.left, bold: true));
 
     bytes += generator.text(
@@ -1197,123 +1195,121 @@ class PrintDataoutputs {
             : "================================",
         styles: const PosStyles(align: PosAlign.center));
 
-    // Initial Cash (Opening Balance)
-    double openingBalance = summary.openingBalance?.toDouble() ?? 0.0;
-    bytes += generator.row([
-      PosColumn(
-        text: "Initial Cash",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(openingBalance),
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+    // Rincian Harian (Daily Breakdown Section)
+    if (summary.dailyBreakdown != null && summary.dailyBreakdown!.isNotEmpty) {
+      double totalPenjualan = 0.0; // Untuk menghitung total penjualan
+      double totalCash = 0.0; // Untuk menghitung total cash
 
-    // Cash Payment
-    double cashSales = summary.getCashSalesAsInt().toDouble();
-    bytes += generator.row([
-      PosColumn(
-        text: "Cash Payment",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(cashSales),
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+      for (var day in summary.dailyBreakdown!) {
+        // Saldo Awal (Opening Balance)
+        double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
+        bytes += generator.row([
+          PosColumn(
+            text: "Saldo Awal",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayOpeningBalance),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    // Other Expenses
-    double expenses = summary.expenses?.toDouble() ?? 0.0;
-    bytes += generator.row([
-      PosColumn(
-        text: "Other Expenses",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(expenses),
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+        // Penjualan Tunai (Cash Sales)
+        double dayCashSales = day.getCashSalesAsInt().toDouble();
+        bytes += generator.row([
+          PosColumn(
+            text: "Penjualan Tunai",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayCashSales),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    // Add QRIS Fee as an expense
-    double qrisFeeAmount = _parseToDouble(summary.qrisFee);
-    bytes += generator.row([
-      PosColumn(
-        text: "QRIS Fee",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(qrisFeeAmount),
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+        // Penjualan QRIS (QRIS Sales)
+        double dayQrisSales = day.getQrisSalesAsInt().toDouble();
+        bytes += generator.row([
+          PosColumn(
+            text: "Penjualan QRIS",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayQrisSales),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    // Calculate final cash including QRIS fee
-    double totalFinalCash =
-        openingBalance + cashSales - expenses - qrisFeeAmount;
+        // Total Penjualan Harian (Daily Total Sales)
+        double dayTotalSales = dayCashSales + dayQrisSales;
+        totalPenjualan += dayTotalSales; // Menambahkan ke total penjualan
+        bytes += generator.row([
+          PosColumn(
+            text: "Total Penjualan",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayTotalSales),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    bytes += generator.row([
-      PosColumn(
-        text: "Total Final Cash",
-        width: 7,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(totalFinalCash),
-        width: 5,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+        // Pengeluaran (Expenses)
+        double dayExpenses = day.expenses?.toDouble() ?? 0.0;
+        bytes += generator.row([
+          PosColumn(
+            text: "Pengeluaran",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayExpenses),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    bytes += generator.row([
-      PosColumn(
-        text: "Total Cash in Drawer",
-        width: 8,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(totalFinalCash),
-        width: 4,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+        // Biaya QRIS (QRIS Fee)
+        double dayQrisFee = _parseToDouble(day.qrisFee);
+        bytes += generator.row([
+          PosColumn(
+            text: "Biaya QRIS",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayQrisFee),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
 
-    bytes += generator.row([
-      PosColumn(
-        text: "Difference",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: "0",
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
-
-    // QRIS Sales (Other Payment)
-    double qrisSales = summary.getQrisSalesAsInt().toDouble();
-    bytes += generator.row([
-      PosColumn(
-        text: "Total Other Payment",
-        width: 8,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: formatNumberWithoutDecimal(qrisSales),
-        width: 4,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
+        // Total Cash Harian (Daily Total Cash)
+        double dayTotalCash =
+            dayOpeningBalance + dayCashSales - dayExpenses - dayQrisFee;
+        totalCash += dayTotalCash; // Menambahkan ke total cash
+        bytes += generator.row([
+          PosColumn(
+            text: "Total Cash",
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatNumberWithoutDecimal(dayTotalCash),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+    }
 
     bytes += generator.feed(3);
     bytes += generator.cut();

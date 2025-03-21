@@ -29,7 +29,7 @@ class _FormTableDialogState extends State<FormTableDialog> {
             onPressed: () => context.pop(),
             icon: const Icon(Icons.close),
           ),
-          const Text('Tambah Table'),
+          const Text('Tambah Meja'),
           const Spacer(),
         ],
       ),
@@ -41,7 +41,7 @@ class _FormTableDialogState extends State<FormTableDialog> {
             children: [
               CustomTextField(
                 controller: generateController,
-                label: 'Jumlah Table',
+                label: 'Jumlah Meja',
                 onChanged: (value) {},
                 keyboardType: TextInputType.number,
               ),
@@ -68,7 +68,7 @@ class _FormTableDialogState extends State<FormTableDialog> {
                               ),
                             );
                       },
-                      label: 'Generate',
+                      label: 'Buat',
                     );
                   }, loading: () {
                     return const Center(

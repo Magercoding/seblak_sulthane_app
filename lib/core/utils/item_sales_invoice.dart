@@ -47,53 +47,45 @@ class ItemSalesInvoice {
       if (outlet != null) {
         String address = '';
 
-        // Add address1 if available
         if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
           address = outlet.address1!;
         }
 
-        // Add address2 if available
         if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
           if (address.isNotEmpty) {
-            address += ', '; // Add separator if address1 was present
+            address += ', ';
           }
           address += outlet.address2!;
         }
 
-        // Return the combined address or default if both are empty
         return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      // If specific outlet not found, try to get the first outlet
       final allOutlets = await outletDataSource.getAllOutlets();
       if (allOutlets.isNotEmpty) {
         String address = '';
         final firstOutlet = allOutlets.first;
 
-        // Add address1 if available
         if (firstOutlet.address1 != null && firstOutlet.address1!.isNotEmpty) {
           address = firstOutlet.address1!;
         }
 
-        // Add address2 if available
         if (firstOutlet.address2 != null && firstOutlet.address2!.isNotEmpty) {
           if (address.isNotEmpty) {
-            address += ', '; // Add separator if address1 was present
+            address += ', ';
           }
           address += firstOutlet.address2!;
         }
 
-        // Return the combined address or default if both are empty
         return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      return 'Seblak Sulthane'; // Default fallback
+      return 'Seblak Sulthane';
     } catch (e) {
-      return 'Seblak Sulthane'; // Default fallback on error
+      return 'Seblak Sulthane';
     }
   }
 
-  // New method to fetch product categories
   static Future<Map<int, String>> _fetchProductCategories() async {
     try {
       final productRemoteDataSource = ProductRemoteDatasource();
@@ -103,7 +95,7 @@ class ItemSalesInvoice {
 
       productsResult.fold(
         (error) {
-          return productCategories; // Return empty map on error
+          return productCategories;
         },
         (productResponse) {
           if (productResponse.data != null) {
@@ -118,24 +110,20 @@ class ItemSalesInvoice {
 
       return productCategories;
     } catch (e) {
-      return {}; // Return empty map on exception
+      return {};
     }
   }
 
-  // Method to add categories to item sales
   static Future<List<ItemSales>> _addCategoriesToItemSales(
       List<ItemSales> itemSales) async {
-    // Fetch product categories
     final productCategories = await _fetchProductCategories();
 
-    // Create a copy of the item sales list with categories
     return itemSales.map((item) {
-      // Add category if product ID matches
       if (item.productId != null &&
           productCategories.containsKey(item.productId)) {
         item.categoryName = productCategories[item.productId];
       } else {
-        item.categoryName = 'Uncategorized';
+        item.categoryName = 'Tidak Terkategori';
       }
       return item;
     }).toList();
@@ -144,7 +132,6 @@ class ItemSalesInvoice {
   static Future<File> generatePdf(
       List<ItemSales> itemSales, String searchDateFormatted,
       {int? outletId}) async {
-    // Add categories to item sales
     final itemSalesWithCategories = await _addCategoriesToItemSales(itemSales);
 
     final pdf = Document();
@@ -172,7 +159,7 @@ class ItemSalesInvoice {
 
     return HelperPdfService.saveDocument(
       name:
-          'Seblak Sulthane | Item Sales Report | ${DateTime.now().millisecondsSinceEpoch}.pdf',
+          'Seblak Sulthane | Laporan Penjualan Item | ${DateTime.now().millisecondsSinceEpoch}.pdf',
       pdf: pdf,
     );
   }
@@ -183,14 +170,14 @@ class ItemSalesInvoice {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 1 * PdfPageFormat.cm),
-            Text('Seblak Sulthane | Item Sales Report',
+            Text('Seblak Sulthane | Laporan Penjualan Item',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 )),
             SizedBox(height: 0.2 * PdfPageFormat.cm),
             Text("Data: $searchDateFormatted"),
-            Text('Created At: ${DateTime.now().toFormattedDate3()}'),
+            Text('Dibuat Pada: ${DateTime.now().toFormattedDate3()}'),
           ],
         ),
         Image(
@@ -202,14 +189,13 @@ class ItemSalesInvoice {
       ]);
 
   static Widget buildInvoice(List<ItemSales> itemSales) {
-    // Add Category to headers
     final headers = [
       'Id',
-      'Order',
-      'Product',
-      'Category',
-      'Qty',
-      'Price',
+      'Pesanan',
+      'Produk',
+      'Kategori',
+      'Jml',
+      'Harga',
       'Total'
     ];
     final data = itemSales.map((item) {
@@ -217,8 +203,7 @@ class ItemSalesInvoice {
         item.id!,
         item.orderId,
         item.productName,
-        item.categoryName ??
-            'Uncategorized', // Use the category from the product
+        item.categoryName ?? 'Tidak Terkategori',
         item.quantity,
         (item.price! * 100).currencyFormatRp,
         (item.price! * item.quantity! * 100).currencyFormatRp
@@ -237,7 +222,7 @@ class ItemSalesInvoice {
         0: Alignment.centerLeft,
         1: Alignment.center,
         2: Alignment.center,
-        3: Alignment.center, // Align category
+        3: Alignment.center,
         4: Alignment.centerLeft,
         5: Alignment.centerLeft,
         6: Alignment.centerLeft,
@@ -250,7 +235,7 @@ class ItemSalesInvoice {
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: 'Address', value: outletAddress),
+          buildSimpleText(title: 'Alamat', value: outletAddress),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );
@@ -295,11 +280,10 @@ class ItemSalesInvoice {
   static Future<File> generateExcel(
       List<ItemSales> itemSales, String searchDateFormatted,
       {int? outletId}) async {
-    // Add categories to item sales
     final itemSalesWithCategories = await _addCategoriesToItemSales(itemSales);
 
     final excel = Excel.createExcel();
-    final Sheet sheet = excel['Item Sales Report'];
+    final Sheet sheet = excel['Laporan Penjualan Item'];
 
     outletId ??= await _fetchOutletIdFromProfile();
     outletId ??= 1;
@@ -308,7 +292,8 @@ class ItemSalesInvoice {
 
     sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("G1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
-    headerCell.value = TextCellValue('Seblak Sulthane | Item Sales Report');
+    headerCell.value =
+        TextCellValue('Seblak Sulthane | Laporan Penjualan Item');
     headerCell.cellStyle = CellStyle(
       bold: true,
       fontSize: 16,
@@ -325,21 +310,20 @@ class ItemSalesInvoice {
     sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("G3"));
     final createdCell = sheet.cell(CellIndex.indexByString("A3"));
     createdCell.value =
-        TextCellValue('Created At: ${DateTime.now().toFormattedDate3()}');
+        TextCellValue('Dibuat Pada: ${DateTime.now().toFormattedDate3()}');
     createdCell.cellStyle = CellStyle(
       horizontalAlign: HorizontalAlign.Center,
     );
 
     sheet.merge(CellIndex.indexByString("A4"), CellIndex.indexByString("G4"));
 
-    // Add Category to headers
     final headers = [
       'Id',
-      'Order',
-      'Product',
-      'Category',
-      'Qty',
-      'Price',
+      'Pesanan',
+      'Produk',
+      'Kategori',
+      'Jml',
+      'Harga',
       'Total'
     ];
     for (var i = 0; i < headers.length; i++) {
@@ -374,10 +358,10 @@ class ItemSalesInvoice {
       productCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Add category cell
       final categoryCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex));
-      categoryCell.value = TextCellValue(item.categoryName ?? 'Uncategorized');
+      categoryCell.value =
+          TextCellValue(item.categoryName ?? 'Tidak Terkategori');
       categoryCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
@@ -409,20 +393,19 @@ class ItemSalesInvoice {
     );
     final footerCell = sheet.cell(
         CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex));
-    footerCell.value = TextCellValue('Address: $outletAddress');
+    footerCell.value = TextCellValue('Alamat: $outletAddress');
 
-    // Adjust column widths
     sheet.setColumnWidth(0, 15.0);
     sheet.setColumnWidth(1, 15.0);
     sheet.setColumnWidth(2, 40.0);
-    sheet.setColumnWidth(3, 25.0); // Category column width
+    sheet.setColumnWidth(3, 25.0);
     sheet.setColumnWidth(4, 15.0);
     sheet.setColumnWidth(5, 25.0);
     sheet.setColumnWidth(6, 25.0);
 
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     return HelperExcelService.saveExcel(
-      name: 'seblak_sulthane_sales_report_$timestamp.xlsx',
+      name: 'seblak_sulthane_laporan_penjualan_$timestamp.xlsx',
       excel: excel,
     );
   }

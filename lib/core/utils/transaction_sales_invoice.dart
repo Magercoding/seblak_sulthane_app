@@ -46,49 +46,42 @@ class TransactionSalesInvoice {
       if (outlet != null) {
         String address = '';
 
-        // Add address1 if available
         if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
           address = outlet.address1!;
         }
 
-        // Add address2 if available
         if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
           if (address.isNotEmpty) {
-            address += ', '; // Add separator if address1 was present
+            address += ', ';
           }
           address += outlet.address2!;
         }
 
-        // Return the combined address or default if both are empty
         return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      // If specific outlet not found, try to get the first outlet
       final allOutlets = await outletDataSource.getAllOutlets();
       if (allOutlets.isNotEmpty) {
         String address = '';
         final firstOutlet = allOutlets.first;
 
-        // Add address1 if available
         if (firstOutlet.address1 != null && firstOutlet.address1!.isNotEmpty) {
           address = firstOutlet.address1!;
         }
 
-        // Add address2 if available
         if (firstOutlet.address2 != null && firstOutlet.address2!.isNotEmpty) {
           if (address.isNotEmpty) {
-            address += ', '; // Add separator if address1 was present
+            address += ', ';
           }
           address += firstOutlet.address2!;
         }
 
-        // Return the combined address or default if both are empty
         return address.isNotEmpty ? address : 'Seblak Sulthane';
       }
 
-      return 'Seblak Sulthane'; // Default fallback
+      return 'Seblak Sulthane';
     } catch (e) {
-      return 'Seblak Sulthane'; // Default fallback on error
+      return 'Seblak Sulthane';
     }
   }
 
@@ -122,7 +115,7 @@ class TransactionSalesInvoice {
 
     return HelperPdfService.saveDocument(
         name:
-            'Seblak Sulthane | Transaction Sales Report | ${DateTime.now().millisecondsSinceEpoch}.pdf',
+            'Seblak Sulthane | Laporan Penjualan Transaksi | ${DateTime.now().millisecondsSinceEpoch}.pdf',
         pdf: pdf);
   }
 
@@ -132,7 +125,7 @@ class TransactionSalesInvoice {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 1 * PdfPageFormat.cm),
-            Text('Seblak Sulthane | Transaction Sales Report',
+            Text('Seblak Sulthane | Laporan Penjualan Transaksi',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -142,7 +135,7 @@ class TransactionSalesInvoice {
               "Data: $searchDateFormatted",
             ),
             Text(
-              'Created At: ${DateTime.now().toFormattedDate3()}',
+              'Dibuat Pada: ${DateTime.now().toFormattedDate3()}',
             ),
           ],
         ),
@@ -159,13 +152,13 @@ class TransactionSalesInvoice {
       'ID',
       'Total',
       'Sub Total',
-      'Tax',
-      'Discount',
-      'Service',
+      'Pajak',
+      'Diskon',
+      'Layanan',
       'Total Item',
-      'Payment Method', // Added Payment Method header
+      'Metode Pembayaran',
       'Kasir',
-      'Time'
+      'Waktu'
     ];
     final data = itemOrders.map((item) {
       return [
@@ -176,8 +169,7 @@ class TransactionSalesInvoice {
         int.parse(item.discountAmount!.replaceAll('.00', '')).currencyFormatRp,
         item.serviceCharge!.currencyFormatRp,
         item.totalItem.toString(),
-        item.paymentMethod ??
-            'Cash', // Added Payment Method, defaulting to 'Cash'
+        item.paymentMethod ?? 'Tunai',
         item.namaKasir ?? '',
         item.transactionTime!.toFormattedDate(),
       ];
@@ -199,9 +191,9 @@ class TransactionSalesInvoice {
         4: Alignment.centerRight,
         5: Alignment.centerRight,
         6: Alignment.center,
-        7: Alignment.center, // Alignment for Payment Method
-        8: Alignment.center, // Updated index for Kasir
-        9: Alignment.center, // Updated index for Time
+        7: Alignment.center,
+        8: Alignment.center,
+        9: Alignment.center,
       },
     );
   }
@@ -211,7 +203,7 @@ class TransactionSalesInvoice {
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: 'Address', value: outletAddress),
+          buildSimpleText(title: 'Alamat', value: outletAddress),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );
@@ -257,55 +249,51 @@ class TransactionSalesInvoice {
       List<ItemOrder> itemOrders, String searchDateFormatted,
       {int? outletId}) async {
     final excel = Excel.createExcel();
-    final Sheet sheet = excel['Transaction Sales Report'];
+    final Sheet sheet = excel['Laporan Penjualan Transaksi'];
 
     outletId ??= await _fetchOutletIdFromProfile();
     outletId ??= 1;
 
     final String outletAddress = await _getOutletAddress(outletId);
 
-    sheet.merge(CellIndex.indexByString("A1"),
-        CellIndex.indexByString("J1")); // Updated to include one more column
+    sheet.merge(CellIndex.indexByString("A1"), CellIndex.indexByString("J1"));
     final headerCell = sheet.cell(CellIndex.indexByString("A1"));
     headerCell.value =
-        TextCellValue('Seblak Sulthane | Transaction Sales Report');
+        TextCellValue('Seblak Sulthane | Laporan Penjualan Transaksi');
     headerCell.cellStyle = CellStyle(
       bold: true,
       fontSize: 16,
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A2"),
-        CellIndex.indexByString("J2")); // Updated to include one more column
+    sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("J2"));
     final dateCell = sheet.cell(CellIndex.indexByString("A2"));
     dateCell.value = TextCellValue('Data: $searchDateFormatted');
     dateCell.cellStyle = CellStyle(
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A3"),
-        CellIndex.indexByString("J3")); // Updated to include one more column
+    sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("J3"));
     final createdCell = sheet.cell(CellIndex.indexByString("A3"));
     createdCell.value =
-        TextCellValue('Created At: ${DateTime.now().toFormattedDate3()}');
+        TextCellValue('Dibuat Pada: ${DateTime.now().toFormattedDate3()}');
     createdCell.cellStyle = CellStyle(
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    sheet.merge(CellIndex.indexByString("A4"),
-        CellIndex.indexByString("J4")); // Updated to include one more column
+    sheet.merge(CellIndex.indexByString("A4"), CellIndex.indexByString("J4"));
 
     final headers = [
       'ID',
       'Total',
       'Sub Total',
-      'Tax',
-      'Discount',
-      'Service',
+      'Pajak',
+      'Diskon',
+      'Layanan',
       'Total Item',
-      'Payment Method', // Added Payment Method header
+      'Metode Pembayaran',
       'Kasir',
-      'Time'
+      'Waktu'
     ];
     for (var i = 0; i < headers.length; i++) {
       final headerCell =
@@ -361,14 +349,12 @@ class TransactionSalesInvoice {
       totalItemCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Add Payment Method column
       final paymentMethodCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex));
-      paymentMethodCell.value = TextCellValue(item.paymentMethod ?? 'Cash');
+      paymentMethodCell.value = TextCellValue(item.paymentMethod ?? 'Tunai');
       paymentMethodCell.cellStyle =
           CellStyle(horizontalAlign: HorizontalAlign.Center);
 
-      // Update the column indices for the remaining columns
       final kasirCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex));
       kasirCell.value = TextCellValue(item.namaKasir ?? '');
@@ -383,13 +369,11 @@ class TransactionSalesInvoice {
     final footerRowIndex = itemOrders.length + 7;
     sheet.merge(
       CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex),
-      CellIndex.indexByColumnRow(
-          columnIndex: 9,
-          rowIndex: footerRowIndex), // Updated to include one more column
+      CellIndex.indexByColumnRow(columnIndex: 9, rowIndex: footerRowIndex),
     );
     final footerCell = sheet.cell(
         CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: footerRowIndex));
-    footerCell.value = TextCellValue('Address: $outletAddress');
+    footerCell.value = TextCellValue('Alamat: $outletAddress');
 
     sheet.setColumnWidth(0, 15.0);
     sheet.setColumnWidth(1, 20.0);
@@ -398,13 +382,13 @@ class TransactionSalesInvoice {
     sheet.setColumnWidth(4, 20.0);
     sheet.setColumnWidth(5, 20.0);
     sheet.setColumnWidth(6, 15.0);
-    sheet.setColumnWidth(7, 20.0); // Width for Payment Method
-    sheet.setColumnWidth(8, 20.0); // Updated width for Kasir
-    sheet.setColumnWidth(9, 30.0); // Updated width for Time
+    sheet.setColumnWidth(7, 20.0);
+    sheet.setColumnWidth(8, 20.0);
+    sheet.setColumnWidth(9, 30.0);
 
     return HelperExcelService.saveExcel(
       name:
-          'seblak_sulthane_transaction_report_${DateTime.now().millisecondsSinceEpoch}.xlsx',
+          'seblak_sulthane_laporan_transaksi_${DateTime.now().millisecondsSinceEpoch}.xlsx',
       excel: excel,
     );
   }

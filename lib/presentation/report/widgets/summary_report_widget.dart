@@ -38,7 +38,7 @@ class SummaryReportWidget extends StatelessWidget {
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                    'Printing ${isEndShift ? 'end shift' : 'summary report'}...'),
+                    'Mencetak ${isEndShift ? 'akhir shift' : 'laporan ringkasan'}...'),
               ],
             ),
           );
@@ -82,10 +82,10 @@ class SummaryReportWidget extends StatelessWidget {
       if (context.mounted) {
         if (result) {
           _showPrintStatusDialog(context, true,
-              '${isEndShift ? 'End shift' : 'Summary report'} printed successfully.');
+              '${isEndShift ? 'Laporan akhir shift' : 'Laporan ringkasan'} berhasil dicetak.');
         } else {
           _showPrintStatusDialog(context, false,
-              'Failed to print ${isEndShift ? 'end shift' : 'summary report'}. Please check if the printer is connected and properly set up.');
+              'Gagal mencetak ${isEndShift ? 'laporan akhir shift' : 'laporan ringkasan'}. Periksa apakah printer terhubung dan diatur dengan benar.');
         }
       }
     } catch (e) {
@@ -115,7 +115,7 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Text(
-              isSuccess ? 'Print Berhasil' : 'Print Gagal',
+              isSuccess ? 'Cetak Berhasil' : 'Cetak Gagal',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -158,7 +158,7 @@ class SummaryReportWidget extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '${isPdf ? 'PDF' : 'Excel'} file has been generated successfully!',
+              'File ${isPdf ? 'PDF' : 'Excel'} berhasil dibuat!',
             ),
             backgroundColor: Colors.green,
           ),
@@ -171,7 +171,7 @@ class SummaryReportWidget extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  'Error with ${isPdf ? 'PDF' : 'Excel'} file: ${e.toString()}'),
+                  'Error dengan file ${isPdf ? 'PDF' : 'Excel'}: ${e.toString()}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -222,80 +222,83 @@ class SummaryReportWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: const Color.fromARGB(255, 255, 255, 255),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
+      child: Column(
+        children: [
+          const SpaceHeight(24.0),
+          Center(
+            child: Text(
               title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w800, fontSize: 16.0),
             ),
-            const SizedBox(height: 8.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    searchDateFormatted,
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => _handleExport(context, false),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "Excel",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            Icon(
-                              Icons.download_outlined,
+          ),
+          const SizedBox(height: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  searchDateFormatted,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _handleExport(context, false),
+                      child: const Row(
+                        children: [
+                          Text(
+                            "Excel",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                             ),
-                          ],
-                        ),
+                          ),
+                          Icon(
+                            Icons.download_outlined,
+                            color: AppColors.primary,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      GestureDetector(
-                        onTap: () => _handleExport(context, true),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "PDF",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            Icon(
-                              Icons.download_outlined,
+                    ),
+                    const SizedBox(width: 16),
+                    GestureDetector(
+                      onTap: () => _handleExport(context, true),
+                      child: const Row(
+                        children: [
+                          Text(
+                            "PDF",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                             ),
-                          ],
-                        ),
+                          ),
+                          Icon(
+                            Icons.download_outlined,
+                            color: AppColors.primary,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SpaceHeight(32.0),
-            Expanded(
+          ),
+          const SpaceHeight(16.0),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
               child: _buildSummaryContent(),
             ),
-            const SpaceHeight(16.0),
-            Row(
+          ),
+          const SpaceHeight(16.0),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
@@ -304,7 +307,7 @@ class SummaryReportWidget extends StatelessWidget {
                         context, false), // false for summary report
                     icon: const Icon(Icons.print, color: Colors.white),
                     label: const Text(
-                      "Print Summary",
+                      "Cetak Ringkasan",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -326,7 +329,7 @@ class SummaryReportWidget extends StatelessWidget {
                         _handlePrint(context, true), // true for end shift
                     icon: const Icon(Icons.print, color: Colors.white),
                     label: const Text(
-                      "Print End Shift",
+                      "Cetak Akhir Shift",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -343,8 +346,8 @@ class SummaryReportWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -369,7 +372,7 @@ class SummaryReportWidget extends StatelessWidget {
           children: [
             // Financial Summary Section
             const Text(
-              'Financial Summary',
+              'Ringkasan Keuangan',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -379,7 +382,7 @@ class SummaryReportWidget extends StatelessWidget {
 
             // Revenue Section
             SummaryItem(
-              label: 'Total Revenue',
+              label: 'Total Pendapatan',
               value:
                   'Rp ${formatCurrency(parseNumericValue(summary.totalRevenue))}',
             ),
@@ -391,19 +394,19 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
-              label: 'Total Tax',
+              label: 'Total Pajak',
               value:
                   'Rp ${formatCurrency(parseNumericValue(summary.totalTax))}',
             ),
             const Divider(),
             SummaryItem(
-              label: 'Total Discount',
+              label: 'Total Diskon',
               value:
                   'Rp ${formatCurrency(parseNumericValue(summary.totalDiscount))}',
             ),
             const Divider(),
             SummaryItem(
-              label: 'Service Charge',
+              label: 'Biaya Layanan',
               value:
                   'Rp ${formatCurrency(parseNumericValue(summary.totalServiceCharge))}',
             ),
@@ -412,7 +415,7 @@ class SummaryReportWidget extends StatelessWidget {
             // Daily Cash Section
             const SizedBox(height: 20),
             const Text(
-              'Daily Cash Flow',
+              'Arus Kas Harian',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -421,14 +424,14 @@ class SummaryReportWidget extends StatelessWidget {
             const SizedBox(height: 20),
 
             SummaryItem(
-              label: 'Opening Balance',
+              label: 'Saldo Awal',
               value: summary.openingBalance != null
                   ? 'Rp ${formatCurrency(summary.openingBalance!)}'
                   : 'Rp 0.00',
             ),
             const Divider(),
             SummaryItem(
-              label: 'Expenses',
+              label: 'Pengeluaran',
               value: summary.expenses != null
                   ? 'Rp ${formatCurrency(summary.expenses!)}'
                   : 'Rp 0.00',
@@ -436,21 +439,21 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
-              label: 'Cash Sales',
+              label: 'Penjualan Tunai',
               value:
                   'Rp ${formatCurrency(summary.getCashSalesAsInt().toDouble())}',
               textColor: Colors.green,
             ),
             const Divider(),
             SummaryItem(
-              label: 'QRIS Sales',
+              label: 'Penjualan QRIS',
               value:
                   'Rp ${formatCurrency(summary.getQrisSalesAsInt().toDouble())}',
               textColor: Colors.green,
             ),
             const Divider(),
             SummaryItem(
-              label: 'QRIS Fee',
+              label: 'Biaya QRIS',
               value: summary.qrisFee != null
                   ? 'Rp ${formatCurrency(parseNumericValue(summary.qrisFee))}'
                   : 'Rp 0.00',
@@ -458,14 +461,14 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
-              label: 'Beverage Sales',
+              label: 'Penjualan Minuman',
               value:
                   'Rp ${formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
               textColor: Colors.green,
             ),
             const Divider(),
             SummaryItem(
-              label: 'Closing Balance',
+              label: 'Saldo Akhir',
               value: summary.closingBalance != null
                   ? 'Rp ${formatCurrency(summary.closingBalance!)}'
                   : 'Rp 0.00',
@@ -476,7 +479,7 @@ class SummaryReportWidget extends StatelessWidget {
             if (summary.paymentMethods != null) ...[
               const SizedBox(height: 20),
               const Text(
-                'Payment Methods',
+                'Metode Pembayaran',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -486,13 +489,13 @@ class SummaryReportWidget extends StatelessWidget {
               if (summary.paymentMethods?.cash != null) ...[
                 SummaryItem(
                   label:
-                      'Cash (${summary.paymentMethods!.cash!.count} transactions)',
+                      'Tunai (${summary.paymentMethods!.cash!.count} transaksi)',
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.cash!.getTotalAsInt().toDouble())}',
                 ),
                 // Add Cash QRIS Fees (usually 0)
                 SummaryItem(
-                  label: 'Cash QRIS Fees',
+                  label: 'Biaya QRIS Tunai',
                   value: summary.paymentMethods!.cash!.qrisFees != null
                       ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.cash!.qrisFees))}'
                       : 'Rp 0.00',
@@ -501,7 +504,7 @@ class SummaryReportWidget extends StatelessWidget {
               ] else ...[
                 // Show no cash transactions if cash is null
                 const SummaryItem(
-                  label: 'Cash (0 transactions)',
+                  label: 'Tunai (0 transaksi)',
                   value: 'Rp 0.00',
                 ),
               ],
@@ -509,13 +512,13 @@ class SummaryReportWidget extends StatelessWidget {
               if (summary.paymentMethods?.qris != null) ...[
                 SummaryItem(
                   label:
-                      'QRIS (${summary.paymentMethods!.qris!.count} transactions)',
+                      'QRIS (${summary.paymentMethods!.qris!.count} transaksi)',
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
                 ),
                 // Add QRIS Fees
                 SummaryItem(
-                  label: 'QRIS Fees',
+                  label: 'Biaya QRIS',
                   value: summary.paymentMethods!.qris!.qrisFees != null
                       ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.qris!.qrisFees))}'
                       : 'Rp 0.00',
@@ -524,7 +527,7 @@ class SummaryReportWidget extends StatelessWidget {
               ] else ...[
                 // Show no QRIS transactions if qris is null
                 const SummaryItem(
-                  label: 'QRIS (0 transactions)',
+                  label: 'QRIS (0 transaksi)',
                   value: 'Rp 0.00',
                 ),
               ],
@@ -532,7 +535,7 @@ class SummaryReportWidget extends StatelessWidget {
               // Show a message when there are no payment methods at all
               const SizedBox(height: 20),
               const Text(
-                'Payment Methods',
+                'Metode Pembayaran',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -540,7 +543,7 @@ class SummaryReportWidget extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const SummaryItem(
-                label: 'No payment methods data available',
+                label: 'Data metode pembayaran tidak tersedia',
                 value: '',
               ),
             ],
@@ -550,7 +553,7 @@ class SummaryReportWidget extends StatelessWidget {
                 summary.dailyBreakdown!.isNotEmpty) ...[
               const SizedBox(height: 20),
               const Text(
-                'Daily Breakdown',
+                'Rincian Harian',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -580,7 +583,7 @@ class SummaryReportWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Date: ${day.date}',
+            'Tanggal: ${day.date}',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -590,7 +593,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Opening:'),
+              const Text('Saldo Awal:'),
               Text(
                 day.openingBalance != null
                     ? 'Rp ${formatCurrency(day.openingBalance!)}'
@@ -602,7 +605,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Expenses:'),
+              const Text('Pengeluaran:'),
               Text(
                 day.expenses != null
                     ? 'Rp ${formatCurrency(day.expenses!)}'
@@ -615,7 +618,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Cash Sales:'),
+              const Text('Penjualan Tunai:'),
               Text(
                 'Rp ${formatCurrency(day.getCashSalesAsInt().toDouble())}',
                 style: const TextStyle(color: Colors.green),
@@ -626,7 +629,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('QRIS Sales:'),
+              const Text('Penjualan QRIS:'),
               Text(
                 'Rp ${formatCurrency(day.getQrisSalesAsInt().toDouble())}',
                 style: const TextStyle(color: Colors.green),
@@ -637,7 +640,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('QRIS Fee:'),
+              const Text('Biaya QRIS:'),
               Text(
                 day.qrisFee != null
                     ? 'Rp ${formatCurrency(parseNumericValue(day.qrisFee))}'
@@ -650,7 +653,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Total Sales:'),
+              const Text('Total Penjualan:'),
               Text(
                 day.totalSales != null
                     ? 'Rp ${formatCurrency(parseNumericValue(day.totalSales))}'
@@ -663,7 +666,7 @@ class SummaryReportWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Closing Balance:'),
+              const Text('Saldo Akhir:'),
               Text(
                 day.closingBalance != null
                     ? 'Rp ${formatCurrency(day.closingBalance!)}'

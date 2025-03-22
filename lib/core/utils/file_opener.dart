@@ -9,16 +9,16 @@ class FileOpenerService {
   static Future<void> openFile(File file, BuildContext context) async {
     try {
       final filePath = file.path;
-      log('Attempting to open file: $filePath');
+      log('Mencoba membuka file: $filePath');
 
       if (!await file.exists()) {
-        log('File does not exist: $filePath');
-        throw Exception('File not found');
+        log('File tidak ditemukan: $filePath');
+        throw Exception('File tidak ditemukan');
       }
 
       final extension = path.extension(filePath).toLowerCase();
-      log('File extension: $extension');
-      log('File size: ${await file.length()} bytes');
+      log('Ekstensi file: $extension');
+      log('Ukuran file: ${await file.length()} bytes');
 
       final result = await OpenFile.open(
         filePath,
@@ -75,11 +75,11 @@ class FileOpenerService {
           ),
         );
       } else if (result.type != ResultType.done) {
-        log('Error opening file: ${result.message}');
+        log('Kesalahan membuka file: ${result.message}');
         throw Exception(result.message);
       }
     } catch (e) {
-      log('Error in openFile: $e');
+      log('Kesalahan dalam openFile: $e');
       rethrow;
     }
   }
@@ -101,10 +101,10 @@ class FileOpenerService {
     try {
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: 'Share Excel File',
+        subject: 'Bagikan File Excel',
       );
     } catch (e) {
-      log('Error sharing file: $e');
+      log('Kesalahan berbagi file: $e');
     }
   }
 }

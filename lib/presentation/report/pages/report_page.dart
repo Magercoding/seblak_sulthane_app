@@ -29,7 +29,7 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   int selectedMenu = 0;
-  String title = 'Summary Sales Report';
+  String title = 'Laporan Penjualan Ringkas';
   DateTime fromDate = DateTime.now();
   DateTime toDate = DateTime.now();
   int? outletId;
@@ -83,7 +83,7 @@ class _ReportPageState extends State<ReportPage> {
     }
 
     String searchDateFormatted =
-        '${fromDate.toFormattedDate2()} to ${toDate.toFormattedDate2()}';
+        '${fromDate.toFormattedDate2()} sampai ${toDate.toFormattedDate2()}';
 
     return Scaffold(
       body: Row(
@@ -103,7 +103,7 @@ class _ReportPageState extends State<ReportPage> {
                       children: [
                         Flexible(
                           child: CustomDatePicker(
-                            prefix: const Text('From: '),
+                            prefix: const Text('Dari: '),
                             initialDate: fromDate,
                             onDateSelected: (selectedDate) {
                               setState(() {
@@ -115,7 +115,7 @@ class _ReportPageState extends State<ReportPage> {
                         const SpaceWidth(24.0),
                         Flexible(
                           child: CustomDatePicker(
-                            prefix: const Text('To: '),
+                            prefix: const Text('Sampai: '),
                             initialDate: toDate,
                             onDateSelected: (selectedDate) {
                               setState(() {
@@ -131,11 +131,11 @@ class _ReportPageState extends State<ReportPage> {
                       child: Wrap(
                         children: [
                           ReportMenu(
-                            label: 'Transaction Report',
+                            label: 'Laporan Transaksi',
                             onPressed: () {
                               setState(() {
                                 selectedMenu = 0;
-                                title = 'Transaction Report';
+                                title = 'Laporan Transaksi';
                               });
                               context.read<TransactionReportBloc>().add(
                                     TransactionReportEvent.getReport(
@@ -150,11 +150,11 @@ class _ReportPageState extends State<ReportPage> {
                             isActive: selectedMenu == 0,
                           ),
                           ReportMenu(
-                            label: 'Item Sales Report',
+                            label: 'Laporan Penjualan Item',
                             onPressed: () {
                               setState(() {
                                 selectedMenu = 1;
-                                title = 'Item Sales Report';
+                                title = 'Laporan Penjualan Item';
                               });
                               context.read<ItemSalesReportBloc>().add(
                                     ItemSalesReportEvent.getItemSales(
@@ -169,11 +169,11 @@ class _ReportPageState extends State<ReportPage> {
                             isActive: selectedMenu == 1,
                           ),
                           ReportMenu(
-                            label: 'Product Sales Chart',
+                            label: 'Grafik Penjualan Produk',
                             onPressed: () {
                               setState(() {
                                 selectedMenu = 2;
-                                title = 'Product Sales Chart';
+                                title = 'Grafik Penjualan Produk';
                               });
                               context.read<ProductSalesBloc>().add(
                                     ProductSalesEvent.getProductSales(
@@ -186,11 +186,11 @@ class _ReportPageState extends State<ReportPage> {
                             isActive: selectedMenu == 2,
                           ),
                           ReportMenu(
-                            label: 'Summary Sales Report',
+                            label: 'Ringkasan Penjualan',
                             onPressed: () {
                               setState(() {
                                 selectedMenu = 3;
-                                title = 'Summary Sales Report';
+                                title = 'Ringkasan Penjualan';
                               });
                               context.read<SummaryBloc>().add(
                                     SummaryEvent.getSummary(
@@ -303,25 +303,25 @@ class _ReportPageState extends State<ReportPage> {
       _getTitleItemWidget('ID', 120),
       _getTitleItemWidget('Total', 100),
       _getTitleItemWidget('Sub Total', 100),
-      _getTitleItemWidget('Tax', 100),
-      _getTitleItemWidget('Disocunt', 100),
-      _getTitleItemWidget('Service', 100),
+      _getTitleItemWidget('Pajak', 100),
+      _getTitleItemWidget('Diskon', 100),
+      _getTitleItemWidget('Layanan', 100),
       _getTitleItemWidget('Total Item', 100),
-      _getTitleItemWidget('Payment Method', 130),
-      _getTitleItemWidget('Cashier', 180),
-      _getTitleItemWidget('Time', 180),
+      _getTitleItemWidget('Metode Pembayaran', 130),
+      _getTitleItemWidget('Kasir', 180),
+      _getTitleItemWidget('Waktu', 180),
     ];
   }
 
   List<Widget> _getItemSalesPageWidget() {
     return [
       _getTitleItemWidget('ID', 80),
-      _getTitleItemWidget('Order', 60),
-      _getTitleItemWidget('Product', 160),
-      _getTitleItemWidget('Category', 120), // New category column
-      _getTitleItemWidget('Qty', 60),
-      _getTitleItemWidget('Price', 140),
-      _getTitleItemWidget('Total Price', 140),
+      _getTitleItemWidget('Pesanan', 60),
+      _getTitleItemWidget('Produk', 160),
+      _getTitleItemWidget('Kategori', 120),
+      _getTitleItemWidget('Jml', 60),
+      _getTitleItemWidget('Harga', 140),
+      _getTitleItemWidget('Total Harga', 140),
     ];
   }
 

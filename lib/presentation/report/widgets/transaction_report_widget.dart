@@ -37,26 +37,26 @@ class TransactionReportWidget extends StatelessWidget {
             : await TransactionSalesInvoice.generateExcel(
                 transactionReport, searchDateFormatted);
 
-        log("Generated file: $file");
+        log("File yang dihasilkan: $file");
         await FileOpenerService.openFile(file, context);
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                '${isPdf ? 'PDF' : 'Excel'} file has been generated successfully!',
+                'File ${isPdf ? 'PDF' : 'Excel'} berhasil dibuat!',
               ),
               backgroundColor: Colors.green,
             ),
           );
         }
       } catch (e) {
-        log("Error generating file: $e");
+        log("Kesalahan saat membuat file: $e");
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  'Error generating ${isPdf ? 'PDF' : 'Excel'} file: ${e.toString()}'),
+                  'Kesalahan saat membuat file ${isPdf ? 'PDF' : 'Excel'}: ${e.toString()}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -164,7 +164,7 @@ class TransactionReportWidget extends StatelessWidget {
                 child: HorizontalDataTable(
                   leftHandSideColumnWidth: 50,
                   rightHandSideColumnWidth:
-                      1110, // Increased width to accommodate payment method
+                      1110, // Lebar kolom diperbesar untuk metode pembayaran
                   isFixedHeader: true,
                   headerWidgets: headerWidgets,
                   leftSideItemBuilder: (context, index) {
@@ -246,7 +246,7 @@ class TransactionReportWidget extends StatelessWidget {
                                 transactionReport[index].totalItem.toString()),
                           ),
                         ),
-                        // Payment Method Column
+                        // Kolom Metode Pembayaran
                         Container(
                           width: 120,
                           height: 52,
@@ -254,7 +254,7 @@ class TransactionReportWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Center(
                             child: Text(
-                              transactionReport[index].paymentMethod ?? 'Cash',
+                              transactionReport[index].paymentMethod ?? 'Tunai',
                             ),
                           ),
                         ),

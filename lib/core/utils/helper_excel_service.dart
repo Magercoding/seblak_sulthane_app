@@ -12,14 +12,14 @@ class HelperExcelService {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/$name');
-      log("file: $file");
+      log("berkas: $file");
       final bytes = excel.encode();
       await file.writeAsBytes(bytes!);
 
       return file;
     } catch (e) {
-      log("Failed to save excel: $e");
-      return Future.error("Failed to save excel: $e");
+      log("Gagal menyimpan excel: $e");
+      return Future.error("Gagal menyimpan excel: $e");
     }
   }
 }

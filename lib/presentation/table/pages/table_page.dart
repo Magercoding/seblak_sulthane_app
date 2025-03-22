@@ -30,7 +30,7 @@ class _TablePageState extends State<TablePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Table Management",
+                "Manajemen Meja",
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -44,7 +44,7 @@ class _TablePageState extends State<TablePage> {
                     builder: (context) => FormTableDialog(),
                   );
                 },
-                label: 'Generate Table',
+                label: 'Buat Meja',
                 height: 48.0,
                 width: 200.0,
               ),
@@ -63,7 +63,7 @@ class _TablePageState extends State<TablePage> {
                 success: (tables) {
                   if (tables.isEmpty) {
                     return const Center(
-                      child: Text('No table available'),
+                      child: Text('Tidak ada meja tersedia'),
                     );
                   }
                   return GridView.builder(

@@ -172,8 +172,8 @@ class _MemberDialogState extends State<MemberDialog> {
                             const SizedBox(height: 16),
                             Text(
                               searchController.text.isEmpty
-                                  ? 'No members available'
-                                  : 'No members found matching "${searchController.text}"',
+                                  ? 'Tidak Ada Member'
+                                  : 'Tidak Ada Member yang Dicari "${searchController.text}"',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -183,7 +183,7 @@ class _MemberDialogState extends State<MemberDialog> {
                             if (isOffline) ...[
                               const SizedBox(height: 8),
                               Text(
-                                'You are currently offline',
+                                'Offline!',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.amber.shade800,
@@ -275,7 +275,7 @@ class _MemberDialogState extends State<MemberDialog> {
                         const SizedBox(height: 16),
                         if (isOffline)
                           Text(
-                            'You are currently offline',
+                            'Offline!',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.amber.shade800,
@@ -292,13 +292,13 @@ class _MemberDialogState extends State<MemberDialog> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                           ),
-                          child: const Text('Retry'),
+                          child: const Text('Ulangi'),
                         ),
                       ],
                     ),
                   ),
                   orElse: () => const Center(
-                    child: Text('No members available'),
+                    child: Text('Tidak Ada Member'),
                   ),
                 );
               },
@@ -358,7 +358,7 @@ class _MemberDialogState extends State<MemberDialog> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search Member',
+                      hintText: 'Cari Member',
                       hintStyle: TextStyle(
                         color: Colors.grey[400],
                       ),

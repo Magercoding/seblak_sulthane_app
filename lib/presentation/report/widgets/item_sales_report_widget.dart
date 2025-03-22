@@ -51,7 +51,7 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
 
       productsResult.fold(
         (error) {
-          // On error, continue with uncategorized products
+          // Jika terjadi error, lanjutkan dengan produk tanpa kategori
         },
         (productResponse) {
           if (productResponse.data != null) {
@@ -64,12 +64,12 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
         },
       );
 
-      // Add categories to item sales
+      // Tambahkan kategori ke penjualan item
       final updatedSales = widget.itemSales.map((item) {
         return item.copyWith(
             categoryName: productCategories.containsKey(item.productId)
                 ? productCategories[item.productId]
-                : 'Uncategorized');
+                : 'Tanpa Kategori');
       }).toList();
 
       setState(() {
@@ -77,8 +77,8 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
         isLoading = false;
       });
     } catch (e) {
-      log('Error fetching categories: $e');
-      // On exception, continue with uncategorized products
+      log('Gagal mengambil kategori: $e');
+      // Jika terjadi exception, lanjutkan dengan produk tanpa kategori
       setState(() {
         itemSalesWithCategories = widget.itemSales;
         isLoading = false;
@@ -99,27 +99,27 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
             : await ItemSalesInvoice.generateExcel(
                 itemSalesWithCategories, widget.searchDateFormatted);
 
-        log("Generated file: $file");
+        log("File yang dihasilkan: $file");
 
         await FileOpenerService.openFile(file, context);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '${isPdf ? 'PDF' : 'Excel'} file has been generated successfully!',
+              'File ${isPdf ? 'PDF' : 'Excel'} berhasil dibuat!',
             ),
             backgroundColor: Colors.green,
           ),
         );
       } catch (e) {
-        log("Error handling file: $e");
+        log("Kesalahan saat menangani file: $e");
         if (!context.mounted) return;
 
         if (!e.toString().contains('No APP found to open this file')) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  'Error with ${isPdf ? 'PDF' : 'Excel'} file: ${e.toString()}'),
+                  'Kesalahan dengan file ${isPdf ? 'PDF' : 'Excel'}: ${e.toString()}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -150,15 +150,15 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Create header widgets if not provided or if we need to update them for category
+    // Buat widget header jika tidak disediakan atau jika perlu diperbarui untuk kategori
     final List<Widget> headerWidgetsWithCategory = widget.headerWidgets ??
         [
           _getTitleItemWidget('ID', 80),
-          _getTitleItemWidget('Order', 60),
-          _getTitleItemWidget('Product', 160),
-          _getTitleItemWidget('Category', 120), // New category column
-          _getTitleItemWidget('Qty', 60),
-          _getTitleItemWidget('Price', 140),
+          _getTitleItemWidget('Pesanan', 60),
+          _getTitleItemWidget('Produk', 160),
+          _getTitleItemWidget('Kategori', 120), // Kolom kategori baru
+          _getTitleItemWidget('Jumlah', 60),
+          _getTitleItemWidget('Harga', 140),
           _getTitleItemWidget('Total', 140),
         ];
 
@@ -241,7 +241,7 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
                       child: HorizontalDataTable(
                         leftHandSideColumnWidth: 80,
                         rightHandSideColumnWidth:
-                            680, // Increased width for the new column
+                            680, // Lebar kolom diperbesar untuk kolom baru
                         isFixedHeader: true,
                         headerWidgets: headerWidgetsWithCategory,
                         leftSideItemBuilder: (context, index) {
@@ -277,7 +277,7 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
                                       .productName),
                                 ),
                               ),
-                              // New category column
+                              // Kolom kategori baru
                               Container(
                                 width: 120,
                                 height: 52,
@@ -286,7 +286,7 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
                                   child: Text(
                                     itemSalesWithCategories[index]
                                             .categoryName ??
-                                        'Uncategorized',
+                                        'Tanpa Kategori',
                                   ),
                                 ),
                               ),

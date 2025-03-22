@@ -1,6 +1,3 @@
-// Update the CardTableWidget class:
-// This code modifies the button logic to handle different status conditions
-
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,27 +41,25 @@ class _CardTableWidgetState extends State<CardTableWidget> {
     }
   }
 
-  // Get the appropriate color based on table status
   Color getStatusColor() {
     switch (widget.table.status) {
       case 'available':
         return AppColors.primary;
       case 'closed':
         return Colors.orange;
-      default: // 'occupied' or any other status
+      default:
         return AppColors.red;
     }
   }
 
-  // Get the appropriate button label based on table status
   String getButtonLabel() {
     switch (widget.table.status) {
       case 'available':
-        return 'Open';
+        return 'Buka';
       case 'closed':
-        return 'Close';
-      default: // 'occupied' or any other status
-        return 'Close';
+        return 'Tutup';
+      default:
+        return 'Tutup';
     }
   }
 
@@ -82,7 +77,7 @@ class _CardTableWidgetState extends State<CardTableWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Table ${widget.table.tableNumber}',
+            'Meja ${widget.table.tableNumber}',
             style: TextStyle(
               color: AppColors.black,
               fontSize: 24,
@@ -91,8 +86,8 @@ class _CardTableWidgetState extends State<CardTableWidget> {
           ),
           Text(
             widget.table.status == 'available'
-                ? widget.table.status
-                : "${widget.table.status} - ${DateTime.parse(widget.table.startTime).toFormattedTime()}",
+                ? 'tersedia'
+                : "${widget.table.status == 'occupied' ? 'terisi' : 'ditutup'} - ${DateTime.parse(widget.table.startTime).toFormattedTime()}",
             style: TextStyle(
               color: AppColors.black,
               fontSize: 24,
@@ -102,15 +97,12 @@ class _CardTableWidgetState extends State<CardTableWidget> {
           Button.filled(
               color: getStatusColor(),
               onPressed: () async {
-                // Handle button press based on table status
                 if (widget.table.status == 'available') {
-                  // Open the table
                   context.push(HomePage(
                     isTable: true,
                     table: widget.table,
                   ));
                 } else if (widget.table.status == 'closed') {
-                  // Show close confirmation dialog
                   showDialog(
                     context: context,
                     builder: (context) => CloseTableConfirmationDialog(
@@ -118,7 +110,6 @@ class _CardTableWidgetState extends State<CardTableWidget> {
                     ),
                   );
                 } else {
-                  // For occupied tables - proceed to payment
                   context.read<CheckoutBloc>().add(
                         CheckoutEvent.loadDraftOrder(data!),
                       );
@@ -126,7 +117,7 @@ class _CardTableWidgetState extends State<CardTableWidget> {
                   context.push(PaymentTablePage(
                     table: widget.table,
                     draftOrder: data!,
-                    isTable: true, // Add this parameter
+                    isTable: true,
                     orderType: 'dine_in',
                   ));
                 }

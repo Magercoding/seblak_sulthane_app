@@ -40,10 +40,7 @@ class ProductSalesChartWidgets extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16.0),
           ),
           const SizedBox(height: 8.0),
           Text(

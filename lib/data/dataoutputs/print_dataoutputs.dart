@@ -595,24 +595,26 @@ class PrintDataoutputs {
     return bytes;
   }
 
-  // Improved helper method to safely parse any numeric value to double
   double _parseToDouble(dynamic value) {
     if (value == null) return 0.0;
-    if (value is double) return value;
-    if (value is int) return value.toDouble();
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
     if (value is String) {
       try {
-        // Remove any currency symbols or formatting
-        String cleanValue = value
-            .replaceAll('Rp', '')
-            .replaceAll('.', '') // Remove thousand separators
-            .replaceAll(',', '.') // Convert comma to decimal point
-            .trim();
+        // First, remove any commas that might be used as thousand separators
+        final cleanValue = value.replaceAll(',', '');
+
+        // Now try to parse as double
         return double.parse(cleanValue);
-      } catch (_) {
+      } catch (e) {
+        print("Error parsing value to double: $e");
         return 0.0;
       }
     }
+
     return 0.0;
   }
 
@@ -877,7 +879,6 @@ class PrintDataoutputs {
       ),
     ]);
 
-    // Biaya QRIS
     double qrisFee = _parseToDouble(summary.qrisFee);
     bytes += generator.row([
       PosColumn(
@@ -980,7 +981,6 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Biaya QRIS
         double qrisFees =
             _parseToDouble(summary.paymentMethods!.qris!.qrisFees);
         bytes += generator.row([
@@ -1075,7 +1075,6 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Biaya QRIS
         double dayQrisFee = _parseToDouble(day.qrisFee);
         bytes += generator.row([
           PosColumn(
@@ -1277,7 +1276,6 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Biaya QRIS (QRIS Fee)
         double dayQrisFee = _parseToDouble(day.qrisFee);
         bytes += generator.row([
           PosColumn(
@@ -1286,7 +1284,7 @@ class PrintDataoutputs {
             styles: const PosStyles(align: PosAlign.left),
           ),
           PosColumn(
-            text: formatNumberWithoutDecimal(dayQrisFee),
+            text: "- " + formatNumberWithoutDecimal(dayQrisFee),
             width: 6,
             styles: const PosStyles(align: PosAlign.right),
           ),

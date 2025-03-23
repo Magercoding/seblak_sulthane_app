@@ -20,18 +20,21 @@ mixin _$LocalProductEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getLocalProduct,
+    required TResult Function(String priceRange) filterByPriceRange,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
+    TResult? Function(String priceRange)? filterByPriceRange,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getLocalProduct,
+    TResult Function(String priceRange)? filterByPriceRange,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$LocalProductEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
+    required TResult Function(_FilterByPriceRange value) filterByPriceRange,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
+    TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
+    TResult Function(_FilterByPriceRange value)? filterByPriceRange,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,6 +126,7 @@ class _$StartedImpl implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getLocalProduct,
+    required TResult Function(String priceRange) filterByPriceRange,
   }) {
     return started();
   }
@@ -129,6 +136,7 @@ class _$StartedImpl implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
+    TResult? Function(String priceRange)? filterByPriceRange,
   }) {
     return started?.call();
   }
@@ -138,6 +146,7 @@ class _$StartedImpl implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getLocalProduct,
+    TResult Function(String priceRange)? filterByPriceRange,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -151,6 +160,7 @@ class _$StartedImpl implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
+    required TResult Function(_FilterByPriceRange value) filterByPriceRange,
   }) {
     return started(this);
   }
@@ -160,6 +170,7 @@ class _$StartedImpl implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
+    TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
   }) {
     return started?.call(this);
   }
@@ -169,6 +180,7 @@ class _$StartedImpl implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
+    TResult Function(_FilterByPriceRange value)? filterByPriceRange,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -225,6 +237,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getLocalProduct,
+    required TResult Function(String priceRange) filterByPriceRange,
   }) {
     return getLocalProduct();
   }
@@ -234,6 +247,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
+    TResult? Function(String priceRange)? filterByPriceRange,
   }) {
     return getLocalProduct?.call();
   }
@@ -243,6 +257,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getLocalProduct,
+    TResult Function(String priceRange)? filterByPriceRange,
     required TResult orElse(),
   }) {
     if (getLocalProduct != null) {
@@ -256,6 +271,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
+    required TResult Function(_FilterByPriceRange value) filterByPriceRange,
   }) {
     return getLocalProduct(this);
   }
@@ -265,6 +281,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
+    TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
   }) {
     return getLocalProduct?.call(this);
   }
@@ -274,6 +291,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
+    TResult Function(_FilterByPriceRange value)? filterByPriceRange,
     required TResult orElse(),
   }) {
     if (getLocalProduct != null) {
@@ -285,6 +303,155 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
 
 abstract class _GetLocalProduct implements LocalProductEvent {
   const factory _GetLocalProduct() = _$GetLocalProductImpl;
+}
+
+/// @nodoc
+abstract class _$$FilterByPriceRangeImplCopyWith<$Res> {
+  factory _$$FilterByPriceRangeImplCopyWith(_$FilterByPriceRangeImpl value,
+          $Res Function(_$FilterByPriceRangeImpl) then) =
+      __$$FilterByPriceRangeImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String priceRange});
+}
+
+/// @nodoc
+class __$$FilterByPriceRangeImplCopyWithImpl<$Res>
+    extends _$LocalProductEventCopyWithImpl<$Res, _$FilterByPriceRangeImpl>
+    implements _$$FilterByPriceRangeImplCopyWith<$Res> {
+  __$$FilterByPriceRangeImplCopyWithImpl(_$FilterByPriceRangeImpl _value,
+      $Res Function(_$FilterByPriceRangeImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? priceRange = null,
+  }) {
+    return _then(_$FilterByPriceRangeImpl(
+      null == priceRange
+          ? _value.priceRange
+          : priceRange // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
+  const _$FilterByPriceRangeImpl(this.priceRange);
+
+  @override
+  final String priceRange;
+
+  @override
+  String toString() {
+    return 'LocalProductEvent.filterByPriceRange(priceRange: $priceRange)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FilterByPriceRangeImpl &&
+            (identical(other.priceRange, priceRange) ||
+                other.priceRange == priceRange));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, priceRange);
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FilterByPriceRangeImplCopyWith<_$FilterByPriceRangeImpl> get copyWith =>
+      __$$FilterByPriceRangeImplCopyWithImpl<_$FilterByPriceRangeImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getLocalProduct,
+    required TResult Function(String priceRange) filterByPriceRange,
+  }) {
+    return filterByPriceRange(priceRange);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getLocalProduct,
+    TResult? Function(String priceRange)? filterByPriceRange,
+  }) {
+    return filterByPriceRange?.call(priceRange);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getLocalProduct,
+    TResult Function(String priceRange)? filterByPriceRange,
+    required TResult orElse(),
+  }) {
+    if (filterByPriceRange != null) {
+      return filterByPriceRange(priceRange);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetLocalProduct value) getLocalProduct,
+    required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+  }) {
+    return filterByPriceRange(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetLocalProduct value)? getLocalProduct,
+    TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+  }) {
+    return filterByPriceRange?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetLocalProduct value)? getLocalProduct,
+    TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    required TResult orElse(),
+  }) {
+    if (filterByPriceRange != null) {
+      return filterByPriceRange(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _FilterByPriceRange implements LocalProductEvent {
+  const factory _FilterByPriceRange(final String priceRange) =
+      _$FilterByPriceRangeImpl;
+
+  String get priceRange;
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$FilterByPriceRangeImplCopyWith<_$FilterByPriceRangeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

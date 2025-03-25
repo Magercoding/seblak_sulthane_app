@@ -690,7 +690,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                             isCash = true;
                                             setState(() {});
                                           },
-                                          label: 'Cash',
+                                          label: 'cash',
                                         )
                                       : Button.outlined(
                                           width: 120.0,
@@ -699,7 +699,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                             isCash = true;
                                             setState(() {});
                                           },
-                                          label: 'Cash',
+                                          label: 'cash',
                                         ),
                                   const SpaceWidth(8.0),
                                   isCash
@@ -710,7 +710,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                             isCash = false;
                                             setState(() {});
                                           },
-                                          label: 'QRIS',
+                                          label: 'qris',
                                         )
                                       : Button.filled(
                                           width: 120.0,
@@ -719,7 +719,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                             isCash = false;
                                             setState(() {});
                                           },
-                                          label: 'QRIS',
+                                          label: 'qris',
                                         ),
                                 ],
                               ),
@@ -892,7 +892,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                                   widget.table?.id ?? 0,
                                                   'completed',
                                                   'paid',
-                                                  isCash ? 'Cash' : 'QRIS',
+                                                  isCash ? 'cash' : 'qris',
                                                   totalPriceFinal,
                                                   orderType:
                                                       'dine_in', // Always use 'dine_in' for tables

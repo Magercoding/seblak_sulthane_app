@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/data/models/response/category_response_model.dart';
+import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/discount_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/member_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/tax_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/pages/confirm_payment_page.dart';
+import 'package:seblak_sulthane_app/presentation/home/widgets/custom_tab_barV2.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
@@ -17,7 +21,6 @@ import '../../../core/constants/colors.dart';
 import '../bloc/checkout/checkout_bloc.dart';
 import '../dialog/service_dialog.dart';
 import '../widgets/column_button.dart';
-import '../widgets/custom_tab_bar.dart';
 import '../widgets/home_title.dart';
 import '../widgets/order_menu.dart';
 import '../widgets/product_card.dart';
@@ -37,30 +40,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
-  bool isTakeaway = true; // State untuk menyimpan status pemesanan
-  String searchQuery = ''; // Add this to store search query
+  bool isTakeaway = true;
+  String searchQuery = '';
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     context
         .read<LocalProductBloc>()
         .add(const LocalProductEvent.getLocalProduct());
+    context
+        .read<GetCategoriesBloc>()
+        .add(const GetCategoriesEvent.getCategories());
 
-    // Force dine in mode if this is a table order
     if (widget.isTable) {
-      isTakeaway = false; // Set to Dine In if it's a table
+      isTakeaway = false;
     }
 
     super.initState();
   }
 
-  void onCategoryTap(int index) {
-    searchController.clear();
-    searchQuery = ''; // Reset search query when category changes
-    setState(() {});
-  }
-
-  // This function will handle the search
   void onSearchChanged(String value) {
     setState(() {
       searchQuery = value.toLowerCase();
@@ -86,340 +85,44 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         HomeTitle(
                           controller: searchController,
-                          onChanged:
-                              onSearchChanged, // Connect to search handler
+                          onChanged: onSearchChanged,
                         ),
                         const SizedBox(height: 24),
-                        CustomTabBar(
-                          tabTitles: const [
-                            'Semua',
-                            'Makanan',
-                            'Minuman',
-                            'Snack'
-                          ],
-                          initialTabIndex: 0,
-                          tabViews: [
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(orElse: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loading: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loaded: (products) {
-                                    if (products.isEmpty) {
-                                      return const Center(
-                                        child: Text('No Items'),
-                                      );
-                                    }
+                        BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () => const SizedBox.shrink(),
+                              loading: () => const CircularProgressIndicator(),
+                              loaded: (categories) {
+                                final tabViews = [
+                                  // "Semua" tab view
+                                  _buildProductGrid(searchQuery),
+                                  // Price filter tab views
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "500"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "1000"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "1500-2000"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "2500"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "3000-9000"),
+                                  // Category tab views
+                                  ...categories.data.map((category) =>
+                                      _buildProductGrid(searchQuery,
+                                          categoryId: category.id)),
+                                ];
 
-                                    // Apply search filter
-                                    final filteredProducts = searchQuery.isEmpty
-                                        ? products
-                                        : products
-                                            .where((product) =>
-                                                product.name
-                                                    ?.toLowerCase()
-                                                    .contains(searchQuery) ??
-                                                false)
-                                            .toList();
-
-                                    if (filteredProducts.isEmpty) {
-                                      return Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const SpaceHeight(40),
-                                            Assets.icons.noProduct.svg(),
-                                            const SizedBox(height: 40.0),
-                                            Text(
-                                              'Tidak ada produk dengan nama "$searchQuery"',
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-
-                                    return GridView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: filteredProducts.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 0.85,
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 30.0,
-                                        mainAxisSpacing: 30.0,
-                                      ),
-                                      itemBuilder: (context, index) =>
-                                          ProductCard(
-                                        data: filteredProducts[index],
-                                        onCartButton: () {},
-                                      ),
-                                    );
-                                  });
-                                },
-                              ),
-                            ),
-                            // For the "Makanan" tab (Category ID 1):
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(orElse: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loading: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loaded: (products) {
-                                    if (products.isEmpty) {
-                                      return const Center(
-                                        child: Text('No Items'),
-                                      );
-                                    }
-
-                                    // First filter by category
-                                    var foodProducts = products
-                                        .where((element) =>
-                                            element.category != null &&
-                                            element.category?.id == 1)
-                                        .toList();
-
-                                    // Then apply search filter
-                                    if (searchQuery.isNotEmpty) {
-                                      foodProducts = foodProducts
-                                          .where((product) =>
-                                              product.name
-                                                  ?.toLowerCase()
-                                                  .contains(searchQuery) ??
-                                              false)
-                                          .toList();
-                                    }
-
-                                    if (foodProducts.isEmpty) {
-                                      return Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const SpaceHeight(40),
-                                            Assets.icons.noProduct.svg(),
-                                            const SizedBox(height: 40.0),
-                                            Text(
-                                              searchQuery.isEmpty
-                                                  ? 'Belum Ada Produk Makanan'
-                                                  : 'Tidak ada makanan dengan nama "$searchQuery"',
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-
-                                    return GridView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: foodProducts.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 0.85,
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 30.0,
-                                        mainAxisSpacing: 30.0,
-                                      ),
-                                      itemBuilder: (context, index) =>
-                                          ProductCard(
-                                        data: foodProducts[index],
-                                        onCartButton: () {},
-                                      ),
-                                    );
-                                  });
-                                },
-                              ),
-                            ),
-
-                            // For the "Minuman" tab (Category ID 2):
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(orElse: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loading: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loaded: (products) {
-                                    if (products.isEmpty) {
-                                      return const Center(
-                                        child: Text('No Items'),
-                                      );
-                                    }
-
-                                    // First filter by category
-                                    var drinkProducts = products
-                                        .where((element) =>
-                                            element.category != null &&
-                                            element.category?.id == 2)
-                                        .toList();
-
-                                    // Then apply search filter
-                                    if (searchQuery.isNotEmpty) {
-                                      drinkProducts = drinkProducts
-                                          .where((product) =>
-                                              product.name
-                                                  ?.toLowerCase()
-                                                  .contains(searchQuery) ??
-                                              false)
-                                          .toList();
-                                    }
-
-                                    if (drinkProducts.isEmpty) {
-                                      return Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const SpaceHeight(40),
-                                            Assets.icons.noProduct.svg(),
-                                            const SizedBox(height: 40.0),
-                                            Text(
-                                              searchQuery.isEmpty
-                                                  ? 'Belum Ada Produk Minuman'
-                                                  : 'Tidak ada minuman dengan nama "$searchQuery"',
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-
-                                    return GridView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: drinkProducts.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 0.85,
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 30.0,
-                                        mainAxisSpacing: 30.0,
-                                      ),
-                                      itemBuilder: (context, index) =>
-                                          ProductCard(
-                                        data: drinkProducts[index],
-                                        onCartButton: () {},
-                                      ),
-                                    );
-                                  });
-                                },
-                              ),
-                            ),
-
-                            // For the "Snack" tab (Category ID 3):
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(orElse: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loading: () {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }, loaded: (products) {
-                                    if (products.isEmpty) {
-                                      return const Center(
-                                        child: Text('No Items'),
-                                      );
-                                    }
-
-                                    // First filter by category
-                                    var snackProducts = products
-                                        .where((element) =>
-                                            element.category != null &&
-                                            element.category?.id == 3)
-                                        .toList();
-
-                                    // Then apply search filter
-                                    if (searchQuery.isNotEmpty) {
-                                      snackProducts = snackProducts
-                                          .where((product) =>
-                                              product.name
-                                                  ?.toLowerCase()
-                                                  .contains(searchQuery) ??
-                                              false)
-                                          .toList();
-                                    }
-
-                                    if (snackProducts.isEmpty) {
-                                      return Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const SpaceHeight(40),
-                                            Assets.icons.noProduct.svg(),
-                                            const SizedBox(height: 40.0),
-                                            Text(
-                                              searchQuery.isEmpty
-                                                  ? 'Belum Ada Produk Snack'
-                                                  : 'Tidak ada snack dengan nama "$searchQuery"',
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-
-                                    return GridView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snackProducts.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 0.85,
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 30.0,
-                                        mainAxisSpacing: 30.0,
-                                      ),
-                                      itemBuilder: (context, index) =>
-                                          ProductCard(
-                                        data: snackProducts[index],
-                                        onCartButton: () {},
-                                      ),
-                                    );
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
+                                return CustomTabBarV2(
+                                  categories: categories.data,
+                                  initialTabIndex: _selectedIndex,
+                                  tabViews: tabViews,
+                                );
+                              },
+                              error: (message) => Text('Error: $message'),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -427,7 +130,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            // Rest of your HomePage implementation (right side panel)
             Expanded(
               flex: 2,
               child: Align(
@@ -439,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Updated text for table orders
                           Text(
                             widget.isTable
                                 ? 'Table ${widget.table?.tableNumber ?? ""} Order'
@@ -451,10 +152,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SpaceHeight(8.0),
-
-                          // Add visual indicator for table orders
                           if (widget.isTable) ...[
-                            // Table indicator
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12.0, vertical: 8.0),
@@ -483,15 +181,13 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ],
-
-                          // Updated row with disabled Take Away button for tables
                           Row(
                             children: [
                               Expanded(
                                 child: Button.filled(
                                   height: 40,
                                   onPressed: widget.isTable
-                                      ? () {} // Use an empty function instead of null
+                                      ? () {}
                                       : () {
                                           setState(() {
                                             isTakeaway = true;
@@ -499,8 +195,7 @@ class _HomePageState extends State<HomePage> {
                                         },
                                   label: 'Take Away',
                                   color: widget.isTable
-                                      ? AppColors.grey.withOpacity(
-                                          0.6) // Grayed out for tables
+                                      ? AppColors.grey.withOpacity(0.6)
                                       : (isTakeaway
                                           ? AppColors.primary
                                           : AppColors.grey),
@@ -512,8 +207,7 @@ class _HomePageState extends State<HomePage> {
                                   height: 40,
                                   onPressed: () {
                                     setState(() {
-                                      isTakeaway =
-                                          false; // Force dine in for tables
+                                      isTakeaway = false;
                                     });
                                   },
                                   label: 'Dine In',
@@ -524,8 +218,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-
-                          // Rest of your right panel code remains the same
                           const SpaceHeight(16.0),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -601,7 +293,6 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
-                          // More code follows...
                           const SpaceHeight(8.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -855,10 +546,8 @@ class _HomePageState extends State<HomePage> {
                                 isTable: widget.isTable,
                                 table: widget.table,
                                 orderType: widget.isTable
-                                    ? 'dine_in' // Force dine_in for tables
-                                    : (isTakeaway
-                                        ? 'take_away'
-                                        : 'dine_in'), // Use selection for non-tables
+                                    ? 'dine_in'
+                                    : (isTakeaway ? 'take_away' : 'dine_in'),
                               ));
                             },
                             label: 'Lanjutkan Pembayaran',
@@ -877,15 +566,93 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _IsEmpty extends StatelessWidget {
-  const _IsEmpty();
+Widget _buildProductGrid(String searchQuery,
+    {int? categoryId, String? priceRange}) {
+  return SizedBox(
+    child: BlocBuilder<LocalProductBloc, LocalProductState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: (products) {
+            if (products.isEmpty) {
+              return const EmptyStateWidget();
+            }
+
+            List<Product> filteredProducts = products;
+
+            // Apply category filter if specified
+            if (categoryId != null) {
+              filteredProducts = filteredProducts
+                  .where((product) => product.category?.id == categoryId)
+                  .toList();
+            }
+
+            // Apply price filter if specified
+            if (priceRange != null) {
+              filteredProducts = filteredProducts.where((product) {
+                final price = product.price?.toIntegerFromText ?? 0;
+                switch (priceRange) {
+                  case "500":
+                    return price == 500;
+                  case "1000":
+                    return price == 1000;
+                  case "1500-2000":
+                    return price >= 1500 && price <= 2000;
+                  case "2500":
+                    return price == 2500;
+                  case "3000-9000":
+                    return price >= 3000 && price <= 9000;
+                  default:
+                    return false;
+                }
+              }).toList();
+            }
+
+            // Apply search filter
+            if (searchQuery.isNotEmpty) {
+              filteredProducts = filteredProducts
+                  .where((product) =>
+                      product.name?.toLowerCase().contains(searchQuery) ??
+                      false)
+                  .toList();
+            }
+
+            if (filteredProducts.isEmpty) {
+              return const EmptyStateWidget();
+            }
+
+            return GridView.builder(
+              shrinkWrap: true,
+              itemCount: filteredProducts.length,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.85,
+                crossAxisCount: 3,
+                crossAxisSpacing: 30.0,
+                mainAxisSpacing: 30.0,
+              ),
+              itemBuilder: (context, index) => ProductCard(
+                data: filteredProducts[index],
+                onCartButton: () {},
+              ),
+            );
+          },
+        );
+      },
+    ),
+  );
+}
+
+class EmptyStateWidget extends StatelessWidget {
+  const EmptyStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SpaceHeight(40),
+        const SpaceHeight(40),
         Assets.icons.noProduct.svg(),
         const SizedBox(height: 40.0),
         const Text(

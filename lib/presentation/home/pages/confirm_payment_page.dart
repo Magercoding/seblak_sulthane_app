@@ -680,7 +680,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         isCash = true;
                                         setState(() {});
                                       },
-                                      label: 'Cash',
+                                      label: 'cash',
                                     )
                                   : Button.outlined(
                                       width: 120.0,
@@ -689,7 +689,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         isCash = true;
                                         setState(() {});
                                       },
-                                      label: 'Cash',
+                                      label: 'cash',
                                     ),
                               const SpaceWidth(8.0),
                               isCash
@@ -700,7 +700,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         isCash = false;
                                         setState(() {});
                                       },
-                                      label: 'QRIS',
+                                      label: 'qris',
                                     )
                                   : Button.filled(
                                       width: 120.0,
@@ -709,7 +709,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                         isCash = false;
                                         setState(() {});
                                       },
-                                      label: 'QRIS',
+                                      label: 'qris',
                                     ),
                             ],
                           ),
@@ -951,7 +951,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                         .id!, // Use table ID
                                                     'completed',
                                                     'paid',
-                                                    isCash ? 'Cash' : 'QRIS',
+                                                    isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType: 'dine_in'));
 
@@ -1009,7 +1009,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     0,
                                                     'completed',
                                                     'paid',
-                                                    isCash ? 'Cash' : 'QRIS',
+                                                    isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType:
                                                         widget.orderType));

@@ -466,6 +466,48 @@ class SummaryReportWidget extends StatelessWidget {
                   'Rp ${formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
               textColor: Colors.green,
             ),
+
+            // Add Beverage Breakdown Section
+            if (summary.beverageBreakdown != null) ...[
+              const SizedBox(height: 20),
+              const Text(
+                'Rincian Penjualan Minuman',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (summary.beverageBreakdown!.cash != null) ...[
+                SummaryItem(
+                  label:
+                      'Tunai (${summary.beverageBreakdown!.cash!.getQuantityAsInt()} item)',
+                  value:
+                      'Rp ${formatCurrency(summary.beverageBreakdown!.cash!.getAmountAsInt().toDouble())}',
+                  textColor: Colors.green,
+                ),
+              ],
+              if (summary.beverageBreakdown!.qris != null) ...[
+                SummaryItem(
+                  label:
+                      'QRIS (${summary.beverageBreakdown!.qris!.getQuantityAsInt()} item)',
+                  value:
+                      'Rp ${formatCurrency(summary.beverageBreakdown!.qris!.getAmountAsInt().toDouble())}',
+                  textColor: Colors.green,
+                ),
+              ],
+              if (summary.beverageBreakdown!.total != null) ...[
+                SummaryItem(
+                  label:
+                      'Total (${summary.beverageBreakdown!.total!.quantity} item)',
+                  value:
+                      'Rp ${formatCurrency(summary.beverageBreakdown!.total!.amount.toDouble())}',
+                  textColor: Colors.green,
+                  isTotal: true,
+                ),
+              ],
+            ],
+
             const Divider(),
             SummaryItem(
               label: 'Saldo Akhir',
@@ -474,6 +516,16 @@ class SummaryReportWidget extends StatelessWidget {
                   : 'Rp 0.00',
               isTotal: true,
             ),
+
+            // Add Final Cash Closing
+            if (summary.finalCashClosing != null) ...[
+              SummaryItem(
+                label: 'Final Kas Akhir',
+                value:
+                    'Rp ${formatCurrency(summary.getFinalCashClosingAsInt().toDouble())}',
+                isTotal: true,
+              ),
+            ],
 
             // Payment Methods Section
             if (summary.paymentMethods != null) ...[
@@ -675,6 +727,77 @@ class SummaryReportWidget extends StatelessWidget {
               ),
             ],
           ),
+
+          // Add Final Cash Closing
+          if (day.finalCashClosing != null) ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Final Kas Akhir:'),
+                Text(
+                  'Rp ${formatCurrency(day.getFinalCashClosingAsInt().toDouble())}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+
+          // Add Beverage Breakdown for Daily
+          if (day.beverageBreakdown != null) ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Rincian Minuman:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (day.beverageBreakdown!.cash != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '- Tunai (${day.beverageBreakdown!.cash!.getQuantityAsInt()} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.beverageBreakdown!.cash!.getAmountAsInt().toDouble())}',
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+            if (day.beverageBreakdown!.qris != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '- QRIS (${day.beverageBreakdown!.qris!.getQuantityAsInt()} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.beverageBreakdown!.qris!.getAmountAsInt().toDouble())}',
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+            if (day.beverageBreakdown!.total != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '- Total (${day.beverageBreakdown!.total!.quantity} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.beverageBreakdown!.total!.amount.toDouble())}',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
         ],
       ),
     );

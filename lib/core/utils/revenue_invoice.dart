@@ -165,6 +165,10 @@ class RevenueInvoice {
           buildFinancialSummary(summaryModel),
           pw.SizedBox(height: 1 * PdfPageFormat.cm),
           buildCashFlowSummary(summaryModel),
+          if (summaryModel.beverageBreakdown != null) ...[
+            pw.SizedBox(height: 1 * PdfPageFormat.cm),
+            buildBeverageBreakdown(summaryModel),
+          ],
           if (summaryModel.paymentMethods != null) ...[
             pw.SizedBox(height: 1 * PdfPageFormat.cm),
             buildPaymentMethods(summaryModel),
@@ -372,6 +376,70 @@ class RevenueInvoice {
           value: safeGetCurrencyFormat(summary.closingBalance),
           unite: true,
         ),
+        // Add Final Cash Closing
+        if (summary.finalCashClosing != null) ...[
+          buildText(
+            title: 'Final Kas Akhir',
+            titleStyle: pw.TextStyle(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.bold,
+            ),
+            value: safeGetCurrencyFormat(summary.finalCashClosing),
+            unite: true,
+          ),
+        ],
+      ],
+    );
+  }
+
+  static pw.Widget buildBeverageBreakdown(EnhancedSummaryData summary) {
+    final beverageBreakdown = summary.beverageBreakdown;
+    if (beverageBreakdown == null) return pw.Container();
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text('Rincian Penjualan Minuman',
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            )),
+        pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
+        if (beverageBreakdown.cash != null) ...[
+          buildText(
+            title: 'Tunai (${beverageBreakdown.cash!.getQuantityAsInt()} item)',
+            value:
+                safeGetCurrencyFormat(beverageBreakdown.cash!.getAmountAsInt()),
+            unite: true,
+            textStyle: pw.TextStyle(
+              color: PdfColor.fromHex('#008000'),
+            ),
+          ),
+        ],
+        if (beverageBreakdown.qris != null) ...[
+          buildText(
+            title: 'QRIS (${beverageBreakdown.qris!.getQuantityAsInt()} item)',
+            value:
+                safeGetCurrencyFormat(beverageBreakdown.qris!.getAmountAsInt()),
+            unite: true,
+            textStyle: pw.TextStyle(
+              color: PdfColor.fromHex('#008000'),
+            ),
+          ),
+        ],
+        if (beverageBreakdown.total != null) ...[
+          pw.Divider(),
+          buildText(
+            title: 'Total (${beverageBreakdown.total!.quantity} item)',
+            titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            value: beverageBreakdown.total!.amount.toString().currencyFormatRp,
+            unite: true,
+            textStyle: pw.TextStyle(
+              color: PdfColor.fromHex('#008000'),
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -453,6 +521,94 @@ class RevenueInvoice {
     for (int i = 0; i < dailyBreakdown.length; i++) {
       final day = dailyBreakdown[i];
 
+      List<pw.Widget> dayWidgets = [
+        pw.Text('Tanggal: ${day.date}',
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        pw.SizedBox(height: 4),
+        buildSimpleText(
+          title: 'Saldo Awal:',
+          value: safeGetCurrencyFormat(day.openingBalance),
+        ),
+        buildSimpleText(
+          title: 'Pengeluaran:',
+          value: "- ${safeGetCurrencyFormat(day.expenses)}",
+        ),
+        buildSimpleText(
+          title: 'Penjualan Tunai:',
+          value: day.getCashSalesAsInt().toString().currencyFormatRp,
+        ),
+        buildSimpleText(
+          title: 'Penjualan QRIS:',
+          value: day.getQrisSalesAsInt().toString().currencyFormatRp,
+        ),
+        buildSimpleText(
+          title: 'Biaya QRIS:',
+          value: day.qrisFee != null
+              ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
+              : "- Rp 0,00",
+        ),
+        buildSimpleText(
+          title: 'Total Penjualan:',
+          value: safeGetCurrencyFormat(day.totalSales),
+        ),
+        buildSimpleText(
+          title: 'Saldo Akhir:',
+          value: safeGetCurrencyFormat(day.closingBalance),
+        ),
+      ];
+
+      // Add Final Cash Closing if available
+      if (day.finalCashClosing != null) {
+        dayWidgets.add(
+          buildSimpleText(
+            title: 'Final Kas Akhir:',
+            value: safeGetCurrencyFormat(day.finalCashClosing),
+          ),
+        );
+      }
+
+      // Add Beverage Breakdown if available
+      if (day.beverageBreakdown != null) {
+        dayWidgets.add(pw.SizedBox(height: 4));
+        dayWidgets.add(
+          pw.Text('Rincian Minuman:',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        );
+
+        if (day.beverageBreakdown!.cash != null) {
+          dayWidgets.add(
+            buildSimpleText(
+              title:
+                  '- Tunai (${day.beverageBreakdown!.cash!.getQuantityAsInt()} item):',
+              value: safeGetCurrencyFormat(
+                  day.beverageBreakdown!.cash!.getAmountAsInt()),
+            ),
+          );
+        }
+
+        if (day.beverageBreakdown!.qris != null) {
+          dayWidgets.add(
+            buildSimpleText(
+              title:
+                  '- QRIS (${day.beverageBreakdown!.qris!.getQuantityAsInt()} item):',
+              value: safeGetCurrencyFormat(
+                  day.beverageBreakdown!.qris!.getAmountAsInt()),
+            ),
+          );
+        }
+
+        if (day.beverageBreakdown!.total != null) {
+          dayWidgets.add(
+            buildSimpleText(
+              title:
+                  '- Total (${day.beverageBreakdown!.total!.quantity} item):',
+              value:
+                  safeGetCurrencyFormat(day.beverageBreakdown!.total!.amount),
+            ),
+          );
+        }
+      }
+
       breakdownWidgets.add(
         pw.Container(
           padding: const pw.EdgeInsets.all(8),
@@ -462,41 +618,7 @@ class RevenueInvoice {
           ),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text('Tanggal: ${day.date}',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              pw.SizedBox(height: 4),
-              buildSimpleText(
-                title: 'Saldo Awal:',
-                value: safeGetCurrencyFormat(day.openingBalance),
-              ),
-              buildSimpleText(
-                title: 'Pengeluaran:',
-                value: "- ${safeGetCurrencyFormat(day.expenses)}",
-              ),
-              buildSimpleText(
-                title: 'Penjualan Tunai:',
-                value: day.getCashSalesAsInt().toString().currencyFormatRp,
-              ),
-              buildSimpleText(
-                title: 'Penjualan QRIS:',
-                value: day.getQrisSalesAsInt().toString().currencyFormatRp,
-              ),
-              buildSimpleText(
-                title: 'Biaya QRIS:',
-                value: day.qrisFee != null
-                    ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
-                    : "- Rp 0,00",
-              ),
-              buildSimpleText(
-                title: 'Total Penjualan:',
-                value: safeGetCurrencyFormat(day.totalSales),
-              ),
-              buildSimpleText(
-                title: 'Saldo Akhir:',
-                value: safeGetCurrencyFormat(day.closingBalance),
-              ),
-            ],
+            children: dayWidgets,
           ),
         ),
       );
@@ -577,14 +699,14 @@ class RevenueInvoice {
     headerCell.cellStyle = CellStyle(
       bold: true,
       fontSize: 16,
-      horizontalAlign: HorizontalAlign.Center,
+      horizontalAlign: HorizontalAlign.Left,
     );
 
     sheet.merge(CellIndex.indexByString("A2"), CellIndex.indexByString("B2"));
     final dateCell = sheet.cell(CellIndex.indexByString("A2"));
     dateCell.value = TextCellValue('Data: $searchDateFormatted');
     dateCell.cellStyle = CellStyle(
-      horizontalAlign: HorizontalAlign.Center,
+      horizontalAlign: HorizontalAlign.Left,
     );
 
     sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("B3"));
@@ -592,12 +714,12 @@ class RevenueInvoice {
     createdCell.value =
         TextCellValue('Dibuat Pada: ${DateTime.now().toFormattedDate3()}');
     createdCell.cellStyle = CellStyle(
-      horizontalAlign: HorizontalAlign.Center,
+      horizontalAlign: HorizontalAlign.Left,
     );
 
-    // Financial Summary
     int currentRow = 5;
 
+    // Financial Summary
     sheet.merge(CellIndex.indexByString("A$currentRow"),
         CellIndex.indexByString("B$currentRow"));
     final financialHeaderCell =
@@ -608,7 +730,7 @@ class RevenueInvoice {
       fontSize: 14,
       horizontalAlign: HorizontalAlign.Left,
     );
-    currentRow += 2;
+    currentRow++;
 
     // Revenue
     final revenueCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
@@ -627,6 +749,7 @@ class RevenueInvoice {
     // Subtotal
     final subtotalCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     subtotalCell.value = TextCellValue('Subtotal');
+    subtotalCell.cellStyle = CellStyle();
 
     final subtotalValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
@@ -639,25 +762,34 @@ class RevenueInvoice {
     // Discount
     final discountCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     discountCell.value = TextCellValue('Diskon');
+    discountCell.cellStyle = CellStyle();
 
     final discountValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     discountValueCell.value = TextCellValue(
         "- ${parseIntFromDynamic(summaryModel.totalDiscount).toString().currencyFormatRp}");
+    discountValueCell.cellStyle = CellStyle(
+      bold: true,
+    );
     currentRow++;
 
     // Tax
     final taxCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     taxCell.value = TextCellValue('Pajak');
+    taxCell.cellStyle = CellStyle();
 
     final taxValueCell = sheet.cell(CellIndex.indexByString("B$currentRow"));
     taxValueCell.value = TextCellValue(
         "- ${parseIntFromDynamic(summaryModel.totalTax).toString().currencyFormatRp}");
+    taxValueCell.cellStyle = CellStyle(
+      bold: true,
+    );
     currentRow++;
 
     // Service Charge
     final serviceCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     serviceCell.value = TextCellValue('Biaya Layanan');
+    serviceCell.cellStyle = CellStyle();
 
     final serviceValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
@@ -678,7 +810,7 @@ class RevenueInvoice {
       fontSize: 14,
       horizontalAlign: HorizontalAlign.Left,
     );
-    currentRow += 2;
+    currentRow++;
 
     // Opening Balance
     final openingBalanceCell =
@@ -694,134 +826,242 @@ class RevenueInvoice {
     // Expenses
     final expensesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     expensesCell.value = TextCellValue('Pengeluaran');
+    expensesCell.cellStyle = CellStyle();
 
     final expensesValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     expensesValueCell.value =
         TextCellValue("- ${safeGetCurrencyFormat(summaryModel.expenses)}");
+    expensesValueCell.cellStyle = CellStyle();
     currentRow++;
 
     // Cash Sales
     final cashSalesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     cashSalesCell.value = TextCellValue('Penjualan Tunai');
+    cashSalesCell.cellStyle = CellStyle();
 
     final cashSalesValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     cashSalesValueCell.value = TextCellValue(
         summaryModel.getCashSalesAsInt().toString().currencyFormatRp);
+    cashSalesValueCell.cellStyle = CellStyle();
     currentRow++;
 
     // QRIS Sales
     final qrisSalesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     qrisSalesCell.value = TextCellValue('Penjualan QRIS');
+    qrisSalesCell.cellStyle = CellStyle();
 
     final qrisSalesValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     qrisSalesValueCell.value = TextCellValue(
         summaryModel.getQrisSalesAsInt().toString().currencyFormatRp);
+    qrisSalesValueCell.cellStyle = CellStyle();
     currentRow++;
 
     // QRIS Fee
     final qrisFeeCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     qrisFeeCell.value = TextCellValue('Biaya QRIS');
+    qrisFeeCell.cellStyle = CellStyle();
 
     final qrisFeeValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     qrisFeeValueCell.value = TextCellValue(summaryModel.qrisFee != null
         ? "- ${safeGetCurrencyFormat(summaryModel.qrisFee)}"
         : "- Rp 0,00");
+    qrisFeeValueCell.cellStyle = CellStyle();
     currentRow++;
 
     // Beverage Sales
     final beverageSalesCell =
         sheet.cell(CellIndex.indexByString("A$currentRow"));
     beverageSalesCell.value = TextCellValue('Penjualan Minuman');
+    beverageSalesCell.cellStyle = CellStyle();
 
     final beverageSalesValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     beverageSalesValueCell.value = TextCellValue(
         summaryModel.getBeverageSalesAsInt().toString().currencyFormatRp);
+    beverageSalesValueCell.cellStyle = CellStyle();
     currentRow++;
 
     // Closing Balance
     final closingBalanceCell =
         sheet.cell(CellIndex.indexByString("A$currentRow"));
     closingBalanceCell.value = TextCellValue('Saldo Akhir');
-    closingBalanceCell.cellStyle = CellStyle(bold: true);
+    closingBalanceCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 12,
+    );
 
     final closingBalanceValueCell =
         sheet.cell(CellIndex.indexByString("B$currentRow"));
     closingBalanceValueCell.value =
         TextCellValue(safeGetCurrencyFormat(summaryModel.closingBalance));
-    closingBalanceValueCell.cellStyle = CellStyle(bold: true);
-    currentRow += 2;
+    closingBalanceValueCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 12,
+    );
+    currentRow++;
+
+    // Final Cash Closing if available
+    if (summaryModel.finalCashClosing != null) {
+      final finalCashCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+      finalCashCell.value = TextCellValue('Final Kas Akhir');
+      finalCashCell.cellStyle = CellStyle(
+        bold: true,
+        fontSize: 12,
+      );
+
+      final finalCashValueCell =
+          sheet.cell(CellIndex.indexByString("B$currentRow"));
+      finalCashValueCell.value =
+          TextCellValue(safeGetCurrencyFormat(summaryModel.finalCashClosing));
+      finalCashValueCell.cellStyle = CellStyle(
+        bold: true,
+        fontSize: 12,
+      );
+      currentRow++;
+    }
+
+    currentRow++;
+
+    // Beverage Breakdown
+    if (summaryModel.beverageBreakdown != null) {
+      sheet.merge(CellIndex.indexByString("A$currentRow"),
+          CellIndex.indexByString("B$currentRow"));
+      final beverageHeaderCell =
+          sheet.cell(CellIndex.indexByString("A$currentRow"));
+      beverageHeaderCell.value = TextCellValue('Rincian Penjualan Minuman');
+      beverageHeaderCell.cellStyle = CellStyle(
+        bold: true,
+        fontSize: 14,
+        horizontalAlign: HorizontalAlign.Left,
+      );
+      currentRow++;
+
+      if (summaryModel.beverageBreakdown?.cash != null) {
+        final cashBeverageCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        cashBeverageCell.value = TextCellValue(
+            'Tunai (${summaryModel.beverageBreakdown!.cash!.getQuantityAsInt()} item)');
+
+        final cashBeverageValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        cashBeverageValueCell.value = TextCellValue(safeGetCurrencyFormat(
+            summaryModel.beverageBreakdown!.cash!.getAmountAsInt()));
+        cashBeverageValueCell.cellStyle = CellStyle();
+        currentRow++;
+      }
+
+      if (summaryModel.beverageBreakdown?.qris != null) {
+        final qrisBeverageCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        qrisBeverageCell.value = TextCellValue(
+            'QRIS (${summaryModel.beverageBreakdown!.qris!.getQuantityAsInt()} item)');
+
+        final qrisBeverageValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        qrisBeverageValueCell.value = TextCellValue(safeGetCurrencyFormat(
+            summaryModel.beverageBreakdown!.qris!.getAmountAsInt()));
+        qrisBeverageValueCell.cellStyle = CellStyle();
+        currentRow++;
+      }
+
+      if (summaryModel.beverageBreakdown?.total != null) {
+        final totalBeverageCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        totalBeverageCell.value = TextCellValue(
+            'Total (${summaryModel.beverageBreakdown!.total!.quantity} item)');
+        totalBeverageCell.cellStyle = CellStyle(bold: true);
+
+        final totalBeverageValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        totalBeverageValueCell.value = TextCellValue(safeGetCurrencyFormat(
+            summaryModel.beverageBreakdown!.total!.amount));
+        totalBeverageValueCell.cellStyle = CellStyle(
+          bold: true,
+        );
+        currentRow++;
+      }
+
+      currentRow++;
+    }
 
     // Payment Methods
     if (summaryModel.paymentMethods != null) {
       sheet.merge(CellIndex.indexByString("A$currentRow"),
           CellIndex.indexByString("B$currentRow"));
-      final paymentMethodsHeaderCell =
+      final paymentHeaderCell =
           sheet.cell(CellIndex.indexByString("A$currentRow"));
-      paymentMethodsHeaderCell.value = TextCellValue('Metode Pembayaran');
-      paymentMethodsHeaderCell.cellStyle = CellStyle(
+      paymentHeaderCell.value = TextCellValue('Metode Pembayaran');
+      paymentHeaderCell.cellStyle = CellStyle(
         bold: true,
         fontSize: 14,
         horizontalAlign: HorizontalAlign.Left,
       );
-      currentRow += 2;
+      currentRow++;
 
       if (summaryModel.paymentMethods?.cash != null) {
-        final cashCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-        cashCell.value = TextCellValue(
+        // Cash Payment
+        final cashPaymentCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        cashPaymentCell.value = TextCellValue(
             'Tunai (${summaryModel.paymentMethods!.cash!.count} transaksi)');
 
-        final cashValueCell =
+        final cashPaymentValueCell =
             sheet.cell(CellIndex.indexByString("B$currentRow"));
-        cashValueCell.value = TextCellValue(summaryModel.paymentMethods!.cash!
+        cashPaymentValueCell.value = TextCellValue(summaryModel
+            .paymentMethods!.cash!
             .getTotalAsInt()
             .toString()
             .currencyFormatRp);
         currentRow++;
 
         // Cash QRIS Fees
-        final cashFeesCell =
+        final cashQrisFeeCell =
             sheet.cell(CellIndex.indexByString("A$currentRow"));
-        cashFeesCell.value = TextCellValue('Biaya QRIS Tunai');
+        cashQrisFeeCell.value = TextCellValue('Biaya QRIS Tunai');
 
-        final cashFeesValueCell =
+        final cashQrisFeeValueCell =
             sheet.cell(CellIndex.indexByString("B$currentRow"));
-        cashFeesValueCell.value = TextCellValue(summaryModel
+        cashQrisFeeValueCell.value = TextCellValue(summaryModel
                     .paymentMethods!.cash!.qrisFees !=
                 null
             ? "- ${safeGetCurrencyFormat(summaryModel.paymentMethods!.cash!.qrisFees)}"
             : "- Rp 0,00");
+        cashQrisFeeValueCell.cellStyle = CellStyle();
         currentRow++;
       }
+
       if (summaryModel.paymentMethods?.qris != null) {
-        final qrisCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-        qrisCell.value = TextCellValue(
+        // QRIS Payment
+        final qrisPaymentCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        qrisPaymentCell.value = TextCellValue(
             'QRIS (${summaryModel.paymentMethods!.qris!.count} transaksi)');
 
-        final qrisValueCell =
+        final qrisPaymentValueCell =
             sheet.cell(CellIndex.indexByString("B$currentRow"));
-        qrisValueCell.value = TextCellValue(summaryModel.paymentMethods!.qris!
+        qrisPaymentValueCell.value = TextCellValue(summaryModel
+            .paymentMethods!.qris!
             .getTotalAsInt()
             .toString()
             .currencyFormatRp);
         currentRow++;
 
         // QRIS Fees
-        final qrisFeesCell =
-            sheet.cell(CellIndex.indexByString("A$currentRow"));
-        qrisFeesCell.value = TextCellValue('Biaya QRIS');
+        final qrisFeeCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+        qrisFeeCell.value = TextCellValue('Biaya QRIS');
 
-        final qrisFeesValueCell =
+        final qrisFeeValueCell =
             sheet.cell(CellIndex.indexByString("B$currentRow"));
-        qrisFeesValueCell.value = TextCellValue(summaryModel
+        qrisFeeValueCell.value = TextCellValue(summaryModel
                     .paymentMethods!.qris!.qrisFees !=
                 null
             ? "- ${safeGetCurrencyFormat(summaryModel.paymentMethods!.qris!.qrisFees)}"
             : "- Rp 0,00");
+        qrisFeeValueCell.cellStyle = CellStyle();
         currentRow++;
       }
 
@@ -832,97 +1072,193 @@ class RevenueInvoice {
     if (summaryModel.dailyBreakdown != null &&
         summaryModel.dailyBreakdown!.isNotEmpty) {
       sheet.merge(CellIndex.indexByString("A$currentRow"),
-          CellIndex.indexByString("H$currentRow"));
-      final breakdownHeaderCell =
+          CellIndex.indexByString("B$currentRow"));
+      final dailyHeaderCell =
           sheet.cell(CellIndex.indexByString("A$currentRow"));
-      breakdownHeaderCell.value = TextCellValue('Rincian Harian');
-      breakdownHeaderCell.cellStyle = CellStyle(
+      dailyHeaderCell.value = TextCellValue('Rincian Harian');
+      dailyHeaderCell.cellStyle = CellStyle(
         bold: true,
         fontSize: 14,
         horizontalAlign: HorizontalAlign.Left,
       );
-      currentRow += 2;
-
-      // Set headers for breakdown table
-      final headers = [
-        'Tanggal',
-        'Saldo Awal',
-        'Pengeluaran',
-        'Penjualan Tunai',
-        'Penjualan QRIS',
-        'Biaya QRIS',
-        'Total Penjualan',
-        'Saldo Akhir'
-      ];
-      for (var i = 0; i < headers.length; i++) {
-        final headerCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: i, rowIndex: currentRow));
-        headerCell.value = TextCellValue(headers[i]);
-        headerCell.cellStyle = CellStyle(bold: true);
-      }
       currentRow++;
 
-      // Add data for each day
-      for (var day in summaryModel.dailyBreakdown!) {
-        final dateCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: currentRow));
-        dateCell.value = TextCellValue(day.date);
+      for (final day in summaryModel.dailyBreakdown!) {
+        // Date
+        final dateCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dateCell.value = TextCellValue('Tanggal: ${day.date}');
+        dateCell.cellStyle = CellStyle(bold: true);
+        currentRow++;
 
-        final openingCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: currentRow));
-        openingCell.value =
+        // Opening Balance
+        final dayOpeningCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayOpeningCell.value = TextCellValue('Saldo Awal:');
+
+        final dayOpeningValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayOpeningValueCell.value =
             TextCellValue(safeGetCurrencyFormat(day.openingBalance));
+        currentRow++;
 
-        final expensesCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: currentRow));
-        expensesCell.value = TextCellValue(safeGetCurrencyFormat(day.expenses));
+        // Expenses
+        final dayExpensesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayExpensesCell.value = TextCellValue('Pengeluaran:');
 
-        final cashSalesCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: currentRow));
-        cashSalesCell.value =
+        final dayExpensesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayExpensesValueCell.value =
+            TextCellValue("- ${safeGetCurrencyFormat(day.expenses)}");
+        dayExpensesValueCell.cellStyle = CellStyle();
+        currentRow++;
+
+        // Cash Sales
+        final dayCashSalesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayCashSalesCell.value = TextCellValue('Penjualan Tunai:');
+
+        final dayCashSalesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayCashSalesValueCell.value =
             TextCellValue(day.getCashSalesAsInt().toString().currencyFormatRp);
+        dayCashSalesValueCell.cellStyle = CellStyle();
+        currentRow++;
 
-        final qrisSalesCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: currentRow));
-        qrisSalesCell.value =
+        // QRIS Sales
+        final dayQrisSalesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayQrisSalesCell.value = TextCellValue('Penjualan QRIS:');
+
+        final dayQrisSalesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayQrisSalesValueCell.value =
             TextCellValue(day.getQrisSalesAsInt().toString().currencyFormatRp);
+        dayQrisSalesValueCell.cellStyle = CellStyle();
+        currentRow++;
 
-        final qrisFeeCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: currentRow));
-        qrisFeeCell.value = TextCellValue(day.qrisFee != null
-            ? safeGetCurrencyFormat(day.qrisFee)
-            : "Rp 0,00");
+        // QRIS Fee
+        final dayQrisFeeCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayQrisFeeCell.value = TextCellValue('Biaya QRIS:');
 
-        final totalSalesCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: currentRow));
-        totalSalesCell.value =
+        final dayQrisFeeValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayQrisFeeValueCell.value = TextCellValue(day.qrisFee != null
+            ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
+            : "- Rp 0,00");
+        dayQrisFeeValueCell.cellStyle = CellStyle();
+        currentRow++;
+
+        // Total Sales
+        final dayTotalSalesCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayTotalSalesCell.value = TextCellValue('Total Penjualan:');
+
+        final dayTotalSalesValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayTotalSalesValueCell.value =
             TextCellValue(safeGetCurrencyFormat(day.totalSales));
+        currentRow++;
 
-        final closingCell = sheet.cell(
-            CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: currentRow));
-        closingCell.value =
+        // Closing Balance
+        final dayClosingCell =
+            sheet.cell(CellIndex.indexByString("A$currentRow"));
+        dayClosingCell.value = TextCellValue('Saldo Akhir:');
+
+        final dayClosingValueCell =
+            sheet.cell(CellIndex.indexByString("B$currentRow"));
+        dayClosingValueCell.value =
             TextCellValue(safeGetCurrencyFormat(day.closingBalance));
+        currentRow++;
+
+        // Final Cash Closing if available
+        if (day.finalCashClosing != null) {
+          final dayFinalCashCell =
+              sheet.cell(CellIndex.indexByString("A$currentRow"));
+          dayFinalCashCell.value = TextCellValue('Final Kas Akhir:');
+
+          final dayFinalCashValueCell =
+              sheet.cell(CellIndex.indexByString("B$currentRow"));
+          dayFinalCashValueCell.value =
+              TextCellValue(safeGetCurrencyFormat(day.finalCashClosing));
+          currentRow++;
+        }
+
+        // Beverage Breakdown if available
+        if (day.beverageBreakdown != null) {
+          final beverageTitleCell =
+              sheet.cell(CellIndex.indexByString("A$currentRow"));
+          beverageTitleCell.value = TextCellValue('Rincian Minuman:');
+          beverageTitleCell.cellStyle = CellStyle(bold: true);
+          currentRow++;
+
+          if (day.beverageBreakdown!.cash != null) {
+            final dayBevCashCell =
+                sheet.cell(CellIndex.indexByString("A$currentRow"));
+            dayBevCashCell.value = TextCellValue(
+                '- Tunai (${day.beverageBreakdown!.cash!.getQuantityAsInt()} item):');
+
+            final dayBevCashValueCell =
+                sheet.cell(CellIndex.indexByString("B$currentRow"));
+            dayBevCashValueCell.value = TextCellValue(safeGetCurrencyFormat(
+                day.beverageBreakdown!.cash!.getAmountAsInt()));
+            dayBevCashValueCell.cellStyle = CellStyle();
+            currentRow++;
+          }
+
+          if (day.beverageBreakdown!.qris != null) {
+            final dayBevQrisCell =
+                sheet.cell(CellIndex.indexByString("A$currentRow"));
+            dayBevQrisCell.value = TextCellValue(
+                '- QRIS (${day.beverageBreakdown!.qris!.getQuantityAsInt()} item):');
+
+            final dayBevQrisValueCell =
+                sheet.cell(CellIndex.indexByString("B$currentRow"));
+            dayBevQrisValueCell.value = TextCellValue(safeGetCurrencyFormat(
+                day.beverageBreakdown!.qris!.getAmountAsInt()));
+            dayBevQrisValueCell.cellStyle = CellStyle();
+            currentRow++;
+          }
+
+          if (day.beverageBreakdown!.total != null) {
+            final dayBevTotalCell =
+                sheet.cell(CellIndex.indexByString("A$currentRow"));
+            dayBevTotalCell.value = TextCellValue(
+                '- Total (${day.beverageBreakdown!.total!.quantity} item):');
+
+            final dayBevTotalValueCell =
+                sheet.cell(CellIndex.indexByString("B$currentRow"));
+            dayBevTotalValueCell.value = TextCellValue(
+                safeGetCurrencyFormat(day.beverageBreakdown!.total!.amount));
+            dayBevTotalValueCell.cellStyle = CellStyle();
+            currentRow++;
+          }
+        }
 
         currentRow++;
       }
-
-      currentRow++;
     }
 
     // Footer with address
-    sheet.merge(
-      CellIndex.indexByString("A$currentRow"),
-      CellIndex.indexByString("H$currentRow"),
-    );
-    final footerCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-    footerCell.value = TextCellValue('Alamat: $outletAddress');
+    currentRow++;
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final addressTitleCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    addressTitleCell.value = TextCellValue('Alamat');
+    addressTitleCell.cellStyle = CellStyle(bold: true);
+    currentRow++;
+
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final addressValueCell =
+        sheet.cell(CellIndex.indexByString("A$currentRow"));
+    addressValueCell.value = TextCellValue(outletAddress);
 
     // Set column widths
     sheet.setColumnWidth(0, 35.0);
     sheet.setColumnWidth(1, 25.0);
-    for (var i = 2; i < 8; i++) {
-      sheet.setColumnWidth(i, 20.0);
-    }
 
     return HelperExcelService.saveExcel(
       name:

@@ -1,67 +1,74 @@
+// lib/data/models/response/category_response_model.dart
 import 'dart:convert';
 
-class CategroyResponseModel {
+class CategoryResponseModel {
   final String status;
   final List<CategoryModel> data;
 
-  CategroyResponseModel({
+  CategoryResponseModel({
     required this.status,
     required this.data,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'status': status,
-      'data': data.map((x) => x.toMap()).toList(),
-    };
-  }
-
-  factory CategroyResponseModel.fromMap(Map<String, dynamic> map) {
-    return CategroyResponseModel(
-      status: map['status'] as String,
-      data: List<CategoryModel>.from(
-        (map['data']).map<CategoryModel>(
-          (x) => CategoryModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-    );
-  }
-
-  factory CategroyResponseModel.fromJson(String str) =>
-      CategroyResponseModel.fromMap(json.decode(str));
+  factory CategoryResponseModel.fromJson(String str) =>
+      CategoryResponseModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
+
+  factory CategoryResponseModel.fromMap(Map<String, dynamic> json) =>
+      CategoryResponseModel(
+        status: json["status"],
+        data: List<CategoryModel>.from(
+            json["data"].map((x) => CategoryModel.fromMap(x))),
+      );
+
+  Map<String, dynamic> toMap() => {
+        "status": status,
+        "data": List<dynamic>.from(data.map((x) => x.toMap())),
+      };
 }
 
 class CategoryModel {
-  int? id;
-  String? name;
-  int? categoryId;
-  int? isSync;
-  String? image;
+  final int id;
+  final String? name;
+  final String? description;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final dynamic deletedAt;
 
-  CategoryModel({this.id, this.name, this.categoryId, this.isSync, this.image});
+  CategoryModel({
+    required this.id,
+    this.name,
+    this.description,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+  });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': name,
-      'is_sync': isSync ?? 1,
-      'category_id': id,
-      'image': image
-    };
-  }
+  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
+      CategoryModel.fromMap(json);
 
-  factory CategoryModel.fromMap(Map<String, dynamic> map) {
-    return CategoryModel(
-        id: map['id'] as int?,
-        name: map['name'] as String?,
-        isSync: map['is_sync'] as int?,
-        categoryId: map['id'],
-        image: map['image']);
-  }
+  Map<String, dynamic> toJson() => toMap();
 
-  factory CategoryModel.fromJson(String str) =>
-      CategoryModel.fromMap(json.decode(str));
+  factory CategoryModel.fromMap(Map<String, dynamic> json) => CategoryModel(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+      );
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+      };
 }

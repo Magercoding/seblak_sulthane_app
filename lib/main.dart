@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/category_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
+import 'package:seblak_sulthane_app/data/datasources/category_repository.dart';
 import 'package:seblak_sulthane_app/data/datasources/daily_cash_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/discount_remote_datasource.dart';
@@ -30,6 +32,7 @@ import 'package:seblak_sulthane_app/presentation/sales/blocs/bloc/last_order_tab
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_category/sync_category_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_discount/sync_discount_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_member/sync_member_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/tax/tax_bloc.dart';
@@ -70,6 +73,14 @@ class MyApp extends StatelessWidget {
     final memberRemoteDatasource = MemberRemoteDatasource();
     final memberLocalDatasource = MemberLocalDatasource.instance;
     final connectivity = Connectivity();
+    final categoryLocalDatasource = CategoryLocalDatasource();
+    final categoryRemoteDatasource = CategoryRemoteDatasource();
+
+    final categoryRepository = CategoryRepository(
+      remoteDatasource: categoryRemoteDatasource,
+      localDatasource: categoryLocalDatasource,
+      connectivity: connectivity,
+    );
 
     // Create repositories
     final discountRepository = DiscountRepository(
@@ -139,7 +150,10 @@ class MyApp extends StatelessWidget {
           create: (context) => GetProductsBloc(ProductRemoteDatasource()),
         ),
         BlocProvider(
-          create: (context) => GetCategoriesBloc(CategoryRemoteDatasource()),
+          create: (context) => SyncCategoryBloc(categoryRepository),
+        ),
+        BlocProvider(
+          create: (context) => GetCategoriesBloc(categoryRepository),
         ),
         BlocProvider(
           create: (context) => SummaryBloc(OrderRemoteDatasource()),

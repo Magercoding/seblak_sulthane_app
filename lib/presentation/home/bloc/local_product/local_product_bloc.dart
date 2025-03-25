@@ -20,6 +20,14 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
       emit(_Loaded(filteredProducts));
     });
 
+    on<_FilterByCategory>((event, emit) async {
+      emit(const _Loading());
+      final allProducts = await productLocalDatasource.getProducts();
+      final filteredProducts =
+          _filterProductsByCategory(allProducts, event.categoryId);
+      emit(_Loaded(filteredProducts));
+    });
+
     on<_Started>((event, emit) {});
 
     on<_GetLocalProduct>((event, emit) async {
@@ -28,6 +36,7 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
       emit(_Loaded(result));
     });
   }
+
   List<Product> _filterProductsByPriceRange(
       List<Product> products, String priceRange) {
     List<Product> filteredProducts;
@@ -68,5 +77,12 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
     }
 
     return filteredProducts;
+  }
+
+  List<Product> _filterProductsByCategory(
+      List<Product> products, int categoryId) {
+    return products
+        .where((product) => product.category?.id == categoryId)
+        .toList();
   }
 }

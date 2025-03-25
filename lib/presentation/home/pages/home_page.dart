@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/data/models/response/category_response_model.dart';
+import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/discount_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/member_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/dialog/tax_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/home/pages/confirm_payment_page.dart';
+import 'package:seblak_sulthane_app/presentation/home/widgets/custom_tab_barV2.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
@@ -17,7 +21,6 @@ import '../../../core/constants/colors.dart';
 import '../bloc/checkout/checkout_bloc.dart';
 import '../dialog/service_dialog.dart';
 import '../widgets/column_button.dart';
-import '../widgets/custom_tab_bar.dart';
 import '../widgets/home_title.dart';
 import '../widgets/order_menu.dart';
 import '../widgets/product_card.dart';
@@ -39,24 +42,22 @@ class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
   bool isTakeaway = true;
   String searchQuery = '';
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     context
         .read<LocalProductBloc>()
         .add(const LocalProductEvent.getLocalProduct());
+    context
+        .read<GetCategoriesBloc>()
+        .add(const GetCategoriesEvent.getCategories());
 
     if (widget.isTable) {
       isTakeaway = false;
     }
 
     super.initState();
-  }
-
-  void onCategoryTap(int index) {
-    searchController.clear();
-    searchQuery = '';
-    setState(() {});
   }
 
   void onSearchChanged(String value) {
@@ -87,495 +88,41 @@ class _HomePageState extends State<HomePage> {
                           onChanged: onSearchChanged,
                         ),
                         const SizedBox(height: 24),
-                        CustomTabBar(
-                          tabTitles: const [
-                            'Semua',
-                            'Makanan',
-                            'Minuman',
-                            'Snack',
-                            'Menu 500',
-                            'Menu 1000',
-                            'Menu 1500-2000',
-                            'Menu 2500',
-                            'Menu 3000-9000',
-                          ],
-                          initialTabIndex: 0,
-                          tabViews: [
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
+                        BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () => const SizedBox.shrink(),
+                              loading: () => const CircularProgressIndicator(),
+                              loaded: (categories) {
+                                final tabViews = [
+                                  // "Semua" tab view
+                                  _buildProductGrid(searchQuery),
+                                  // Price filter tab views
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "500"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "1000"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "1500-2000"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "2500"),
+                                  _buildProductGrid(searchQuery,
+                                      priceRange: "3000-9000"),
+                                  // Category tab views
+                                  ...categories.data.map((category) =>
+                                      _buildProductGrid(searchQuery,
+                                          categoryId: category.id)),
+                                ];
 
-                                      final filteredProducts = searchQuery
-                                              .isEmpty
-                                          ? products
-                                          : products
-                                              .where((product) =>
-                                                  product.name
-                                                      ?.toLowerCase()
-                                                      .contains(searchQuery) ??
-                                                  false)
-                                              .toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      var foodProducts = products
-                                          .where((element) =>
-                                              element.category != null &&
-                                              element.category?.id == 1)
-                                          .toList();
-
-                                      if (searchQuery.isNotEmpty) {
-                                        foodProducts = foodProducts
-                                            .where((product) =>
-                                                product.name
-                                                    ?.toLowerCase()
-                                                    .contains(searchQuery) ??
-                                                false)
-                                            .toList();
-                                      }
-
-                                      if (foodProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: foodProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: foodProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      var drinkProducts = products
-                                          .where((element) =>
-                                              element.category != null &&
-                                              element.category?.id == 2)
-                                          .toList();
-
-                                      if (searchQuery.isNotEmpty) {
-                                        drinkProducts = drinkProducts
-                                            .where((product) =>
-                                                product.name
-                                                    ?.toLowerCase()
-                                                    .contains(searchQuery) ??
-                                                false)
-                                            .toList();
-                                      }
-
-                                      if (drinkProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: drinkProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: drinkProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      var snackProducts = products
-                                          .where((element) =>
-                                              element.category != null &&
-                                              element.category?.id == 3)
-                                          .toList();
-
-                                      if (searchQuery.isNotEmpty) {
-                                        snackProducts = snackProducts
-                                            .where((product) =>
-                                                product.name
-                                                    ?.toLowerCase()
-                                                    .contains(searchQuery) ??
-                                                false)
-                                            .toList();
-                                      }
-
-                                      if (snackProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: snackProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: snackProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      final filteredProducts = products
-                                          .where((product) =>
-                                              product
-                                                  .price?.toIntegerFromText ==
-                                              500)
-                                          .toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      final filteredProducts = products
-                                          .where((product) =>
-                                              product
-                                                  .price?.toIntegerFromText ==
-                                              1000)
-                                          .toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      final filteredProducts =
-                                          products.where((product) {
-                                        final price =
-                                            product.price?.toIntegerFromText ??
-                                                0;
-                                        return price >= 1500 && price <= 2000;
-                                      }).toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      final filteredProducts = products
-                                          .where((product) =>
-                                              product
-                                                  .price?.toIntegerFromText ==
-                                              2500)
-                                          .toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              child: BlocBuilder<LocalProductBloc,
-                                  LocalProductState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loading: () => const Center(
-                                        child: CircularProgressIndicator()),
-                                    loaded: (products) {
-                                      if (products.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items'));
-                                      }
-
-                                      final filteredProducts =
-                                          products.where((product) {
-                                        final price =
-                                            product.price?.toIntegerFromText ??
-                                                0;
-                                        return price >= 3000 && price <= 9000;
-                                      }).toList();
-
-                                      if (filteredProducts.isEmpty) {
-                                        return const _IsEmpty();
-                                      }
-
-                                      return GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filteredProducts.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 0.85,
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: 30.0,
-                                          mainAxisSpacing: 30.0,
-                                        ),
-                                        itemBuilder: (context, index) =>
-                                            ProductCard(
-                                          data: filteredProducts[index],
-                                          onCartButton: () {},
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                                return CustomTabBarV2(
+                                  categories: categories.data,
+                                  initialTabIndex: _selectedIndex,
+                                  tabViews: tabViews,
+                                );
+                              },
+                              error: (message) => Text('Error: $message'),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -1019,15 +566,93 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _IsEmpty extends StatelessWidget {
-  const _IsEmpty();
+Widget _buildProductGrid(String searchQuery,
+    {int? categoryId, String? priceRange}) {
+  return SizedBox(
+    child: BlocBuilder<LocalProductBloc, LocalProductState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: (products) {
+            if (products.isEmpty) {
+              return const EmptyStateWidget();
+            }
+
+            List<Product> filteredProducts = products;
+
+            // Apply category filter if specified
+            if (categoryId != null) {
+              filteredProducts = filteredProducts
+                  .where((product) => product.category?.id == categoryId)
+                  .toList();
+            }
+
+            // Apply price filter if specified
+            if (priceRange != null) {
+              filteredProducts = filteredProducts.where((product) {
+                final price = product.price?.toIntegerFromText ?? 0;
+                switch (priceRange) {
+                  case "500":
+                    return price == 500;
+                  case "1000":
+                    return price == 1000;
+                  case "1500-2000":
+                    return price >= 1500 && price <= 2000;
+                  case "2500":
+                    return price == 2500;
+                  case "3000-9000":
+                    return price >= 3000 && price <= 9000;
+                  default:
+                    return false;
+                }
+              }).toList();
+            }
+
+            // Apply search filter
+            if (searchQuery.isNotEmpty) {
+              filteredProducts = filteredProducts
+                  .where((product) =>
+                      product.name?.toLowerCase().contains(searchQuery) ??
+                      false)
+                  .toList();
+            }
+
+            if (filteredProducts.isEmpty) {
+              return const EmptyStateWidget();
+            }
+
+            return GridView.builder(
+              shrinkWrap: true,
+              itemCount: filteredProducts.length,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.85,
+                crossAxisCount: 3,
+                crossAxisSpacing: 30.0,
+                mainAxisSpacing: 30.0,
+              ),
+              itemBuilder: (context, index) => ProductCard(
+                data: filteredProducts[index],
+                onCartButton: () {},
+              ),
+            );
+          },
+        );
+      },
+    ),
+  );
+}
+
+class EmptyStateWidget extends StatelessWidget {
+  const EmptyStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SpaceHeight(40),
+        const SpaceHeight(40),
         Assets.icons.noProduct.svg(),
         const SizedBox(height: 40.0),
         const Text(

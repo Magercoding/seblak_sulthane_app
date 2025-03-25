@@ -21,6 +21,7 @@ mixin _$LocalProductEvent {
     required TResult Function() started,
     required TResult Function() getLocalProduct,
     required TResult Function(String priceRange) filterByPriceRange,
+    required TResult Function(int categoryId) filterByCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$LocalProductEvent {
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
     TResult? Function(String priceRange)? filterByPriceRange,
+    TResult? Function(int categoryId)? filterByCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$LocalProductEvent {
     TResult Function()? started,
     TResult Function()? getLocalProduct,
     TResult Function(String priceRange)? filterByPriceRange,
+    TResult Function(int categoryId)? filterByCategory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$LocalProductEvent {
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
     required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+    required TResult Function(_FilterByCategory value) filterByCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$LocalProductEvent {
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
     TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult? Function(_FilterByCategory value)? filterByCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$LocalProductEvent {
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
     TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult Function(_FilterByCategory value)? filterByCategory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,6 +133,7 @@ class _$StartedImpl implements _Started {
     required TResult Function() started,
     required TResult Function() getLocalProduct,
     required TResult Function(String priceRange) filterByPriceRange,
+    required TResult Function(int categoryId) filterByCategory,
   }) {
     return started();
   }
@@ -137,6 +144,7 @@ class _$StartedImpl implements _Started {
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
     TResult? Function(String priceRange)? filterByPriceRange,
+    TResult? Function(int categoryId)? filterByCategory,
   }) {
     return started?.call();
   }
@@ -147,6 +155,7 @@ class _$StartedImpl implements _Started {
     TResult Function()? started,
     TResult Function()? getLocalProduct,
     TResult Function(String priceRange)? filterByPriceRange,
+    TResult Function(int categoryId)? filterByCategory,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -161,6 +170,7 @@ class _$StartedImpl implements _Started {
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
     required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+    required TResult Function(_FilterByCategory value) filterByCategory,
   }) {
     return started(this);
   }
@@ -171,6 +181,7 @@ class _$StartedImpl implements _Started {
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
     TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult? Function(_FilterByCategory value)? filterByCategory,
   }) {
     return started?.call(this);
   }
@@ -181,6 +192,7 @@ class _$StartedImpl implements _Started {
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
     TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult Function(_FilterByCategory value)? filterByCategory,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -238,6 +250,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     required TResult Function() started,
     required TResult Function() getLocalProduct,
     required TResult Function(String priceRange) filterByPriceRange,
+    required TResult Function(int categoryId) filterByCategory,
   }) {
     return getLocalProduct();
   }
@@ -248,6 +261,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
     TResult? Function(String priceRange)? filterByPriceRange,
+    TResult? Function(int categoryId)? filterByCategory,
   }) {
     return getLocalProduct?.call();
   }
@@ -258,6 +272,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     TResult Function()? started,
     TResult Function()? getLocalProduct,
     TResult Function(String priceRange)? filterByPriceRange,
+    TResult Function(int categoryId)? filterByCategory,
     required TResult orElse(),
   }) {
     if (getLocalProduct != null) {
@@ -272,6 +287,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
     required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+    required TResult Function(_FilterByCategory value) filterByCategory,
   }) {
     return getLocalProduct(this);
   }
@@ -282,6 +298,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
     TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult? Function(_FilterByCategory value)? filterByCategory,
   }) {
     return getLocalProduct?.call(this);
   }
@@ -292,6 +309,7 @@ class _$GetLocalProductImpl implements _GetLocalProduct {
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
     TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult Function(_FilterByCategory value)? filterByCategory,
     required TResult orElse(),
   }) {
     if (getLocalProduct != null) {
@@ -378,6 +396,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     required TResult Function() started,
     required TResult Function() getLocalProduct,
     required TResult Function(String priceRange) filterByPriceRange,
+    required TResult Function(int categoryId) filterByCategory,
   }) {
     return filterByPriceRange(priceRange);
   }
@@ -388,6 +407,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     TResult? Function()? started,
     TResult? Function()? getLocalProduct,
     TResult? Function(String priceRange)? filterByPriceRange,
+    TResult? Function(int categoryId)? filterByCategory,
   }) {
     return filterByPriceRange?.call(priceRange);
   }
@@ -398,6 +418,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     TResult Function()? started,
     TResult Function()? getLocalProduct,
     TResult Function(String priceRange)? filterByPriceRange,
+    TResult Function(int categoryId)? filterByCategory,
     required TResult orElse(),
   }) {
     if (filterByPriceRange != null) {
@@ -412,6 +433,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     required TResult Function(_Started value) started,
     required TResult Function(_GetLocalProduct value) getLocalProduct,
     required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+    required TResult Function(_FilterByCategory value) filterByCategory,
   }) {
     return filterByPriceRange(this);
   }
@@ -422,6 +444,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     TResult? Function(_Started value)? started,
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
     TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult? Function(_FilterByCategory value)? filterByCategory,
   }) {
     return filterByPriceRange?.call(this);
   }
@@ -432,6 +455,7 @@ class _$FilterByPriceRangeImpl implements _FilterByPriceRange {
     TResult Function(_Started value)? started,
     TResult Function(_GetLocalProduct value)? getLocalProduct,
     TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult Function(_FilterByCategory value)? filterByCategory,
     required TResult orElse(),
   }) {
     if (filterByPriceRange != null) {
@@ -451,6 +475,161 @@ abstract class _FilterByPriceRange implements LocalProductEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FilterByPriceRangeImplCopyWith<_$FilterByPriceRangeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FilterByCategoryImplCopyWith<$Res> {
+  factory _$$FilterByCategoryImplCopyWith(_$FilterByCategoryImpl value,
+          $Res Function(_$FilterByCategoryImpl) then) =
+      __$$FilterByCategoryImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int categoryId});
+}
+
+/// @nodoc
+class __$$FilterByCategoryImplCopyWithImpl<$Res>
+    extends _$LocalProductEventCopyWithImpl<$Res, _$FilterByCategoryImpl>
+    implements _$$FilterByCategoryImplCopyWith<$Res> {
+  __$$FilterByCategoryImplCopyWithImpl(_$FilterByCategoryImpl _value,
+      $Res Function(_$FilterByCategoryImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? categoryId = null,
+  }) {
+    return _then(_$FilterByCategoryImpl(
+      null == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FilterByCategoryImpl implements _FilterByCategory {
+  const _$FilterByCategoryImpl(this.categoryId);
+
+  @override
+  final int categoryId;
+
+  @override
+  String toString() {
+    return 'LocalProductEvent.filterByCategory(categoryId: $categoryId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FilterByCategoryImpl &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, categoryId);
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FilterByCategoryImplCopyWith<_$FilterByCategoryImpl> get copyWith =>
+      __$$FilterByCategoryImplCopyWithImpl<_$FilterByCategoryImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getLocalProduct,
+    required TResult Function(String priceRange) filterByPriceRange,
+    required TResult Function(int categoryId) filterByCategory,
+  }) {
+    return filterByCategory(categoryId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getLocalProduct,
+    TResult? Function(String priceRange)? filterByPriceRange,
+    TResult? Function(int categoryId)? filterByCategory,
+  }) {
+    return filterByCategory?.call(categoryId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getLocalProduct,
+    TResult Function(String priceRange)? filterByPriceRange,
+    TResult Function(int categoryId)? filterByCategory,
+    required TResult orElse(),
+  }) {
+    if (filterByCategory != null) {
+      return filterByCategory(categoryId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetLocalProduct value) getLocalProduct,
+    required TResult Function(_FilterByPriceRange value) filterByPriceRange,
+    required TResult Function(_FilterByCategory value) filterByCategory,
+  }) {
+    return filterByCategory(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetLocalProduct value)? getLocalProduct,
+    TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult? Function(_FilterByCategory value)? filterByCategory,
+  }) {
+    return filterByCategory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetLocalProduct value)? getLocalProduct,
+    TResult Function(_FilterByPriceRange value)? filterByPriceRange,
+    TResult Function(_FilterByCategory value)? filterByCategory,
+    required TResult orElse(),
+  }) {
+    if (filterByCategory != null) {
+      return filterByCategory(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _FilterByCategory implements LocalProductEvent {
+  const factory _FilterByCategory(final int categoryId) =
+      _$FilterByCategoryImpl;
+
+  int get categoryId;
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$FilterByCategoryImplCopyWith<_$FilterByCategoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'get_categories_bloc.dart';
+part of 'sync_category_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,65 +15,65 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$GetCategoriesEvent {
+mixin _$SyncCategoryEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCategories,
+    required TResult Function() syncCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? getCategories,
+    TResult? Function()? syncCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCategories,
+    TResult Function()? syncCategory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_GetCategories value) getCategories,
+    required TResult Function(_SyncCategory value) syncCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_GetCategories value)? getCategories,
+    TResult? Function(_SyncCategory value)? syncCategory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_GetCategories value)? getCategories,
+    TResult Function(_SyncCategory value)? syncCategory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GetCategoriesEventCopyWith<$Res> {
-  factory $GetCategoriesEventCopyWith(
-          GetCategoriesEvent value, $Res Function(GetCategoriesEvent) then) =
-      _$GetCategoriesEventCopyWithImpl<$Res, GetCategoriesEvent>;
+abstract class $SyncCategoryEventCopyWith<$Res> {
+  factory $SyncCategoryEventCopyWith(
+          SyncCategoryEvent value, $Res Function(SyncCategoryEvent) then) =
+      _$SyncCategoryEventCopyWithImpl<$Res, SyncCategoryEvent>;
 }
 
 /// @nodoc
-class _$GetCategoriesEventCopyWithImpl<$Res, $Val extends GetCategoriesEvent>
-    implements $GetCategoriesEventCopyWith<$Res> {
-  _$GetCategoriesEventCopyWithImpl(this._value, this._then);
+class _$SyncCategoryEventCopyWithImpl<$Res, $Val extends SyncCategoryEvent>
+    implements $SyncCategoryEventCopyWith<$Res> {
+  _$SyncCategoryEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of GetCategoriesEvent
+  /// Create a copy of SyncCategoryEvent
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -86,13 +86,13 @@ abstract class _$$StartedImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$StartedImplCopyWithImpl<$Res>
-    extends _$GetCategoriesEventCopyWithImpl<$Res, _$StartedImpl>
+    extends _$SyncCategoryEventCopyWithImpl<$Res, _$StartedImpl>
     implements _$$StartedImplCopyWith<$Res> {
   __$$StartedImplCopyWithImpl(
       _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesEvent
+  /// Create a copy of SyncCategoryEvent
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -103,7 +103,7 @@ class _$StartedImpl implements _Started {
 
   @override
   String toString() {
-    return 'GetCategoriesEvent.started()';
+    return 'SyncCategoryEvent.started()';
   }
 
   @override
@@ -119,7 +119,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCategories,
+    required TResult Function() syncCategory,
   }) {
     return started();
   }
@@ -128,7 +128,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? getCategories,
+    TResult? Function()? syncCategory,
   }) {
     return started?.call();
   }
@@ -137,7 +137,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCategories,
+    TResult Function()? syncCategory,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -150,7 +150,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_GetCategories value) getCategories,
+    required TResult Function(_SyncCategory value) syncCategory,
   }) {
     return started(this);
   }
@@ -159,7 +159,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_GetCategories value)? getCategories,
+    TResult? Function(_SyncCategory value)? syncCategory,
   }) {
     return started?.call(this);
   }
@@ -168,7 +168,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_GetCategories value)? getCategories,
+    TResult Function(_SyncCategory value)? syncCategory,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -178,43 +178,43 @@ class _$StartedImpl implements _Started {
   }
 }
 
-abstract class _Started implements GetCategoriesEvent {
+abstract class _Started implements SyncCategoryEvent {
   const factory _Started() = _$StartedImpl;
 }
 
 /// @nodoc
-abstract class _$$GetCategoriesImplCopyWith<$Res> {
-  factory _$$GetCategoriesImplCopyWith(
-          _$GetCategoriesImpl value, $Res Function(_$GetCategoriesImpl) then) =
-      __$$GetCategoriesImplCopyWithImpl<$Res>;
+abstract class _$$SyncCategoryImplCopyWith<$Res> {
+  factory _$$SyncCategoryImplCopyWith(
+          _$SyncCategoryImpl value, $Res Function(_$SyncCategoryImpl) then) =
+      __$$SyncCategoryImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$GetCategoriesImplCopyWithImpl<$Res>
-    extends _$GetCategoriesEventCopyWithImpl<$Res, _$GetCategoriesImpl>
-    implements _$$GetCategoriesImplCopyWith<$Res> {
-  __$$GetCategoriesImplCopyWithImpl(
-      _$GetCategoriesImpl _value, $Res Function(_$GetCategoriesImpl) _then)
+class __$$SyncCategoryImplCopyWithImpl<$Res>
+    extends _$SyncCategoryEventCopyWithImpl<$Res, _$SyncCategoryImpl>
+    implements _$$SyncCategoryImplCopyWith<$Res> {
+  __$$SyncCategoryImplCopyWithImpl(
+      _$SyncCategoryImpl _value, $Res Function(_$SyncCategoryImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesEvent
+  /// Create a copy of SyncCategoryEvent
   /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$GetCategoriesImpl implements _GetCategories {
-  const _$GetCategoriesImpl();
+class _$SyncCategoryImpl implements _SyncCategory {
+  const _$SyncCategoryImpl();
 
   @override
   String toString() {
-    return 'GetCategoriesEvent.getCategories()';
+    return 'SyncCategoryEvent.syncCategory()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$GetCategoriesImpl);
+        (other.runtimeType == runtimeType && other is _$SyncCategoryImpl);
   }
 
   @override
@@ -224,29 +224,29 @@ class _$GetCategoriesImpl implements _GetCategories {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCategories,
+    required TResult Function() syncCategory,
   }) {
-    return getCategories();
+    return syncCategory();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? getCategories,
+    TResult? Function()? syncCategory,
   }) {
-    return getCategories?.call();
+    return syncCategory?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCategories,
+    TResult Function()? syncCategory,
     required TResult orElse(),
   }) {
-    if (getCategories != null) {
-      return getCategories();
+    if (syncCategory != null) {
+      return syncCategory();
     }
     return orElse();
   }
@@ -255,40 +255,40 @@ class _$GetCategoriesImpl implements _GetCategories {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_GetCategories value) getCategories,
+    required TResult Function(_SyncCategory value) syncCategory,
   }) {
-    return getCategories(this);
+    return syncCategory(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
-    TResult? Function(_GetCategories value)? getCategories,
+    TResult? Function(_SyncCategory value)? syncCategory,
   }) {
-    return getCategories?.call(this);
+    return syncCategory?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_GetCategories value)? getCategories,
+    TResult Function(_SyncCategory value)? syncCategory,
     required TResult orElse(),
   }) {
-    if (getCategories != null) {
-      return getCategories(this);
+    if (syncCategory != null) {
+      return syncCategory(this);
     }
     return orElse();
   }
 }
 
-abstract class _GetCategories implements GetCategoriesEvent {
-  const factory _GetCategories() = _$GetCategoriesImpl;
+abstract class _SyncCategory implements SyncCategoryEvent {
+  const factory _SyncCategory() = _$SyncCategoryImpl;
 }
 
 /// @nodoc
-mixin _$GetCategoriesState {
+mixin _$SyncCategoryState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
@@ -343,23 +343,23 @@ mixin _$GetCategoriesState {
 }
 
 /// @nodoc
-abstract class $GetCategoriesStateCopyWith<$Res> {
-  factory $GetCategoriesStateCopyWith(
-          GetCategoriesState value, $Res Function(GetCategoriesState) then) =
-      _$GetCategoriesStateCopyWithImpl<$Res, GetCategoriesState>;
+abstract class $SyncCategoryStateCopyWith<$Res> {
+  factory $SyncCategoryStateCopyWith(
+          SyncCategoryState value, $Res Function(SyncCategoryState) then) =
+      _$SyncCategoryStateCopyWithImpl<$Res, SyncCategoryState>;
 }
 
 /// @nodoc
-class _$GetCategoriesStateCopyWithImpl<$Res, $Val extends GetCategoriesState>
-    implements $GetCategoriesStateCopyWith<$Res> {
-  _$GetCategoriesStateCopyWithImpl(this._value, this._then);
+class _$SyncCategoryStateCopyWithImpl<$Res, $Val extends SyncCategoryState>
+    implements $SyncCategoryStateCopyWith<$Res> {
+  _$SyncCategoryStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -372,13 +372,13 @@ abstract class _$$InitialImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$InitialImplCopyWithImpl<$Res>
-    extends _$GetCategoriesStateCopyWithImpl<$Res, _$InitialImpl>
+    extends _$SyncCategoryStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -389,7 +389,7 @@ class _$InitialImpl implements _Initial {
 
   @override
   String toString() {
-    return 'GetCategoriesState.initial()';
+    return 'SyncCategoryState.initial()';
   }
 
   @override
@@ -477,7 +477,7 @@ class _$InitialImpl implements _Initial {
   }
 }
 
-abstract class _Initial implements GetCategoriesState {
+abstract class _Initial implements SyncCategoryState {
   const factory _Initial() = _$InitialImpl;
 }
 
@@ -490,13 +490,13 @@ abstract class _$$LoadingImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$GetCategoriesStateCopyWithImpl<$Res, _$LoadingImpl>
+    extends _$SyncCategoryStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
 }
 
@@ -507,7 +507,7 @@ class _$LoadingImpl implements _Loading {
 
   @override
   String toString() {
-    return 'GetCategoriesState.loading()';
+    return 'SyncCategoryState.loading()';
   }
 
   @override
@@ -595,7 +595,7 @@ class _$LoadingImpl implements _Loading {
   }
 }
 
-abstract class _Loading implements GetCategoriesState {
+abstract class _Loading implements SyncCategoryState {
   const factory _Loading() = _$LoadingImpl;
 }
 
@@ -610,13 +610,13 @@ abstract class _$$LoadedImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$GetCategoriesStateCopyWithImpl<$Res, _$LoadedImpl>
+    extends _$SyncCategoryStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
       _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -642,7 +642,7 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   String toString() {
-    return 'GetCategoriesState.loaded(categoryResponseModel: $categoryResponseModel)';
+    return 'SyncCategoryState.loaded(categoryResponseModel: $categoryResponseModel)';
   }
 
   @override
@@ -657,7 +657,7 @@ class _$LoadedImpl implements _Loaded {
   @override
   int get hashCode => Object.hash(runtimeType, categoryResponseModel);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -741,13 +741,13 @@ class _$LoadedImpl implements _Loaded {
   }
 }
 
-abstract class _Loaded implements GetCategoriesState {
+abstract class _Loaded implements SyncCategoryState {
   const factory _Loaded(final CategoryResponseModel categoryResponseModel) =
       _$LoadedImpl;
 
   CategoryResponseModel get categoryResponseModel;
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
@@ -765,13 +765,13 @@ abstract class _$$ErrorImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$GetCategoriesStateCopyWithImpl<$Res, _$ErrorImpl>
+    extends _$SyncCategoryStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
       _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -797,7 +797,7 @@ class _$ErrorImpl implements _Error {
 
   @override
   String toString() {
-    return 'GetCategoriesState.error(message: $message)';
+    return 'SyncCategoryState.error(message: $message)';
   }
 
   @override
@@ -811,7 +811,7 @@ class _$ErrorImpl implements _Error {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -895,12 +895,12 @@ class _$ErrorImpl implements _Error {
   }
 }
 
-abstract class _Error implements GetCategoriesState {
+abstract class _Error implements SyncCategoryState {
   const factory _Error(final String message) = _$ErrorImpl;
 
   String get message;
 
-  /// Create a copy of GetCategoriesState
+  /// Create a copy of SyncCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>

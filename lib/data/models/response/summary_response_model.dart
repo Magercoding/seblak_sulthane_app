@@ -37,7 +37,9 @@ class EnhancedSummaryData {
   final dynamic qrisSales;
   final dynamic qrisFee;
   final dynamic beverageSales;
+  final BeverageBreakdown? beverageBreakdown;
   final double? closingBalance;
+  final dynamic finalCashClosing;
   final PaymentMethods? paymentMethods;
   final List<DailyBreakdown>? dailyBreakdown;
   final int outletId;
@@ -54,7 +56,9 @@ class EnhancedSummaryData {
     this.qrisSales,
     this.qrisFee,
     this.beverageSales,
+    this.beverageBreakdown,
     this.closingBalance,
+    this.finalCashClosing,
     this.paymentMethods,
     this.dailyBreakdown,
     required this.outletId,
@@ -81,6 +85,18 @@ class EnhancedSummaryData {
       paymentMethodsObj = null;
     }
 
+    // Parse beverage_breakdown
+    BeverageBreakdown? beverageBreakdownObj;
+    if (json['beverage_breakdown'] != null) {
+      try {
+        beverageBreakdownObj =
+            BeverageBreakdown.fromJson(json['beverage_breakdown']);
+      } catch (e) {
+        log("Error parsing beverage_breakdown: $e");
+        beverageBreakdownObj = null;
+      }
+    }
+
     return EnhancedSummaryData(
       totalRevenue: json['total_revenue'] ?? 0,
       totalDiscount: json['total_discount'] ?? 0,
@@ -93,7 +109,9 @@ class EnhancedSummaryData {
       qrisSales: json['qris_sales'] ?? 0,
       qrisFee: json['qris_fee'] ?? '0.00',
       beverageSales: json['beverage_sales'] ?? 0,
+      beverageBreakdown: beverageBreakdownObj,
       closingBalance: _parseToDouble(json['closing_balance']),
+      finalCashClosing: json['final_cash_closing'] ?? 0,
       paymentMethods: paymentMethodsObj,
       dailyBreakdown: json['daily_breakdown'] != null
           ? (json['daily_breakdown'] as List)
@@ -131,7 +149,9 @@ class EnhancedSummaryData {
         'qris_sales': qrisSales,
         'qris_fee': qrisFee,
         'beverage_sales': beverageSales,
+        'beverage_breakdown': beverageBreakdown?.toJson(),
         'closing_balance': closingBalance,
+        'final_cash_closing': finalCashClosing,
         'payment_methods': paymentMethods?.toJson(),
         'daily_breakdown': dailyBreakdown?.map((e) => e.toJson()).toList(),
         'outlet_id': outletId,
@@ -241,10 +261,147 @@ class EnhancedSummaryData {
     return 0;
   }
 
+  int getFinalCashClosingAsInt() {
+    if (finalCashClosing == null) return 0;
+    if (finalCashClosing is int) return finalCashClosing as int;
+    if (finalCashClosing is String) {
+      if (finalCashClosing.toString().isEmpty) return 0;
+      try {
+        return int.parse(finalCashClosing as String);
+      } catch (e) {
+        try {
+          return double.parse(finalCashClosing as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (finalCashClosing is double) {
+      return finalCashClosing.toInt();
+    }
+    if (finalCashClosing is num) {
+      return finalCashClosing.toInt();
+    }
+    return 0;
+  }
+
   // For backward compatibility with existing code
   double getTotal() {
     return closingBalance ?? 0.0;
   }
+}
+
+class BeverageBreakdown {
+  final BeveragePayment? cash;
+  final BeveragePayment? qris;
+  final BeverageTotal? total;
+
+  BeverageBreakdown({
+    this.cash,
+    this.qris,
+    this.total,
+  });
+
+  factory BeverageBreakdown.fromJson(Map<String, dynamic> json) {
+    return BeverageBreakdown(
+      cash:
+          json['cash'] != null ? BeveragePayment.fromJson(json['cash']) : null,
+      qris:
+          json['qris'] != null ? BeveragePayment.fromJson(json['qris']) : null,
+      total:
+          json['total'] != null ? BeverageTotal.fromJson(json['total']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'cash': cash?.toJson(),
+        'qris': qris?.toJson(),
+        'total': total?.toJson(),
+      };
+}
+
+class BeveragePayment {
+  final dynamic quantity;
+  final dynamic amount;
+
+  BeveragePayment({
+    required this.quantity,
+    required this.amount,
+  });
+
+  factory BeveragePayment.fromJson(Map<String, dynamic> json) {
+    return BeveragePayment(
+      quantity: json['quantity'] ?? 0,
+      amount: json['amount'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'quantity': quantity,
+        'amount': amount,
+      };
+
+  int getQuantityAsInt() {
+    if (quantity == null) return 0;
+    if (quantity is int) return quantity as int;
+    if (quantity is String) {
+      try {
+        return int.parse(quantity as String);
+      } catch (e) {
+        try {
+          return double.parse(quantity as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (quantity is double) {
+      return quantity.toInt();
+    }
+    return 0;
+  }
+
+  int getAmountAsInt() {
+    if (amount == null) return 0;
+    if (amount is int) return amount as int;
+    if (amount is String) {
+      try {
+        return int.parse(amount as String);
+      } catch (e) {
+        try {
+          return double.parse(amount as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (amount is double) {
+      return amount.toInt();
+    }
+    return 0;
+  }
+}
+
+class BeverageTotal {
+  final int quantity;
+  final int amount;
+
+  BeverageTotal({
+    required this.quantity,
+    required this.amount,
+  });
+
+  factory BeverageTotal.fromJson(Map<String, dynamic> json) {
+    return BeverageTotal(
+      quantity: json['quantity'] ?? 0,
+      amount: json['amount'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'quantity': quantity,
+        'amount': amount,
+      };
 }
 
 class PaymentMethods {
@@ -272,8 +429,8 @@ class PaymentMethods {
   }
 
   Map<String, dynamic> toJson() => {
-        'Cash': cash?.toJson(),
-        'QRIS': qris?.toJson(),
+        'cash': cash?.toJson(),
+        'qris': qris?.toJson(),
       };
 }
 
@@ -336,6 +493,8 @@ class DailyBreakdown {
   final dynamic qrisFee;
   final dynamic totalSales;
   final double? closingBalance;
+  final dynamic finalCashClosing;
+  final BeverageBreakdown? beverageBreakdown;
 
   DailyBreakdown({
     required this.date,
@@ -346,9 +505,23 @@ class DailyBreakdown {
     this.qrisFee,
     this.totalSales,
     this.closingBalance,
+    this.finalCashClosing,
+    this.beverageBreakdown,
   });
 
   factory DailyBreakdown.fromJson(Map<String, dynamic> json) {
+    // Parse beverage_breakdown
+    BeverageBreakdown? beverageBreakdownObj;
+    if (json['beverage_breakdown'] != null) {
+      try {
+        beverageBreakdownObj =
+            BeverageBreakdown.fromJson(json['beverage_breakdown']);
+      } catch (e) {
+        log("Error parsing daily beverage_breakdown: $e");
+        beverageBreakdownObj = null;
+      }
+    }
+
     return DailyBreakdown(
       date: json['date'] ?? '',
       openingBalance: _parseToDouble(json['opening_balance']),
@@ -358,6 +531,8 @@ class DailyBreakdown {
       qrisFee: json['qris_fee'] ?? '0.00',
       totalSales: json['total_sales'] ?? 0,
       closingBalance: _parseToDouble(json['closing_balance']),
+      finalCashClosing: json['final_cash_closing'] ?? 0,
+      beverageBreakdown: beverageBreakdownObj,
     );
   }
 
@@ -385,6 +560,8 @@ class DailyBreakdown {
         'qris_fee': qrisFee,
         'total_sales': totalSales,
         'closing_balance': closingBalance,
+        'final_cash_closing': finalCashClosing,
+        'beverage_breakdown': beverageBreakdown?.toJson(),
       };
 
   int getCashSalesAsInt() {
@@ -427,6 +604,54 @@ class DailyBreakdown {
     }
     if (qrisSales is num) {
       return qrisSales.toInt();
+    }
+    return 0;
+  }
+
+  int getTotalSalesAsInt() {
+    if (totalSales == null) return 0;
+    if (totalSales is int) return totalSales as int;
+    if (totalSales is String) {
+      if (totalSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(totalSales as String);
+      } catch (e) {
+        try {
+          return double.parse(totalSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (totalSales is double) {
+      return totalSales.toInt();
+    }
+    if (totalSales is num) {
+      return totalSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFinalCashClosingAsInt() {
+    if (finalCashClosing == null) return 0;
+    if (finalCashClosing is int) return finalCashClosing as int;
+    if (finalCashClosing is String) {
+      if (finalCashClosing.toString().isEmpty) return 0;
+      try {
+        return int.parse(finalCashClosing as String);
+      } catch (e) {
+        try {
+          return double.parse(finalCashClosing as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (finalCashClosing is double) {
+      return finalCashClosing.toInt();
+    }
+    if (finalCashClosing is num) {
+      return finalCashClosing.toInt();
     }
     return 0;
   }

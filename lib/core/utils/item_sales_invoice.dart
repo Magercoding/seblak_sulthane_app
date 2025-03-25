@@ -144,18 +144,52 @@ class ItemSalesInvoice {
 
     final String outletAddress = await _getOutletAddress(outletId);
 
-    pdf.addPage(
-      MultiPage(
-        build: (context) => [
-          buildHeader(image, searchDateFormatted),
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          buildInvoice(itemSalesWithCategories),
-          Divider(),
-          SizedBox(height: 0.25 * PdfPageFormat.cm),
-        ],
-        footer: (context) => buildFooter(outletAddress),
-      ),
-    );
+    // Create smaller chunks to avoid memory issues
+    const int itemsPerPage = 20; // Reduced from 25 to 10 items
+    final int totalPages =
+        (itemSalesWithCategories.length / itemsPerPage).ceil();
+
+    // Use a more efficient approach for page creation
+    for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+      final int startIndex = pageIndex * itemsPerPage;
+      final int endIndex =
+          (startIndex + itemsPerPage < itemSalesWithCategories.length)
+              ? startIndex + itemsPerPage
+              : itemSalesWithCategories.length;
+
+      final List<ItemSales> pageItems =
+          itemSalesWithCategories.sublist(startIndex, endIndex);
+
+      // Create a single page instead of MultiPage to reduce memory consumption
+      pdf.addPage(
+        Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (context) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildHeader(image, searchDateFormatted),
+                SizedBox(height: 0.5 * PdfPageFormat.cm),
+                buildInvoiceOptimized(pageItems),
+                Divider(),
+                SizedBox(height: 0.25 * PdfPageFormat.cm),
+                Center(
+                  child: Text(
+                    'Halaman ${pageIndex + 1} dari $totalPages',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ),
+                Spacer(),
+                buildFooter(outletAddress),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Add a small delay between page generation to prevent memory pressure
+      await Future.delayed(Duration(milliseconds: 20));
+    }
 
     return HelperPdfService.saveDocument(
       name:
@@ -188,7 +222,7 @@ class ItemSalesInvoice {
         ),
       ]);
 
-  static Widget buildInvoice(List<ItemSales> itemSales) {
+  static Widget buildInvoiceOptimized(List<ItemSales> itemSales) {
     final headers = [
       'Id',
       'Pesanan',
@@ -198,13 +232,15 @@ class ItemSalesInvoice {
       'Harga',
       'Total'
     ];
+
+    // Simplify the data structure to reduce memory usage
     final data = itemSales.map((item) {
       return [
-        item.id!,
-        item.orderId,
-        item.productName,
+        item.id.toString(),
+        item.orderId.toString(),
+        item.productName ?? '',
         item.categoryName ?? 'Tidak Terkategori',
-        item.quantity,
+        item.quantity.toString(),
         (item.price! * 100).currencyFormatRp,
         (item.price! * item.quantity! * 100).currencyFormatRp
       ];
@@ -215,17 +251,30 @@ class ItemSalesInvoice {
       data: data,
       border: null,
       headerStyle: TextStyle(
-          fontWeight: FontWeight.bold, color: PdfColor.fromHex('FFFFFF')),
+        fontWeight: FontWeight.bold,
+        color: PdfColor.fromHex('FFFFFF'),
+        fontSize: 9, // Reduced font size
+      ),
+      cellStyle: TextStyle(fontSize: 8), // Reduced cell font size
       headerDecoration: BoxDecoration(color: PdfColors.blue),
-      cellHeight: 30,
+      cellHeight: 25, // Reduced cell height
       cellAlignments: {
-        0: Alignment.centerLeft,
+        0: Alignment.center,
         1: Alignment.center,
         2: Alignment.center,
         3: Alignment.center,
-        4: Alignment.centerLeft,
-        5: Alignment.centerLeft,
-        6: Alignment.centerLeft,
+        4: Alignment.center,
+        5: Alignment.centerRight,
+        6: Alignment.centerRight,
+      },
+      columnWidths: {
+        0: FixedColumnWidth(30),
+        1: FixedColumnWidth(40),
+        2: FixedColumnWidth(70),
+        3: FixedColumnWidth(60),
+        4: FixedColumnWidth(25),
+        5: FixedColumnWidth(60),
+        6: FixedColumnWidth(60),
       },
     );
   }

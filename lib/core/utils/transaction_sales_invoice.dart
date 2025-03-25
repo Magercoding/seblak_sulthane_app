@@ -92,7 +92,6 @@ class TransactionSalesInvoice {
 
     final ByteData dataImage = await rootBundle.load('assets/images/logo.png');
     final Uint8List bytes = dataImage.buffer.asUint8List();
-
     final image = pw.MemoryImage(bytes);
 
     outletId ??= await _fetchOutletIdFromProfile();
@@ -100,18 +99,50 @@ class TransactionSalesInvoice {
 
     final String outletAddress = await _getOutletAddress(outletId);
 
-    pdf.addPage(
-      MultiPage(
-        build: (context) => [
-          buildHeader(image, searchDateFormatted),
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          buildInvoice(itemOrders),
-          Divider(),
-          SizedBox(height: 0.25 * PdfPageFormat.cm),
-        ],
-        footer: (context) => buildFooter(outletAddress),
-      ),
-    );
+    // Create smaller chunks to avoid memory issues
+    const int itemsPerPage = 15; // Reduced from 20 to 10 items
+    final int totalPages = (itemOrders.length / itemsPerPage).ceil();
+
+    // Use a more efficient approach for page creation
+    for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+      final int startIndex = pageIndex * itemsPerPage;
+      final int endIndex = (startIndex + itemsPerPage < itemOrders.length)
+          ? startIndex + itemsPerPage
+          : itemOrders.length;
+
+      final List<ItemOrder> pageItems =
+          itemOrders.sublist(startIndex, endIndex);
+
+      // Create a single page instead of MultiPage to reduce memory consumption
+      pdf.addPage(
+        Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (context) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildHeader(image, searchDateFormatted),
+                SizedBox(height: 0.5 * PdfPageFormat.cm),
+                buildInvoiceOptimized(pageItems),
+                Divider(),
+                SizedBox(height: 0.25 * PdfPageFormat.cm),
+                Center(
+                  child: Text(
+                    'Halaman ${pageIndex + 1} dari $totalPages',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ),
+                Spacer(),
+                buildFooter(outletAddress),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Add a small delay between page generation to prevent memory pressure
+      await Future.delayed(Duration(milliseconds: 20));
+    }
 
     return HelperPdfService.saveDocument(
         name:
@@ -147,7 +178,7 @@ class TransactionSalesInvoice {
         ),
       ]);
 
-  static Widget buildInvoice(List<ItemOrder> itemOrders) {
+  static Widget buildInvoiceOptimized(List<ItemOrder> itemOrders) {
     final headers = [
       'ID',
       'Total',
@@ -156,10 +187,12 @@ class TransactionSalesInvoice {
       'Diskon',
       'Layanan',
       'Total Item',
-      'Metode Pembayaran',
+      'Metode',
       'Kasir',
       'Waktu'
     ];
+
+    // Simplify the data structure to reduce memory usage
     final data = itemOrders.map((item) {
       return [
         item.id.toString(),
@@ -180,9 +213,13 @@ class TransactionSalesInvoice {
       data: data,
       border: null,
       headerStyle: TextStyle(
-          fontWeight: FontWeight.bold, color: PdfColor.fromHex('FFFFFF')),
+        fontWeight: FontWeight.bold,
+        color: PdfColor.fromHex('FFFFFF'),
+        fontSize: 9, // Reduced font size
+      ),
+      cellStyle: TextStyle(fontSize: 8), // Reduced cell font size
       headerDecoration: BoxDecoration(color: PdfColors.blue),
-      cellHeight: 30,
+      cellHeight: 25, // Reduced cell height
       cellAlignments: {
         0: Alignment.center,
         1: Alignment.centerRight,
@@ -194,6 +231,18 @@ class TransactionSalesInvoice {
         7: Alignment.center,
         8: Alignment.center,
         9: Alignment.center,
+      },
+      columnWidths: {
+        0: FixedColumnWidth(30),
+        1: FixedColumnWidth(50),
+        2: FixedColumnWidth(50),
+        3: FixedColumnWidth(40),
+        4: FixedColumnWidth(40),
+        5: FixedColumnWidth(40),
+        6: FixedColumnWidth(30),
+        7: FixedColumnWidth(40),
+        8: FixedColumnWidth(40),
+        9: FixedColumnWidth(60),
       },
     );
   }

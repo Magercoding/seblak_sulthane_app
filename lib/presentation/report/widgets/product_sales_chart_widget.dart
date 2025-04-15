@@ -8,11 +8,11 @@ class ProductSalesChartWidgets extends StatelessWidget {
   final List<ProductSales> productSales;
 
   const ProductSalesChartWidgets({
-    Key? key,
+    super.key,
     required this.title,
     required this.searchDateFormatted,
     required this.productSales,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -161,15 +161,18 @@ class PrintDataoutputs {
     final generator =
         Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
 
+    // Load logo
     final ByteData data =
         await rootBundle.load('assets/logo/seblak_sulthane.png');
     final Uint8List bytesData = data.buffer.asUint8List();
-    final img.Image? orginalImage = img.decodeImage(bytesData);
+    final img.Image? originalImage = img.decodeImage(bytesData);
     bytes += generator.reset();
 
+    // Get outlet info
     outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
     outletId ??= 1;
 
+    // Get cashier name
     try {
       final authLocalDataSource = AuthLocalDataSource();
       final userData = await authLocalDataSource.getUserData();
@@ -184,6 +187,7 @@ class PrintDataoutputs {
       print("🧾 ORDER - Error getting local user data: $e");
     }
 
+    // Get outlet details
     final OutletModel? outlet = await PrintDataoutputs._getOutletInfo(outletId);
     String outletAddress = 'OFFLINE';
 
@@ -198,14 +202,15 @@ class PrintDataoutputs {
     }
     final String outletPhone = outlet?.phone ?? 'Seblak Sulthane';
 
-    if (orginalImage != null) {
-      final img.Image grayscalledImage = img.grayscale(orginalImage);
-      final img.Image resizedImage =
-          img.copyResize(grayscalledImage, width: 240);
+    // Print logo
+    if (originalImage != null) {
+      final img.Image grayscaleImage = img.grayscale(originalImage);
+      final img.Image resizedImage = img.copyResize(grayscaleImage, width: 240);
       bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
       bytes += generator.feed(3);
     }
 
+    // Print outlet info
     bytes += generator.text(outletAddress,
         styles: const PosStyles(bold: false, align: PosAlign.center));
     bytes += generator.text(outletPhone,
@@ -217,6 +222,7 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
+    // Print date and time
     bytes += generator.row([
       PosColumn(
         text: DateFormat('dd MMM yyyy').format(DateTime.now()),
@@ -229,6 +235,8 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
+
+    // Print receipt number
     bytes += generator.row([
       PosColumn(
         text: 'Receipt Number',
@@ -242,6 +250,7 @@ class PrintDataoutputs {
       ),
     ]);
 
+    // Print order info
     bytes += generator.row([
       PosColumn(
         text: 'Order ID',
@@ -254,6 +263,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
+
     bytes += generator.row([
       PosColumn(
         text: 'Bill Name',
@@ -280,6 +290,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
+
     if (orderType.isNotEmpty) {
       bytes += generator.row([
         PosColumn(
@@ -294,11 +305,14 @@ class PrintDataoutputs {
         ),
       ]);
     }
+
     bytes += generator.text(
         paper == 80
             ? '------------------------------------------------'
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    // Print products
     for (final product in products) {
       bytes += generator.row([
         PosColumn(
@@ -314,12 +328,14 @@ class PrintDataoutputs {
         ),
       ]);
     }
+
     bytes += generator.text(
         paper == 80
             ? '------------------------------------------------'
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
+    // Print order summary
     bytes += generator.row([
       PosColumn(
         text: 'Subtotal $totalQuantity Product',
@@ -387,6 +403,8 @@ class PrintDataoutputs {
             ? '------------------------------------------------'
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    // Print total
     bytes += generator.row([
       PosColumn(
         text: 'Total',
@@ -399,9 +417,23 @@ class PrintDataoutputs {
         styles: const PosStyles(bold: true, align: PosAlign.right),
       ),
     ]);
+
+    // ===== FIXED PAYMENT SECTION =====
+    final isCashPayment = paymentMethod.toLowerCase() == 'cash';
+
+    // Recalculate change to ensure correctness
+    kembalian = isCashPayment ? nominalBayar - totalPrice : 0;
+
+    // Handle negative change
+    if (kembalian < 0) {
+      print("⚠️ WARNING - Negative change: $kembalian");
+      kembalian = 0;
+    }
+
+    // Print payment method
     bytes += generator.row([
       PosColumn(
-        text: paymentMethod == 'Cash' ? 'Cash' : 'QRIS',
+        text: isCashPayment ? 'Cash' : 'QRIS',
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
@@ -412,10 +444,11 @@ class PrintDataoutputs {
       ),
     ]);
 
-    if (paymentMethod == 'Cash') {
+    // Print change only for cash payments
+    if (isCashPayment) {
       bytes += generator.row([
         PosColumn(
-          text: 'Return',
+          text: 'Kembalian',
           width: 6,
           styles: const PosStyles(align: PosAlign.left),
         ),
@@ -426,7 +459,9 @@ class PrintDataoutputs {
         ),
       ]);
     }
+    // ===== END FIXED SECTION =====
 
+    // Print footer
     bytes += generator.text(
         paper == 80
             ? '------------------------------------------------'

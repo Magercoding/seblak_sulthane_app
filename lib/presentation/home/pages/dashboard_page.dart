@@ -6,7 +6,6 @@ import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/auth/login_page.dart';
-import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/table/pages/table_page.dart';
 import 'package:seblak_sulthane_app/presentation/report/pages/report_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/settings_page.dart';
@@ -28,7 +27,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  bool _wasOffline = true; // Track if we were previously offline
+  final bool _wasOffline = true; // Track if we were previously offline
 
   final List<Widget> _pages = [
     const HomePage(

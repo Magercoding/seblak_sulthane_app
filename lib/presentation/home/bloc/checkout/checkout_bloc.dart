@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:seblak_sulthane_app/core/core.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
-import 'package:seblak_sulthane_app/presentation/home/models/order_item.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_item.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

@@ -5,7 +5,6 @@ import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/order_model.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_item.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_model.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../presentation/home/models/product_quantity.dart';

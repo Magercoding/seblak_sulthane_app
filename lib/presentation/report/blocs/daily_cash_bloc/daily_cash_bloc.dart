@@ -19,12 +19,8 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          if (response.data != null) {
-            emit(_Loaded(response.data));
-          } else {
-            emit(const _Error("No daily cash data available for this date"));
-          }
-        },
+          emit(_Loaded(response.data));
+                },
       );
     });
 
@@ -39,12 +35,8 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          if (response.data != null) {
-            emit(_OpeningBalanceSet(response.data));
-          } else {
-            emit(const _Error("Failed to set opening balance"));
-          }
-        },
+          emit(_OpeningBalanceSet(response.data));
+                },
       );
     });
 
@@ -60,12 +52,8 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          if (response.data != null) {
-            emit(_ExpenseAdded(response.data));
-          } else {
-            emit(const _Error("Failed to add expense"));
-          }
-        },
+          emit(_ExpenseAdded(response.data));
+                },
       );
     });
   }

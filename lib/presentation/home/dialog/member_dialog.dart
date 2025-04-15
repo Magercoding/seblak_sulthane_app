@@ -133,15 +133,8 @@ class _MemberDialogState extends State<MemberDialog> {
                 state.maybeWhen(
                   loaded: (membersData) {
                     List<Member> members;
-                    if (membersData is List<Member>) {
-                      members = membersData;
-                    } else {
-                      members = (membersData as List).map((item) {
-                        if (item is Member) return item;
-                        return Member.fromJson(item as Map<String, dynamic>);
-                      }).toList();
-                    }
-
+                    members = membersData;
+                  
                     setState(() {
                       allMembers = members;
                       // Only update filtered members if not searching

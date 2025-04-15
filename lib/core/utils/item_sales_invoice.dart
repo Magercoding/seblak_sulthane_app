@@ -8,12 +8,10 @@ import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/item_sales_response_model.dart';
-import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:excel/excel.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 
 class ItemSalesInvoice {
   static late Font ttf;
@@ -119,8 +117,7 @@ class ItemSalesInvoice {
     final productCategories = await _fetchProductCategories();
 
     return itemSales.map((item) {
-      if (item.productId != null &&
-          productCategories.containsKey(item.productId)) {
+      if (productCategories.containsKey(item.productId)) {
         item.categoryName = productCategories[item.productId];
       } else {
         item.categoryName = 'Tidak Terkategori';
@@ -241,8 +238,8 @@ class ItemSalesInvoice {
         item.productName ?? '',
         item.categoryName ?? 'Tidak Terkategori',
         item.quantity.toString(),
-        (item.price! * 100).currencyFormatRp,
-        (item.price! * item.quantity! * 100).currencyFormatRp
+        (item.price * 100).currencyFormatRp,
+        (item.price * item.quantity * 100).currencyFormatRp
       ];
     }).toList();
 
@@ -423,14 +420,14 @@ class ItemSalesInvoice {
 
       final priceCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex));
-      priceCell.value = TextCellValue(item.price?.currencyFormatRp ?? '');
+      priceCell.value = TextCellValue(item.price.currencyFormatRp ?? '');
       priceCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Right);
 
       final totalCell = sheet
           .cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex));
       totalCell.value = TextCellValue(
-          (item.price != null && item.quantity != null)
-              ? (item.price! * item.quantity!).currencyFormatRp
+          (item.quantity != null)
+              ? (item.price * item.quantity).currencyFormatRp
               : '');
       totalCell.cellStyle = CellStyle(horizontalAlign: HorizontalAlign.Right);
     }

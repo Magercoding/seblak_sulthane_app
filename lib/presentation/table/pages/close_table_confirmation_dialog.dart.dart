@@ -12,9 +12,9 @@ class CloseTableConfirmationDialog extends StatelessWidget {
   final TableModel table;
 
   const CloseTableConfirmationDialog({
-    Key? key,
+    super.key,
     required this.table,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

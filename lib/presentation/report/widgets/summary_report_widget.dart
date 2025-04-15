@@ -18,11 +18,11 @@ class SummaryReportWidget extends StatelessWidget {
   final String searchDateFormatted;
 
   const SummaryReportWidget({
-    Key? key,
+    super.key,
     required this.summary,
     required this.title,
     required this.searchDateFormatted,
-  }) : super(key: key);
+  });
 
   Future<void> _handlePrint(BuildContext context, bool isEndShift) async {
     try {
@@ -390,7 +390,7 @@ class SummaryReportWidget extends StatelessWidget {
             // Add Total Items
             SummaryItem(
               label: 'Total Item Terjual',
-              value: '${summary.totalItems ?? "0"}',
+              value: summary.totalItems ?? "0",
             ),
             const Divider(),
 
@@ -842,12 +842,12 @@ class SummaryItem extends StatelessWidget {
   final Color? textColor;
 
   const SummaryItem({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     this.isTotal = false,
     this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

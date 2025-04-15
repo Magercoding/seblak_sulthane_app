@@ -12,11 +12,11 @@ class ManageMemberCard extends StatelessWidget {
   final VoidCallback onDeleteTap;
 
   const ManageMemberCard({
-    Key? key,
+    super.key,
     required this.data,
     required this.onEditTap,
     required this.onDeleteTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +140,7 @@ class ManageMemberCard extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   context.read<MemberBloc>().add(
-                                        MemberEvent.deleteMember(data.id!),
+                                        MemberEvent.deleteMember(data.id),
                                       );
                                   Navigator.pop(context);
                                 },

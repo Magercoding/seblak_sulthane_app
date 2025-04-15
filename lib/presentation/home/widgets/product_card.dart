@@ -6,7 +6,6 @@ import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
 import '../../../core/assets/assets.gen.dart';
-import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
 
 class ProductCard extends StatelessWidget {

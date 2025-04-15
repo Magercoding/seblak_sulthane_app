@@ -8,9 +8,9 @@ class DailyCashInfoCard extends StatelessWidget {
   final DailyCashModel dailyCash;
 
   const DailyCashInfoCard({
-    Key? key,
+    super.key,
     required this.dailyCash,
-  }) : super(key: key);
+  });
 
   // Helper method to format the cash sales value safely
   String _formatCashSales() {

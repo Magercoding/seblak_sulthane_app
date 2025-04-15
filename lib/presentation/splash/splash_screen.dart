@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
-import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/auth/login_page.dart';
-import 'package:seblak_sulthane_app/presentation/home/pages/dashboard_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

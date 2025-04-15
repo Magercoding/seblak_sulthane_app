@@ -3,16 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
-import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
-import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
-import 'package:seblak_sulthane_app/data/datasources/daily_cash_remote_datasource.dart';
-import 'package:seblak_sulthane_app/data/models/response/daily_cash_model.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/daily_cash_bloc/daily_cash_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/widgets/daily_cash_info_card.dart';
 import 'package:seblak_sulthane_app/presentation/setting/widgets/daily_cash_section_widget.dart';
 
 class DailyCashPage extends StatefulWidget {
-  const DailyCashPage({Key? key}) : super(key: key);
+  const DailyCashPage({super.key});
 
   @override
   State<DailyCashPage> createState() => _DailyCashPageState();

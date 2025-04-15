@@ -5,7 +5,6 @@ import 'package:seblak_sulthane_app/presentation/setting/bloc/discount/discount_
 
 import '../../home/widgets/custom_tab_bar.dart';
 import '../dialogs/form_discount_dialog.dart';
-import '../models/discount_model.dart';
 import '../widgets/add_data.dart';
 import '../widgets/manage_discount_card.dart';
 import '../widgets/settings_title.dart';

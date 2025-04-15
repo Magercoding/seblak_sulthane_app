@@ -40,7 +40,7 @@ class _CustomTabBarV2State extends State<CustomTabBarV2> {
       'Menu 1500-2000',
       'Menu 2500',
       'Menu 3000-9000',
-      ...widget.categories.map((e) => e.name ?? '').toList(),
+      ...widget.categories.map((e) => e.name ?? ''),
     ];
 
     return Column(

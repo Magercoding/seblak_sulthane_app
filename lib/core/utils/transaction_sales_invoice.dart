@@ -12,7 +12,6 @@ import 'package:seblak_sulthane_app/data/models/response/order_response_model.da
 import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 
 class TransactionSalesInvoice {
   static late Font ttf;

@@ -17,7 +17,6 @@ import 'package:seblak_sulthane_app/presentation/home/widgets/order_menu.dart';
 import 'package:seblak_sulthane_app/presentation/home/widgets/success_payment_dialog.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_model.dart';
 
-import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
@@ -29,12 +28,12 @@ class PaymentTablePage extends StatefulWidget {
   final bool isTable;
 
   const PaymentTablePage({
-    Key? key,
+    super.key,
     this.draftOrder,
     this.table,
     required this.isTable,
     required this.orderType, // Add this parameter
-  }) : super(key: key);
+  });
 
   @override
   State<PaymentTablePage> createState() => _PaymentTablePageState();

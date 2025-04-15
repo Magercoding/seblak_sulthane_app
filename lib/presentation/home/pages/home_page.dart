@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
-import 'package:seblak_sulthane_app/data/models/response/category_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
   bool isTakeaway = true;
   String searchQuery = '';
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
 
   @override
   void initState() {

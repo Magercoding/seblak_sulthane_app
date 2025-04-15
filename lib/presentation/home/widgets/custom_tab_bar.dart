@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
-import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 
 class CustomTabBar extends StatefulWidget {
   final List<String> tabTitles;
@@ -10,14 +8,13 @@ class CustomTabBar extends StatefulWidget {
   final Function(int)? onTap; // Added onTap callback
 
   const CustomTabBar({
-    Key? key,
+    super.key,
     required this.tabTitles,
     required this.tabViews,
     this.initialTabIndex = 0,
     this.onTap, // Optional callback for tab selection
   })  : assert(tabTitles.length == tabViews.length,
-            'Tab titles and views count must match'),
-        super(key: key);
+            'Tab titles and views count must match');
 
   @override
   State<CustomTabBar> createState() => _CustomTabBarState();

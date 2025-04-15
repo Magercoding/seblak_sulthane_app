@@ -1,18 +1,14 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:seblak_sulthane_app/core/core.dart';
-import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
-import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
-import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 
 class RevenueInvoice {
@@ -181,7 +177,7 @@ class RevenueInvoice {
               pw.Divider(),
               buildText(
                 title: 'Total Item Terjual',
-                value: '${summaryModel.totalItems ?? "0"}',
+                value: summaryModel.totalItems ?? "0",
                 unite: true,
               ),
             ],

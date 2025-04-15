@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/category_remote_datasource.dart';
@@ -18,7 +17,6 @@ import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.da
 import 'package:seblak_sulthane_app/data/datasources/product_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_item_remote_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/auth/bloc/logout/logout_bloc.dart';
-import 'package:seblak_sulthane_app/presentation/auth/login_page.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/get_table_status/get_table_status_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/online_checker/online_checker_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/outlet/outlet_bloc.dart';
@@ -52,7 +50,6 @@ import 'presentation/auth/bloc/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Import untuk initializeDateFormatting
 
-import 'presentation/home/pages/dashboard_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

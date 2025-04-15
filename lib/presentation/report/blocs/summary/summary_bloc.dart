@@ -24,7 +24,7 @@ class SummaryBloc extends Bloc<SummaryEvent, SummaryState> {
         (l) => emit(_Error(l)),
         (r) {
           if (r.data != null) {
-            emit(_Success(r.data! as EnhancedSummaryData));
+            emit(_Success(r.data!));
           } else {
             emit(const _Error("No summary data for this outlet"));
           }

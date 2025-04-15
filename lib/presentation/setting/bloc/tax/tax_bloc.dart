@@ -33,7 +33,7 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
       }
     });
 
-    this.add(const TaxEvent.started());
+    add(const TaxEvent.started());
 
     on<_Add>((event, emit) async {
       try {

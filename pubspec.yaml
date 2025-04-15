@@ -50,7 +50,9 @@ dependencies:
   shared_preferences: ^2.2.2
   sqflite: ^2.3.2
   pdf: ^3.10.8
-  open_file_plus: ^3.4.1+1
+  open_file_plus:
+    git:
+      url: https://github.com/postflow/open_file_plus.git
   pie_chart: ^5.4.0
   device_info_plus: ^11.1.0
   widgets_to_image: ^1.0.0

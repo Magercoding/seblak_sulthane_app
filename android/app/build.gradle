@@ -5,9 +5,8 @@ plugins {
 }
 
 android {
-    namespace "com.example.seblak_sulthane_app"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    namespace = "com.example.seblak_sulthane_app"
+    compileSdk = 35
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -15,7 +14,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = "17"
     }
 
     defaultConfig {

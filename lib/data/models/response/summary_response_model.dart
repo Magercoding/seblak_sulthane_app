@@ -26,11 +26,13 @@ class SummaryResponseModel {
 }
 
 class EnhancedSummaryData {
+  final int? totalOrders;
+  final String? totalItems;
   final dynamic totalRevenue;
   final dynamic totalDiscount;
   final dynamic totalTax;
-  final dynamic totalSubtotal;
   final dynamic totalServiceCharge;
+  final dynamic totalSubtotal;
   final double? openingBalance;
   final double? expenses;
   final dynamic cashSales;
@@ -45,6 +47,8 @@ class EnhancedSummaryData {
   final int outletId;
 
   const EnhancedSummaryData({
+    this.totalOrders,
+    this.totalItems,
     required this.totalRevenue,
     required this.totalDiscount,
     required this.totalTax,
@@ -98,6 +102,8 @@ class EnhancedSummaryData {
     }
 
     return EnhancedSummaryData(
+      totalOrders: json['total_orders'] ?? 0,
+      totalItems: json['total_items'] ?? "0",
       totalRevenue: json['total_revenue'] ?? 0,
       totalDiscount: json['total_discount'] ?? 0,
       totalTax: json['total_tax'] ?? 0,
@@ -138,6 +144,8 @@ class EnhancedSummaryData {
   }
 
   Map<String, dynamic> toJson() => {
+        'total_orders': totalOrders,
+        'total_items': totalItems,
         'total_revenue': totalRevenue,
         'total_discount': totalDiscount,
         'total_tax': totalTax,
@@ -486,6 +494,8 @@ class PaymentMethodDetail {
 
 class DailyBreakdown {
   final String date;
+  final int orderCount;
+  final String itemsCount;
   final double? openingBalance;
   final double? expenses;
   final dynamic cashSales;
@@ -498,6 +508,8 @@ class DailyBreakdown {
 
   DailyBreakdown({
     required this.date,
+    required this.orderCount,
+    required this.itemsCount,
     this.openingBalance,
     this.expenses,
     this.cashSales,
@@ -524,6 +536,8 @@ class DailyBreakdown {
 
     return DailyBreakdown(
       date: json['date'] ?? '',
+      orderCount: json['order_count'] ?? 0,
+      itemsCount: json['items_count'] ?? "0",
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
       cashSales: json['cash_sales'] ?? 0,
@@ -553,6 +567,8 @@ class DailyBreakdown {
 
   Map<String, dynamic> toJson() => {
         'date': date,
+        'order_count': orderCount,
+        'items_count': itemsCount,
         'opening_balance': openingBalance,
         'expenses': expenses,
         'cash_sales': cashSales,

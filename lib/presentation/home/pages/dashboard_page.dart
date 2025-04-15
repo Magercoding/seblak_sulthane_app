@@ -27,6 +27,8 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _wasOffline = true; // Track if we were previously offline
 
   final List<Widget> _pages = [
     const HomePage(
@@ -45,23 +47,22 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
+    _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((List<ConnectivityResult> connectivityResult) {
-      if (connectivityResult.contains(ConnectivityResult.mobile)) {
-        context
-            .read<OnlineCheckerBloc>()
-            .add(const OnlineCheckerEvent.check(true));
-      } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-        context
-            .read<OnlineCheckerBloc>()
-            .add(const OnlineCheckerEvent.check(true));
-      } else {
-        context
-            .read<OnlineCheckerBloc>()
-            .add(const OnlineCheckerEvent.check(false));
-      }
+      final bool isOnline =
+          connectivityResult.contains(ConnectivityResult.mobile) ||
+              connectivityResult.contains(ConnectivityResult.wifi);
+
+      // Update the UI status indicator
+      context.read<OnlineCheckerBloc>().add(OnlineCheckerEvent.check(isOnline));
     });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -116,9 +117,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               ),
                             ),
                             online: () {
-                              context.read<SyncOrderBloc>().add(
-                                    const SyncOrderEvent.syncOrder(),
-                                  );
+                              // No sync here - it's handled in the connectivity listener
                               return Container(
                                 width: 40,
                                 margin:

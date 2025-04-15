@@ -138,45 +138,45 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
-        allCategories,
-        calendar,
-        cash,
-        dashboard,
-        debit,
-        delete,
-        discount,
-        diskon,
-        done,
-        drink,
-        edit,
-        food,
-        history,
-        homeResto,
-        home,
-        image,
-        kelolaDiskon,
-        kelolaPajak,
-        kelolaPrinter,
-        kelolaProduk,
-        layanan,
-        logout,
-        member,
-        member2,
-        noProduct,
-        ongkir,
-        orders,
-        pajak,
-        payments,
-        print,
-        profile,
-        qrCode,
-        report,
-        seblakSulthaneApp,
-        setting,
-        shoppingBasket,
-        snack,
-        success
-      ];
+    allCategories,
+    calendar,
+    cash,
+    dashboard,
+    debit,
+    delete,
+    discount,
+    diskon,
+    done,
+    drink,
+    edit,
+    food,
+    history,
+    homeResto,
+    home,
+    image,
+    kelolaDiskon,
+    kelolaPajak,
+    kelolaPrinter,
+    kelolaProduk,
+    layanan,
+    logout,
+    member,
+    member2,
+    noProduct,
+    ongkir,
+    orders,
+    pajak,
+    payments,
+    print,
+    profile,
+    qrCode,
+    report,
+    seblakSulthaneApp,
+    setting,
+    shoppingBasket,
+    snack,
+    success,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -198,8 +198,12 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/manage_qr.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [logo, managePrinter, manageProduct, manageQr];
+  List<AssetGenImage> get values => [
+    logo,
+    managePrinter,
+    manageProduct,
+    manageQr,
+  ];
 }
 
 class $AssetsLogoGen {
@@ -221,7 +225,7 @@ class $AssetsLogoGen {
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
@@ -229,11 +233,7 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -261,7 +261,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -293,15 +293,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
@@ -310,17 +303,11 @@ class AssetGenImage {
 }
 
 class SvgGenImage {
-  const SvgGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = false;
+  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = false;
 
-  const SvgGenImage.vec(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = true;
+  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = true;
 
   final String _assetName;
   final Size? size;
@@ -374,7 +361,8 @@ class SvgGenImage {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      colorFilter: colorFilter ??
+      colorFilter:
+          colorFilter ??
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,

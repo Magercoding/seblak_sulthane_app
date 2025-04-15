@@ -724,6 +724,45 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
 
+    // ==================== RINGKASAN PENJUALAN ====================
+    bytes += generator.text('RINGKASAN PENJUALAN',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.feed(1);
+
+    // Total Pesanan
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Pesanan',
+        width: 7,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: '${summary.totalOrders ?? 0}',
+        width: 5,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Total Item
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Item',
+        width: 7,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: '${summary.totalItems ?? "0"}',
+        width: 5,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.text(
+        paper == 80
+            ? '------------------------------------------------'
+            : '--------------------------------',
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
     bytes += generator.text('RINGKASAN KEUANGAN',
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.feed(1);

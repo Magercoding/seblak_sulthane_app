@@ -370,7 +370,32 @@ class SummaryReportWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            // Add Summary Overview Section
+            const Text(
+              'Ringkasan Pesanan',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Add Total Orders
+            SummaryItem(
+              label: 'Total Pesanan',
+              value: '${summary.totalOrders ?? 0}',
+            ),
+            const Divider(),
+
+            // Add Total Items
+            SummaryItem(
+              label: 'Total Item Terjual',
+              value: '${summary.totalItems ?? "0"}',
+            ),
+            const Divider(),
+
             // Financial Summary Section
+            const SizedBox(height: 20),
             const Text(
               'Ringkasan Keuangan',
               style: TextStyle(
@@ -387,6 +412,7 @@ class SummaryReportWidget extends StatelessWidget {
                   'Rp ${formatCurrency(parseNumericValue(summary.totalRevenue))}',
             ),
             const Divider(),
+
             SummaryItem(
               label: 'Total Subtotal',
               value:

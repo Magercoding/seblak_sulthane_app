@@ -1,0 +1,2 @@
+C:/Users/Admin/OneDrive/Documents/GitHub/seblaksulthane/seblak_sulthane_app/android/app/.cxx/Debug/4d3y6r6o/x86/CMakeFiles/edit_cache.dir
+C:/Users/Admin/OneDrive/Documents/GitHub/seblaksulthane/seblak_sulthane_app/android/app/.cxx/Debug/4d3y6r6o/x86/CMakeFiles/rebuild_cache.dir

@@ -294,6 +294,7 @@ mixin _$SyncOrderState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -302,6 +303,7 @@ mixin _$SyncOrderState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -310,6 +312,7 @@ mixin _$SyncOrderState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -319,6 +322,7 @@ mixin _$SyncOrderState {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
     required TResult Function(_Error value) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -327,6 +331,7 @@ mixin _$SyncOrderState {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
     TResult? Function(_Error value)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -335,6 +340,7 @@ mixin _$SyncOrderState {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
     TResult Function(_Error value)? error,
     required TResult orElse(),
   }) =>
@@ -406,6 +412,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -417,6 +424,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -428,6 +436,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -443,6 +452,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
     required TResult Function(_Error value) error,
   }) {
     return initial(this);
@@ -454,6 +464,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
     TResult? Function(_Error value)? error,
   }) {
     return initial?.call(this);
@@ -465,6 +476,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
     TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
@@ -523,6 +535,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -534,6 +547,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -545,6 +559,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -560,6 +575,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
     required TResult Function(_Error value) error,
   }) {
     return loading(this);
@@ -571,6 +587,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
     TResult? Function(_Error value)? error,
   }) {
     return loading?.call(this);
@@ -582,6 +599,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
     TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
@@ -640,6 +658,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
     required TResult Function(String message) error,
   }) {
     return loaded();
@@ -651,6 +670,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call();
@@ -662,6 +682,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -677,6 +698,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
     required TResult Function(_Error value) error,
   }) {
     return loaded(this);
@@ -688,6 +710,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
     TResult? Function(_Error value)? error,
   }) {
     return loaded?.call(this);
@@ -699,6 +722,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
     TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
@@ -711,6 +735,175 @@ class _$LoadedImpl implements _Loaded {
 
 abstract class _Loaded implements SyncOrderState {
   const factory _Loaded() = _$LoadedImpl;
+}
+
+/// @nodoc
+abstract class _$$LoadedWithCountImplCopyWith<$Res> {
+  factory _$$LoadedWithCountImplCopyWith(_$LoadedWithCountImpl value,
+          $Res Function(_$LoadedWithCountImpl) then) =
+      __$$LoadedWithCountImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int success, int failure});
+}
+
+/// @nodoc
+class __$$LoadedWithCountImplCopyWithImpl<$Res>
+    extends _$SyncOrderStateCopyWithImpl<$Res, _$LoadedWithCountImpl>
+    implements _$$LoadedWithCountImplCopyWith<$Res> {
+  __$$LoadedWithCountImplCopyWithImpl(
+      _$LoadedWithCountImpl _value, $Res Function(_$LoadedWithCountImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SyncOrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? success = null,
+    Object? failure = null,
+  }) {
+    return _then(_$LoadedWithCountImpl(
+      null == success
+          ? _value.success
+          : success // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == failure
+          ? _value.failure
+          : failure // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadedWithCountImpl implements _LoadedWithCount {
+  const _$LoadedWithCountImpl(this.success, this.failure);
+
+  @override
+  final int success;
+  @override
+  final int failure;
+
+  @override
+  String toString() {
+    return 'SyncOrderState.loadedWithCount(success: $success, failure: $failure)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadedWithCountImpl &&
+            (identical(other.success, success) || other.success == success) &&
+            (identical(other.failure, failure) || other.failure == failure));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, success, failure);
+
+  /// Create a copy of SyncOrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadedWithCountImplCopyWith<_$LoadedWithCountImpl> get copyWith =>
+      __$$LoadedWithCountImplCopyWithImpl<_$LoadedWithCountImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
+    required TResult Function(String message) error,
+  }) {
+    return loadedWithCount(success, failure);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
+    TResult? Function(String message)? error,
+  }) {
+    return loadedWithCount?.call(success, failure);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (loadedWithCount != null) {
+      return loadedWithCount(success, failure);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
+    required TResult Function(_Error value) error,
+  }) {
+    return loadedWithCount(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
+    TResult? Function(_Error value)? error,
+  }) {
+    return loadedWithCount?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
+    TResult Function(_Error value)? error,
+    required TResult orElse(),
+  }) {
+    if (loadedWithCount != null) {
+      return loadedWithCount(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoadedWithCount implements SyncOrderState {
+  const factory _LoadedWithCount(final int success, final int failure) =
+      _$LoadedWithCountImpl;
+
+  int get success;
+  int get failure;
+
+  /// Create a copy of SyncOrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadedWithCountImplCopyWith<_$LoadedWithCountImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -784,6 +977,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function() loaded,
+    required TResult Function(int success, int failure) loadedWithCount,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -795,6 +989,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? loaded,
+    TResult? Function(int success, int failure)? loadedWithCount,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -806,6 +1001,7 @@ class _$ErrorImpl implements _Error {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function()? loaded,
+    TResult Function(int success, int failure)? loadedWithCount,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -821,6 +1017,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoadedWithCount value) loadedWithCount,
     required TResult Function(_Error value) error,
   }) {
     return error(this);
@@ -832,6 +1029,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoadedWithCount value)? loadedWithCount,
     TResult? Function(_Error value)? error,
   }) {
     return error?.call(this);
@@ -843,6 +1041,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoadedWithCount value)? loadedWithCount,
     TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {

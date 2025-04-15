@@ -11,6 +11,17 @@ class ProductQuantity {
     required this.quantity,
   });
 
+  // Add the copyWith method for creating modified instances
+  ProductQuantity copyWith({
+    Product? product,
+    int? quantity,
+  }) {
+    return ProductQuantity(
+      product: product ?? this.product,
+      quantity: quantity ?? this.quantity,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -42,11 +53,13 @@ class ProductQuantity {
   }
 
   Map<String, dynamic> toServerMap(int? orderId) {
-    log("toServerMap: ${product.id}");
+    // Gunakan productId jika tersedia, jika tidak gunakan id
+    final productIdToUse = product.productId ?? product.id;
+    log("toServerMap: $productIdToUse (name: ${product.name})");
 
     return {
       'id_order': orderId ?? 0,
-      'id_product': product.id,
+      'id_product': productIdToUse,
       'quantity': quantity,
       'price': product.price,
     };

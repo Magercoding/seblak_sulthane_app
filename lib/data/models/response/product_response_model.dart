@@ -75,7 +75,6 @@ class Product {
         name: json["name"],
         description: json["description"],
         image: json["image"],
-        
         price: json["price"].toString().replaceAll('.00', ''),
         stock: json["stock"],
         status: json["status"],
@@ -185,6 +184,38 @@ class Product {
         createdAt.hashCode ^
         updatedAt.hashCode ^
         category.hashCode;
+  }
+
+  Product copyWith({
+    int? id,
+    int? productId,
+    int? categoryId,
+    String? name,
+    String? description,
+    String? image,
+    String? price,
+    int? stock,
+    int? status,
+    int? isFavorite,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Category? category,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      categoryId: categoryId ?? this.categoryId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
+      status: status ?? this.status,
+      isFavorite: isFavorite ?? this.isFavorite,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      category: category ?? this.category,
+    );
   }
 }
 

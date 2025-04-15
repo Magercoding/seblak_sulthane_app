@@ -162,6 +162,33 @@ class RevenueInvoice {
         build: (context) => [
           buildHeader(summaryModel, image, searchDateFormatted),
           pw.SizedBox(height: 1 * PdfPageFormat.cm),
+
+          // Add Order Summary Section
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Ringkasan Pesanan',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              pw.SizedBox(height: 0.5 * PdfPageFormat.cm),
+              buildText(
+                title: 'Total Pesanan',
+                value: '${summaryModel.totalOrders ?? 0}',
+                unite: true,
+              ),
+              pw.Divider(),
+              buildText(
+                title: 'Total Item Terjual',
+                value: '${summaryModel.totalItems ?? "0"}',
+                unite: true,
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 1 * PdfPageFormat.cm),
+
+          // Existing sections
           buildFinancialSummary(summaryModel),
           pw.SizedBox(height: 1 * PdfPageFormat.cm),
           buildCashFlowSummary(summaryModel),
@@ -211,6 +238,13 @@ class RevenueInvoice {
             ),
             pw.Text(
               'Dibuat Pada: ${DateTime.now().toFormattedDate3()}',
+            ),
+            pw.SizedBox(height: 0.2 * PdfPageFormat.cm),
+            pw.Text(
+              'Total Pesanan: ${summary.totalOrders ?? 0}',
+            ),
+            pw.Text(
+              'Total Item: ${summary.totalItems ?? "0"}',
             ),
           ],
         ),
@@ -717,7 +751,46 @@ class RevenueInvoice {
       horizontalAlign: HorizontalAlign.Left,
     );
 
-    int currentRow = 5;
+    int currentRow = 5; // Mulai dari row 4 untuk Ringkasan Penjualan
+
+    // Ringkasan Penjualan Header
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final salesHeaderCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    salesHeaderCell.value = TextCellValue('Ringkasan Penjualan');
+    salesHeaderCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 14,
+      horizontalAlign: HorizontalAlign.Left,
+    );
+    currentRow++;
+
+    // Add Total Orders and Items
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final ordersCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    ordersCell.value =
+        TextCellValue('Total Pesanan: ${summaryModel.totalOrders ?? 0}');
+    currentRow++;
+
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    final itemsCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
+    itemsCell.value =
+        TextCellValue('Total Item: ${summaryModel.totalItems ?? "0"}');
+    currentRow++;
+
+    // Ringkasan Penjualan Header
+    sheet.merge(CellIndex.indexByString("A$currentRow"),
+        CellIndex.indexByString("B$currentRow"));
+    sheet.cell(CellIndex.indexByString("A$currentRow"));
+    salesHeaderCell.value = TextCellValue('Ringkasan Penjualan');
+    salesHeaderCell.cellStyle = CellStyle(
+      bold: true,
+      fontSize: 14,
+      horizontalAlign: HorizontalAlign.Left,
+    );
+    currentRow++;
 
     // Financial Summary
     sheet.merge(CellIndex.indexByString("A$currentRow"),

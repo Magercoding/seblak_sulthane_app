@@ -102,7 +102,7 @@ class EnhancedSummaryData {
 
     return EnhancedSummaryData(
       totalOrders: json['total_orders'] ?? 0,
-      totalItems: json['total_items'] ?? "0",
+      totalItems: (json['total_items'] ?? 0).toString(),
       totalRevenue: json['total_revenue'] ?? 0,
       totalDiscount: json['total_discount'] ?? 0,
       totalTax: json['total_tax'] ?? 0,
@@ -536,7 +536,7 @@ class DailyBreakdown {
     return DailyBreakdown(
       date: json['date'] ?? '',
       orderCount: json['order_count'] ?? 0,
-      itemsCount: json['items_count'] ?? "0",
+      itemsCount: (json['items_count'] ?? 0).toString(),
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
       cashSales: json['cash_sales'] ?? 0,

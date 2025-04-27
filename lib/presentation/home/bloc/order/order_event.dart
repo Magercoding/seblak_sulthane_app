@@ -18,4 +18,6 @@ class OrderEvent with _$OrderEvent {
     int totalPriceFinal, {
     @Default('dine_in') String orderType, // Use named parameter with default value
   }) = _Order;
+  const factory OrderEvent.loadHistoricalOrder(OrderModel order) = _LoadHistoricalOrder;
+
 }

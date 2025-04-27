@@ -11,6 +11,7 @@ import 'package:seblak_sulthane_app/presentation/setting/pages/member_page.dart'
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
+import 'history_order_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -141,6 +142,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Colors.transparent,
                     onTap: () => indexValue(6),
                   ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(12.0),
+                    leading: Icon(Icons.history, color: AppColors.primary),
+                    title: const Text('Riwayat Pesanan'),
+                    subtitle: const Text('Lihat seluruh riwayat transaksi'),
+                    textColor: AppColors.primary,
+                    tileColor: currentIndex == 7
+                        ? AppColors.blueLight
+                        : Colors.transparent,
+                    onTap: () => indexValue(7),
+                  ),
                 ],
               ),
             ),
@@ -161,6 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     DailyCashPage(),
                     ManagePrinterPage(),
                     SyncDataPage(),
+                    HistoryOrderPage(),
                   ],
                 ),
               ),

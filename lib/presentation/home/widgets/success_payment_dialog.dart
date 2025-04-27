@@ -32,6 +32,8 @@ class SuccessPaymentDialog extends StatefulWidget {
     required this.totalService,
     required this.draftName,
     required this.orderType, // Added required orderType parameter
+    this.tableNumber = 0, // Add optional parameter with default value
+
   });
   final List<ProductQuantity> data;
   final int totalQty;
@@ -43,6 +45,8 @@ class SuccessPaymentDialog extends StatefulWidget {
   final int totalService;
   final String draftName;
   final String orderType; // Order type field
+  final int tableNumber; // New field to store table number
+
 
   @override
   State<SuccessPaymentDialog> createState() => _SuccessPaymentDialogState();

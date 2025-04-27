@@ -222,12 +222,48 @@ class ProductLocalDatasource {
 
   Future<List<ProductQuantity>> getOrderItemByOrderId(int orderId) async {
     final db = await instance.database;
-    final List<Map<String, dynamic>> maps = await db
+    final List<Map<String, dynamic>> orderItems = await db
         .query(tableOrderItem, where: 'id_order = ?', whereArgs: [orderId]);
-    return List.generate(maps.length, (i) {
-      log("ProductQuantity: ${ProductQuantity.fromLocalMap(maps[i])}");
-      return ProductQuantity.fromLocalMap(maps[i]);
-    });
+
+    List<ProductQuantity> result = [];
+
+    for (var item in orderItems) {
+      final int productId = item['id_product'];
+
+      // Get full product information from products table
+      List<Map<String, dynamic>> productData = await db.query(
+        tableProduct,
+        where: 'product_id = ?',
+        whereArgs: [productId],
+      );
+
+      // If not found by product_id, try with id
+      if (productData.isEmpty) {
+        productData = await db.query(
+          tableProduct,
+          where: 'id = ?',
+          whereArgs: [productId],
+        );
+      }
+
+      if (productData.isNotEmpty) {
+        // Create a product with complete information
+        final product = Product.fromLocalMap(productData.first);
+
+        result.add(ProductQuantity(
+          product: product,
+          quantity: item['quantity'],
+        ));
+
+        log("Complete product loaded: ID=${product.id}, Name=${product.name}, Price=${product.price}");
+      } else {
+        // Fallback to basic product information
+        log("Product not found in database, using basic info for ID: $productId");
+        result.add(ProductQuantity.fromLocalMap(item));
+      }
+    }
+
+    return result;
   }
 
   Future<void> updatePaymentStatus(

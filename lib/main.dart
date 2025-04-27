@@ -29,6 +29,7 @@ import 'package:seblak_sulthane_app/presentation/report/blocs/summary/summary_bl
 import 'package:seblak_sulthane_app/presentation/sales/blocs/bloc/last_order_table_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_categories/get_categories_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/get_products/get_products_bloc.dart';
+import 'package:seblak_sulthane_app/presentation/setting/bloc/history_order/history_order_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/member/member_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_category/sync_category_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/bloc/sync_discount/sync_discount_bloc.dart';
@@ -181,6 +182,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => DailyCashBloc(DailyCashRemoteDatasource()),
         ),
+    BlocProvider(
+    create: (context) => HistoryOrderBloc(
+    ProductLocalDatasource.instance,
+    ),
+    ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

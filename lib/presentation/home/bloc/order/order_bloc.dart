@@ -130,5 +130,19 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(_Loaded(fallbackOrder, 0));
       }
     });
+    // Add this handler to your OrderBloc class
+    on<_LoadHistoricalOrder>((event, emit) {
+      emit(const _Loading());
+
+      log("Loading historical order: ID=${event.order.id}, TableNumber=${event.order.tableNumber}");
+
+      // For each product, log the name to verify it's available
+      for (var item in event.order.orderItems) {
+        log("Item: ${item.product.name ?? 'Unknown'} (ID=${item.product.id}), Qty=${item.quantity}");
+      }
+
+      // Emit loaded state with the historical order
+      emit(_Loaded(event.order, event.order.id ?? 0));
+    });
   }
 }

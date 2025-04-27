@@ -34,6 +34,7 @@ mixin _$OrderEvent {
             int totalPriceFinal,
             String orderType)
         order,
+    required TResult Function(OrderModel order) loadHistoricalOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -54,6 +55,7 @@ mixin _$OrderEvent {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -74,6 +76,7 @@ mixin _$OrderEvent {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -81,18 +84,21 @@ mixin _$OrderEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Order value) order,
+    required TResult Function(_LoadHistoricalOrder value) loadHistoricalOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_Order value)? order,
+    TResult? Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Order value)? order,
+    TResult Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -176,6 +182,7 @@ class _$StartedImpl implements _Started {
             int totalPriceFinal,
             String orderType)
         order,
+    required TResult Function(OrderModel order) loadHistoricalOrder,
   }) {
     return started();
   }
@@ -199,6 +206,7 @@ class _$StartedImpl implements _Started {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) {
     return started?.call();
   }
@@ -222,6 +230,7 @@ class _$StartedImpl implements _Started {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -235,6 +244,7 @@ class _$StartedImpl implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Order value) order,
+    required TResult Function(_LoadHistoricalOrder value) loadHistoricalOrder,
   }) {
     return started(this);
   }
@@ -244,6 +254,7 @@ class _$StartedImpl implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_Order value)? order,
+    TResult? Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
   }) {
     return started?.call(this);
   }
@@ -253,6 +264,7 @@ class _$StartedImpl implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Order value)? order,
+    TResult Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -504,6 +516,7 @@ class _$OrderImpl implements _Order {
             int totalPriceFinal,
             String orderType)
         order,
+    required TResult Function(OrderModel order) loadHistoricalOrder,
   }) {
     return order(
         items,
@@ -540,6 +553,7 @@ class _$OrderImpl implements _Order {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) {
     return order?.call(
         items,
@@ -576,6 +590,7 @@ class _$OrderImpl implements _Order {
             int totalPriceFinal,
             String orderType)?
         order,
+    TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
   }) {
     if (order != null) {
@@ -602,6 +617,7 @@ class _$OrderImpl implements _Order {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Order value) order,
+    required TResult Function(_LoadHistoricalOrder value) loadHistoricalOrder,
   }) {
     return order(this);
   }
@@ -611,6 +627,7 @@ class _$OrderImpl implements _Order {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_Order value)? order,
+    TResult? Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
   }) {
     return order?.call(this);
   }
@@ -620,6 +637,7 @@ class _$OrderImpl implements _Order {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Order value)? order,
+    TResult Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
     required TResult orElse(),
   }) {
     if (order != null) {
@@ -663,6 +681,196 @@ abstract class _Order implements OrderEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$OrderImplCopyWith<_$OrderImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadHistoricalOrderImplCopyWith<$Res> {
+  factory _$$LoadHistoricalOrderImplCopyWith(_$LoadHistoricalOrderImpl value,
+          $Res Function(_$LoadHistoricalOrderImpl) then) =
+      __$$LoadHistoricalOrderImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({OrderModel order});
+}
+
+/// @nodoc
+class __$$LoadHistoricalOrderImplCopyWithImpl<$Res>
+    extends _$OrderEventCopyWithImpl<$Res, _$LoadHistoricalOrderImpl>
+    implements _$$LoadHistoricalOrderImplCopyWith<$Res> {
+  __$$LoadHistoricalOrderImplCopyWithImpl(_$LoadHistoricalOrderImpl _value,
+      $Res Function(_$LoadHistoricalOrderImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? order = null,
+  }) {
+    return _then(_$LoadHistoricalOrderImpl(
+      null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as OrderModel,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadHistoricalOrderImpl implements _LoadHistoricalOrder {
+  const _$LoadHistoricalOrderImpl(this.order);
+
+  @override
+  final OrderModel order;
+
+  @override
+  String toString() {
+    return 'OrderEvent.loadHistoricalOrder(order: $order)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadHistoricalOrderImpl &&
+            (identical(other.order, order) || other.order == order));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, order);
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadHistoricalOrderImplCopyWith<_$LoadHistoricalOrderImpl> get copyWith =>
+      __$$LoadHistoricalOrderImplCopyWithImpl<_$LoadHistoricalOrderImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(
+            List<ProductQuantity> items,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int paymentAmount,
+            String customerName,
+            int tableNumber,
+            String status,
+            String paymentStatus,
+            String paymentMethod,
+            int totalPriceFinal,
+            String orderType)
+        order,
+    required TResult Function(OrderModel order) loadHistoricalOrder,
+  }) {
+    return loadHistoricalOrder(this.order);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(
+            List<ProductQuantity> items,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int paymentAmount,
+            String customerName,
+            int tableNumber,
+            String status,
+            String paymentStatus,
+            String paymentMethod,
+            int totalPriceFinal,
+            String orderType)?
+        order,
+    TResult? Function(OrderModel order)? loadHistoricalOrder,
+  }) {
+    return loadHistoricalOrder?.call(this.order);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(
+            List<ProductQuantity> items,
+            int discount,
+            int discountAmount,
+            int tax,
+            int serviceCharge,
+            int paymentAmount,
+            String customerName,
+            int tableNumber,
+            String status,
+            String paymentStatus,
+            String paymentMethod,
+            int totalPriceFinal,
+            String orderType)?
+        order,
+    TResult Function(OrderModel order)? loadHistoricalOrder,
+    required TResult orElse(),
+  }) {
+    if (loadHistoricalOrder != null) {
+      return loadHistoricalOrder(this.order);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Order value) order,
+    required TResult Function(_LoadHistoricalOrder value) loadHistoricalOrder,
+  }) {
+    return loadHistoricalOrder(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Order value)? order,
+    TResult? Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
+  }) {
+    return loadHistoricalOrder?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Order value)? order,
+    TResult Function(_LoadHistoricalOrder value)? loadHistoricalOrder,
+    required TResult orElse(),
+  }) {
+    if (loadHistoricalOrder != null) {
+      return loadHistoricalOrder(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoadHistoricalOrder implements OrderEvent {
+  const factory _LoadHistoricalOrder(final OrderModel order) =
+      _$LoadHistoricalOrderImpl;
+
+  OrderModel get order;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadHistoricalOrderImplCopyWith<_$LoadHistoricalOrderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

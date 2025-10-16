@@ -33,6 +33,7 @@ class SuccessPaymentDialog extends StatefulWidget {
     required this.draftName,
     required this.orderType, // Added required orderType parameter
     this.tableNumber = 0, // Add optional parameter with default value
+    this.notes = '',
 
   });
   final List<ProductQuantity> data;
@@ -46,6 +47,7 @@ class SuccessPaymentDialog extends StatefulWidget {
   final String draftName;
   final String orderType; // Order type field
   final int tableNumber; // New field to store table number
+  final String notes;
 
 
   @override
@@ -399,6 +401,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                                     receiptSize, // paper size
                                     orderType:
                                         orderTypeFromState, // Pass the order type
+                                    notes: widget.notes,
                                   );
 
                                   // Print the receipt first

@@ -1045,6 +1045,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                 draftName:
                                                     customerController.text,
                                                 orderType: 'dine_in',
+                                                notes: notesController.text,
                                               ),
                                             );
                                           } else {
@@ -1086,6 +1087,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                 draftName:
                                                     customerController.text,
                                                 orderType: widget.orderType,
+                                                notes: notesController.text,
                                               ),
                                             );
                                           }

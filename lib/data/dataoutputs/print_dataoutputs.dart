@@ -154,7 +154,8 @@ class PrintDataoutputs {
       String customerName,
       int paper,
       {int? outletId,
-      String orderType = ''}) async {
+      String orderType = '',
+      String notes = ''}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -468,9 +469,14 @@ class PrintDataoutputs {
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.left));
 
-    bytes += generator.text('Notes',
-        styles: const PosStyles(bold: false, align: PosAlign.center));
-    bytes += generator.feed(1);
+    final trimmedNotes = notes.trim();
+    if (trimmedNotes.isNotEmpty) {
+      bytes += generator.text('Catatan',
+          styles: const PosStyles(bold: true, align: PosAlign.center));
+      bytes += generator.text(trimmedNotes,
+          styles: const PosStyles(bold: false, align: PosAlign.center));
+      bytes += generator.feed(1);
+    }
 
     bytes += generator.text('Instagram: ',
         styles: const PosStyles(bold: false, align: PosAlign.center));

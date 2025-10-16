@@ -339,6 +339,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
                 draftName: order.customerName,
                 orderType: order.orderType,
                 tableNumber: order.tableNumber, // Pass table number explicitly
+                notes: order.notes,
               );
             },
             loading: () => const Center(

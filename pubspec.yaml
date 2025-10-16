@@ -43,7 +43,7 @@ dependencies:
   http: ^1.2.0
   image: ^4.3.0
   image_picker: ^1.0.4
-  intl: ^0.19.0
+  intl: ^0.20.2
   permission_handler: ^11.3.1
   print_bluetooth_thermal: ^1.0.9
   qr_flutter: ^4.1.0

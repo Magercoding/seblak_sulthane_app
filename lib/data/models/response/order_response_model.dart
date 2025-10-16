@@ -47,6 +47,7 @@ class ItemOrder {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? outletId;
+  String? notes;
 
   ItemOrder({
     this.id,
@@ -65,6 +66,7 @@ class ItemOrder {
     this.createdAt,
     this.updatedAt,
     this.outletId,
+    this.notes,
   });
 
   factory ItemOrder.fromJson(String str) => ItemOrder.fromMap(json.decode(str));
@@ -94,6 +96,7 @@ class ItemOrder {
             ? null
             : DateTime.parse(json["updated_at"]),
         outletId: json["outlet_id"],
+        notes: json["notes"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -113,5 +116,6 @@ class ItemOrder {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "outlet_id": outletId,
+        "notes": notes,
       };
 }

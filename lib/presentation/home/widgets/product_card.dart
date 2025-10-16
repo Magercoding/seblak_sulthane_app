@@ -20,6 +20,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isFavorite = (data.isFavorite ?? 0) == 1;
+
     return GestureDetector(
       onTap: () {
         context.read<CheckoutBloc>().add(CheckoutEvent.addItem(data));
@@ -134,6 +136,24 @@ class ProductCard extends StatelessWidget {
                   },
                 );
               },
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                width: 36,
+                height: 36,
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(9.0)),
+                  border: Border.all(color: AppColors.primary),
+                ),
+                child: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
             ),
           ],
         ),

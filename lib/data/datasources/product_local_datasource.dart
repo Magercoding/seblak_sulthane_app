@@ -22,7 +22,7 @@ class ProductLocalDatasource {
   static Database? _database;
 
   // Increase database version to trigger migration
-  final int _databaseVersion = 2;
+  final int _databaseVersion = 3;
 
   Future<void> _createDb(Database db, int version) async {
     await db.execute('''
@@ -63,7 +63,8 @@ class ProductLocalDatasource {
         status TEXT,
         payment_status TEXT,
         is_sync INTEGER DEFAULT 0,
-        order_type TEXT
+        order_type TEXT,
+        notes TEXT
       )
     ''');
 
@@ -128,6 +129,15 @@ class ProductLocalDatasource {
         log('Error adding order_type column: ${e.toString()}');
       }
     }
+
+    if (oldVersion < 3) {
+      try {
+        await db.execute('ALTER TABLE $tableOrder ADD COLUMN notes TEXT');
+        log('Added notes column to $tableOrder table');
+      } catch (e) {
+        log('Error adding notes column: ${e.toString()}');
+      }
+    }
   }
 
   Future<Database> _initDB(String filePath) async {
@@ -168,11 +178,13 @@ class ProductLocalDatasource {
       log("Error saving order with order_type: ${e.toString()}");
 
       // If the error is about order_type, try again without it
-      if (e.toString().contains("order_type")) {
+      if (e.toString().contains("order_type") ||
+          e.toString().contains("notes")) {
         Map<String, dynamic> orderMap = Map.from(order.toMap());
         orderMap.remove('order_type');
+        orderMap.remove('notes');
 
-        log("Retrying without order_type field: $orderMap");
+        log("Retrying without order_type/notes fields: $orderMap");
 
         int id = await db.insert(tableOrder, orderMap,
             conflictAlgorithm: ConflictAlgorithm.replace);
@@ -182,7 +194,7 @@ class ProductLocalDatasource {
               conflictAlgorithm: ConflictAlgorithm.replace);
         }
 
-        log("Success Order without order_type: $orderMap");
+        log("Success Order without order_type/notes: $orderMap");
         return id;
       } else {
         // If it's not an order_type error, rethrow

@@ -38,6 +38,7 @@ class ConfirmPaymentPage extends StatefulWidget {
 class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   final totalPriceController = TextEditingController();
   final customerController = TextEditingController();
+  final notesController = TextEditingController();
   bool isCash = true;
   TableModel? selectTable;
   int discountAmount = 0;
@@ -48,6 +49,25 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
 
   int totalPriceFinal = 0;
   String orderTypeDisplay = ''; // Added to show order type in UI
+
+  void _scheduleTotalPriceUpdate({
+    required String formattedText,
+    required int rawValue,
+  }) {
+    priceValue = rawValue;
+
+    if (totalPriceController.text == formattedText) {
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      totalPriceController.value = TextEditingValue(
+        text: formattedText,
+        selection: TextSelection.collapsed(offset: formattedText.length),
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -65,6 +85,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   void dispose() {
     totalPriceController.dispose();
     customerController.dispose();
+    notesController.dispose();
     super.dispose();
   }
 
@@ -563,15 +584,24 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                               final service = (serviceCharge / 100) * subTotal;
                               final total = subTotal + finalTax + service;
 
-                              totalPriceController.text =
-                                  total.ceil().currencyFormatRpV2;
-                              uangPas = total.ceil();
+                              final totalCeil = total.ceil();
+                              final controllerFormatted =
+                                  totalCeil.currencyFormatRp;
+                              final displayFormatted =
+                                  totalCeil.currencyFormatRpV2;
+
+                              _scheduleTotalPriceUpdate(
+                                formattedText: controllerFormatted,
+                                rawValue: totalCeil,
+                              );
+
+                              uangPas = totalCeil;
                               uangPas2 = uangPas ~/ 50000 * 50000 + 50000;
                               uangPas3 = uangPas ~/ 50000 * 50000 + 100000;
-                              totalPriceFinal = total.ceil();
+                              totalPriceFinal = totalCeil;
 
                               return Text(
-                                total.ceil().currencyFormatRp,
+                                displayFormatted,
                                 style: const TextStyle(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w600,
@@ -657,6 +687,29 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                               hintText: 'Nama Customer',
                             ),
                             textCapitalization: TextCapitalization.words,
+                          ),
+                          const SpaceHeight(12.0),
+                          const Divider(),
+                          //Notes
+                          const SpaceHeight(12.0),
+                          const Text(
+                            'Catatan',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SpaceHeight(12.0),
+                          TextFormField(
+                            controller: notesController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              hintText: 'Tuliskan Catatan Pesanan',
+                            ),
+                            textCapitalization: TextCapitalization.sentences,
                           ),
                           const SpaceHeight(8.0),
                           const Divider(),
@@ -953,7 +1006,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     'paid',
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
-                                                    orderType: 'dine_in'));
+                                                    orderType: 'dine_in',
+                                                    notes: notesController.text));
 
                                             // Update table status to 'closed' after payment
                                             final newTableStatus = TableModel(
@@ -1012,7 +1066,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType:
-                                                        widget.orderType));
+                                                        widget.orderType,
+                                                    notes: notesController.text));
                                             await showDialog(
                                               context: context,
                                               barrierDismissible: false,

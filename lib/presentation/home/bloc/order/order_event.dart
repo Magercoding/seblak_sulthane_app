@@ -17,6 +17,7 @@ class OrderEvent with _$OrderEvent {
     String paymentMethod,
     int totalPriceFinal, {
     @Default('dine_in') String orderType, // Use named parameter with default value
+    @Default('') String notes,
   }) = _Order;
   const factory OrderEvent.loadHistoricalOrder(OrderModel order) = _LoadHistoricalOrder;
 

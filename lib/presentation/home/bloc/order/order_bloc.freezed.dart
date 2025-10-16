@@ -32,7 +32,8 @@ mixin _$OrderEvent {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)
+            String orderType,
+            String notes)
         order,
     required TResult Function(OrderModel order) loadHistoricalOrder,
   }) =>
@@ -53,7 +54,8 @@ mixin _$OrderEvent {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) =>
@@ -74,7 +76,8 @@ mixin _$OrderEvent {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
@@ -180,7 +183,8 @@ class _$StartedImpl implements _Started {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)
+            String orderType,
+            String notes)
         order,
     required TResult Function(OrderModel order) loadHistoricalOrder,
   }) {
@@ -204,7 +208,8 @@ class _$StartedImpl implements _Started {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) {
@@ -228,7 +233,8 @@ class _$StartedImpl implements _Started {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
@@ -297,7 +303,8 @@ abstract class _$$OrderImplCopyWith<$Res> {
       String paymentStatus,
       String paymentMethod,
       int totalPriceFinal,
-      String orderType});
+      String orderType,
+      String notes});
 }
 
 /// @nodoc
@@ -326,6 +333,7 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? paymentMethod = null,
     Object? totalPriceFinal = null,
     Object? orderType = null,
+    Object? notes = null,
   }) {
     return _then(_$OrderImpl(
       null == items
@@ -380,6 +388,10 @@ class __$$OrderImplCopyWithImpl<$Res>
           ? _value.orderType
           : orderType // ignore: cast_nullable_to_non_nullable
               as String,
+      notes: null == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -400,7 +412,8 @@ class _$OrderImpl implements _Order {
       this.paymentStatus,
       this.paymentMethod,
       this.totalPriceFinal,
-      {this.orderType = 'dine_in'})
+      {this.orderType = 'dine_in',
+      this.notes = ''})
       : _items = items;
 
   final List<ProductQuantity> _items;
@@ -436,10 +449,14 @@ class _$OrderImpl implements _Order {
   @override
   @JsonKey()
   final String orderType;
+// Use named parameter with default value
+  @override
+  @JsonKey()
+  final String notes;
 
   @override
   String toString() {
-    return 'OrderEvent.order(items: $items, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, paymentAmount: $paymentAmount, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, paymentMethod: $paymentMethod, totalPriceFinal: $totalPriceFinal, orderType: $orderType)';
+    return 'OrderEvent.order(items: $items, discount: $discount, discountAmount: $discountAmount, tax: $tax, serviceCharge: $serviceCharge, paymentAmount: $paymentAmount, customerName: $customerName, tableNumber: $tableNumber, status: $status, paymentStatus: $paymentStatus, paymentMethod: $paymentMethod, totalPriceFinal: $totalPriceFinal, orderType: $orderType, notes: $notes)';
   }
 
   @override
@@ -469,7 +486,8 @@ class _$OrderImpl implements _Order {
             (identical(other.totalPriceFinal, totalPriceFinal) ||
                 other.totalPriceFinal == totalPriceFinal) &&
             (identical(other.orderType, orderType) ||
-                other.orderType == orderType));
+                other.orderType == orderType) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @override
@@ -487,7 +505,8 @@ class _$OrderImpl implements _Order {
       paymentStatus,
       paymentMethod,
       totalPriceFinal,
-      orderType);
+      orderType,
+      notes);
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -514,7 +533,8 @@ class _$OrderImpl implements _Order {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)
+            String orderType,
+            String notes)
         order,
     required TResult Function(OrderModel order) loadHistoricalOrder,
   }) {
@@ -531,7 +551,8 @@ class _$OrderImpl implements _Order {
         paymentStatus,
         paymentMethod,
         totalPriceFinal,
-        orderType);
+        orderType,
+        notes);
   }
 
   @override
@@ -551,7 +572,8 @@ class _$OrderImpl implements _Order {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) {
@@ -568,7 +590,8 @@ class _$OrderImpl implements _Order {
         paymentStatus,
         paymentMethod,
         totalPriceFinal,
-        orderType);
+        orderType,
+        notes);
   }
 
   @override
@@ -588,7 +611,8 @@ class _$OrderImpl implements _Order {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),
@@ -607,7 +631,8 @@ class _$OrderImpl implements _Order {
           paymentStatus,
           paymentMethod,
           totalPriceFinal,
-          orderType);
+          orderType,
+          notes);
     }
     return orElse();
   }
@@ -661,7 +686,8 @@ abstract class _Order implements OrderEvent {
       final String paymentStatus,
       final String paymentMethod,
       final int totalPriceFinal,
-      {final String orderType}) = _$OrderImpl;
+      {final String orderType,
+      final String notes}) = _$OrderImpl;
 
   List<ProductQuantity> get items;
   int get discount;
@@ -675,7 +701,8 @@ abstract class _Order implements OrderEvent {
   String get paymentStatus;
   String get paymentMethod;
   int get totalPriceFinal;
-  String get orderType;
+  String get orderType; // Use named parameter with default value
+  String get notes;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -767,7 +794,8 @@ class _$LoadHistoricalOrderImpl implements _LoadHistoricalOrder {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)
+            String orderType,
+            String notes)
         order,
     required TResult Function(OrderModel order) loadHistoricalOrder,
   }) {
@@ -791,7 +819,8 @@ class _$LoadHistoricalOrderImpl implements _LoadHistoricalOrder {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult? Function(OrderModel order)? loadHistoricalOrder,
   }) {
@@ -815,7 +844,8 @@ class _$LoadHistoricalOrderImpl implements _LoadHistoricalOrder {
             String paymentStatus,
             String paymentMethod,
             int totalPriceFinal,
-            String orderType)?
+            String orderType,
+            String notes)?
         order,
     TResult Function(OrderModel order)? loadHistoricalOrder,
     required TResult orElse(),

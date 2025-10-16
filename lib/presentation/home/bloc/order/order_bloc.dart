@@ -70,6 +70,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         paymentStatus: event.paymentStatus,
         isSync: 0,
         orderType: orderType, // Add order type
+        notes: event.notes,
         orderItems: event.items,
       );
 
@@ -124,6 +125,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           paymentStatus: event.paymentStatus,
           isSync: 0,
           orderType: orderType, // Add order type
+          notes: event.notes,
           orderItems: event.items,
         );
 

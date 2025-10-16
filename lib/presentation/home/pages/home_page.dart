@@ -578,7 +578,7 @@ Widget _buildProductGrid(String searchQuery,
               return const EmptyStateWidget();
             }
 
-            List<Product> filteredProducts = products;
+            List<Product> filteredProducts = List<Product>.from(products);
 
             // Apply category filter if specified
             if (categoryId != null) {
@@ -616,6 +616,11 @@ Widget _buildProductGrid(String searchQuery,
                       false)
                   .toList();
             }
+
+            filteredProducts.sort(
+              (a, b) =>
+                  (b.isFavorite ?? 0).compareTo(a.isFavorite ?? 0),
+            );
 
             if (filteredProducts.isEmpty) {
               return const EmptyStateWidget();

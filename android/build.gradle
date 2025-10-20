@@ -5,7 +5,7 @@ allprojects {
     }
 }
 buildscript {
-    ext.kotlin_version = '1.9.22' // Ensure this is recent
+    ext.kotlin_version = '2.1.0' // Ensure this is recent
     repositories {
         google()
         mavenCentral()
@@ -28,13 +28,13 @@ tasks.register("clean", Delete) {
 }
 
 buildscript {
-    ext.kotlin_version = '1.9.22' // Update to latest stable version
+    ext.kotlin_version = '2.1.0' // Update to latest stable version
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'com.android.tools.build:gradle:8.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

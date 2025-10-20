@@ -35,11 +35,11 @@ class _CustomTabBarV2State extends State<CustomTabBarV2> {
     // New order: All → Price Filters → Categories
     final allTabs = [
       'Semua',
-      // 'Menu 500',
-      // 'Menu 1000',
-      // 'Menu 1500-2000',
-      // 'Menu 2500',
-      // 'Menu 3000-9000',
+      'Menu 500',
+      'Menu 1000',
+      'Menu 1500-2000',
+      'Menu 2500',
+      'Menu 3000-9000',
       ...widget.categories.map((e) => e.name ?? ''),
     ];
 

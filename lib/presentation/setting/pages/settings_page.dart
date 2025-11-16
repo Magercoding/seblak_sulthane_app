@@ -10,7 +10,9 @@ import 'package:seblak_sulthane_app/presentation/setting/pages/member_page.dart'
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/spaces.dart';
+import '../../../core/components/buttons.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/utils/clear_local_data.dart';
 import 'history_order_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -153,6 +155,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Colors.transparent,
                     onTap: () => indexValue(7),
                   ),
+                  // const Divider(height: 32),
+                  // ListTile(
+                  //   contentPadding: const EdgeInsets.all(12.0),
+                  //   leading: Icon(Icons.delete_forever, color: Colors.red),
+                  //   title: const Text(
+                  //     'Hapus Semua Data Lokal',
+                  //     style: TextStyle(color: Colors.red),
+                  //   ),
+                  //   subtitle: const Text(
+                  //     'Hapus semua data yang tersimpan di device',
+                  //     style: TextStyle(color: Colors.red),
+                  //   ),
+                  //   textColor: Colors.red,
+                  //   onTap: () => _showClearDataDialog(context),
+                  // ),
                 ],
               ),
             ),
@@ -178,6 +195,141 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showClearDataDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Hapus Semua Data Lokal',
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Apakah Anda yakin ingin menghapus semua data lokal?',
+              style: TextStyle(fontSize: 16),
+            ),
+            SpaceHeight(16.0),
+            Text(
+              'Data yang akan dihapus:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            SpaceHeight(8.0),
+            Text('• Data autentikasi (perlu login ulang)'),
+            Text('• Data produk'),
+            Text('• Data pesanan'),
+            Text('• Data member'),
+            Text('• Data diskon'),
+            Text('• Data kategori'),
+            Text('• Pengaturan aplikasi'),
+            SpaceHeight(16.0),
+            Text(
+              '⚠️ PERINGATAN: Tindakan ini tidak dapat dibatalkan!',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Button.outlined(
+                  onPressed: () => Navigator.pop(context),
+                  label: 'Batal',
+                ),
+              ),
+              const SpaceWidth(8.0),
+              Expanded(
+                child: Button.filled(
+                  onPressed: () async {
+                    Navigator.pop(context); // Close dialog first
+
+                    // Show loading dialog
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => const Center(
+                        child: Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(),
+                                SpaceHeight(16.0),
+                                Text('Menghapus data...'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // Clear all data
+                    final success = await ClearLocalData.clearAllData();
+
+                    // Close loading dialog
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+
+                    // Show result
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(
+                            success ? 'Berhasil' : 'Gagal',
+                            style: TextStyle(
+                              color: success ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: Text(
+                            success
+                                ? 'Semua data lokal berhasil dihapus.\n\nAplikasi akan restart dan Anda perlu login ulang.'
+                                : 'Gagal menghapus data lokal. Silakan coba lagi.',
+                          ),
+                          actions: [
+                            Button.filled(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                if (success) {
+                                  // Restart app or navigate to login
+                                  // You might want to add navigation to login page here
+                                }
+                              },
+                              label: 'OK',
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  label: 'Hapus',
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ),
         ],
       ),

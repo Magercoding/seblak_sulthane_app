@@ -34,11 +34,16 @@ class EnhancedSummaryData {
   final dynamic totalSubtotal;
   final double? openingBalance;
   final double? expenses;
+  final double? effectiveExpenses;
   final dynamic cashSales;
   final dynamic qrisSales;
   final dynamic qrisFee;
   final dynamic beverageSales;
   final BeverageBreakdown? beverageBreakdown;
+  final dynamic foodSales;
+  final dynamic foodCashSales;
+  final dynamic foodQrisSales;
+  final BeverageBreakdown? foodBreakdown;
   final double? closingBalance;
   final dynamic finalCashClosing;
   final PaymentMethods? paymentMethods;
@@ -55,11 +60,16 @@ class EnhancedSummaryData {
     required this.totalServiceCharge,
     this.openingBalance,
     this.expenses,
+    this.effectiveExpenses,
     this.cashSales,
     this.qrisSales,
     this.qrisFee,
     this.beverageSales,
     this.beverageBreakdown,
+    this.foodSales,
+    this.foodCashSales,
+    this.foodQrisSales,
+    this.foodBreakdown,
     this.closingBalance,
     this.finalCashClosing,
     this.paymentMethods,
@@ -100,6 +110,17 @@ class EnhancedSummaryData {
       }
     }
 
+    // Parse food_breakdown
+    BeverageBreakdown? foodBreakdownObj;
+    if (json['food_breakdown'] != null) {
+      try {
+        foodBreakdownObj = BeverageBreakdown.fromJson(json['food_breakdown']);
+      } catch (e) {
+        log("Error parsing food_breakdown: $e");
+        foodBreakdownObj = null;
+      }
+    }
+
     return EnhancedSummaryData(
       totalOrders: json['total_orders'] ?? 0,
       totalItems: (json['total_items'] ?? 0).toString(),
@@ -110,11 +131,16 @@ class EnhancedSummaryData {
       totalServiceCharge: json['total_service_charge'] ?? 0,
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
+      effectiveExpenses: _parseToDouble(json['effective_expenses']),
       cashSales: json['cash_sales'] ?? 0,
       qrisSales: json['qris_sales'] ?? 0,
       qrisFee: json['qris_fee'] ?? '0.00',
       beverageSales: json['beverage_sales'] ?? 0,
       beverageBreakdown: beverageBreakdownObj,
+      foodSales: json['food_sales'] ?? 0,
+      foodCashSales: json['food_cash_sales'] ?? 0,
+      foodQrisSales: json['food_qris_sales'] ?? 0,
+      foodBreakdown: foodBreakdownObj,
       closingBalance: _parseToDouble(json['closing_balance']),
       finalCashClosing: json['final_cash_closing'] ?? 0,
       paymentMethods: paymentMethodsObj,
@@ -152,11 +178,16 @@ class EnhancedSummaryData {
         'total_service_charge': totalServiceCharge,
         'opening_balance': openingBalance,
         'expenses': expenses,
+        'effective_expenses': effectiveExpenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
         'qris_fee': qrisFee,
         'beverage_sales': beverageSales,
         'beverage_breakdown': beverageBreakdown?.toJson(),
+        'food_sales': foodSales,
+        'food_cash_sales': foodCashSales,
+        'food_qris_sales': foodQrisSales,
+        'food_breakdown': foodBreakdown?.toJson(),
         'closing_balance': closingBalance,
         'final_cash_closing': finalCashClosing,
         'payment_methods': paymentMethods?.toJson(),
@@ -264,6 +295,78 @@ class EnhancedSummaryData {
     }
     if (beverageSales is num) {
       return beverageSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodSalesAsInt() {
+    if (foodSales == null) return 0;
+    if (foodSales is int) return foodSales as int;
+    if (foodSales is String) {
+      if (foodSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodSales is double) {
+      return foodSales.toInt();
+    }
+    if (foodSales is num) {
+      return foodSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodCashSalesAsInt() {
+    if (foodCashSales == null) return 0;
+    if (foodCashSales is int) return foodCashSales as int;
+    if (foodCashSales is String) {
+      if (foodCashSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodCashSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodCashSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodCashSales is double) {
+      return foodCashSales.toInt();
+    }
+    if (foodCashSales is num) {
+      return foodCashSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodQrisSalesAsInt() {
+    if (foodQrisSales == null) return 0;
+    if (foodQrisSales is int) return foodQrisSales as int;
+    if (foodQrisSales is String) {
+      if (foodQrisSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodQrisSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodQrisSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodQrisSales is double) {
+      return foodQrisSales.toInt();
+    }
+    if (foodQrisSales is num) {
+      return foodQrisSales.toInt();
     }
     return 0;
   }
@@ -497,6 +600,7 @@ class DailyBreakdown {
   final String itemsCount;
   final double? openingBalance;
   final double? expenses;
+  final double? effectiveExpenses;
   final dynamic cashSales;
   final dynamic qrisSales;
   final dynamic qrisFee;
@@ -504,6 +608,10 @@ class DailyBreakdown {
   final double? closingBalance;
   final dynamic finalCashClosing;
   final BeverageBreakdown? beverageBreakdown;
+  final dynamic foodSales;
+  final dynamic foodCashSales;
+  final dynamic foodQrisSales;
+  final BeverageBreakdown? foodBreakdown;
 
   DailyBreakdown({
     required this.date,
@@ -511,6 +619,7 @@ class DailyBreakdown {
     required this.itemsCount,
     this.openingBalance,
     this.expenses,
+    this.effectiveExpenses,
     this.cashSales,
     this.qrisSales,
     this.qrisFee,
@@ -518,6 +627,10 @@ class DailyBreakdown {
     this.closingBalance,
     this.finalCashClosing,
     this.beverageBreakdown,
+    this.foodSales,
+    this.foodCashSales,
+    this.foodQrisSales,
+    this.foodBreakdown,
   });
 
   factory DailyBreakdown.fromJson(Map<String, dynamic> json) {
@@ -533,12 +646,24 @@ class DailyBreakdown {
       }
     }
 
+    // Parse food_breakdown
+    BeverageBreakdown? foodBreakdownObj;
+    if (json['food_breakdown'] != null) {
+      try {
+        foodBreakdownObj = BeverageBreakdown.fromJson(json['food_breakdown']);
+      } catch (e) {
+        log("Error parsing daily food_breakdown: $e");
+        foodBreakdownObj = null;
+      }
+    }
+
     return DailyBreakdown(
       date: json['date'] ?? '',
       orderCount: json['order_count'] ?? 0,
       itemsCount: (json['items_count'] ?? 0).toString(),
       openingBalance: _parseToDouble(json['opening_balance']),
       expenses: _parseToDouble(json['expenses']),
+      effectiveExpenses: _parseToDouble(json['effective_expenses']),
       cashSales: json['cash_sales'] ?? 0,
       qrisSales: json['qris_sales'] ?? 0,
       qrisFee: json['qris_fee'] ?? '0.00',
@@ -546,6 +671,10 @@ class DailyBreakdown {
       closingBalance: _parseToDouble(json['closing_balance']),
       finalCashClosing: json['final_cash_closing'] ?? 0,
       beverageBreakdown: beverageBreakdownObj,
+      foodSales: json['food_sales'] ?? 0,
+      foodCashSales: json['food_cash_sales'] ?? 0,
+      foodQrisSales: json['food_qris_sales'] ?? 0,
+      foodBreakdown: foodBreakdownObj,
     );
   }
 
@@ -570,6 +699,7 @@ class DailyBreakdown {
         'items_count': itemsCount,
         'opening_balance': openingBalance,
         'expenses': expenses,
+        'effective_expenses': effectiveExpenses,
         'cash_sales': cashSales,
         'qris_sales': qrisSales,
         'qris_fee': qrisFee,
@@ -577,6 +707,10 @@ class DailyBreakdown {
         'closing_balance': closingBalance,
         'final_cash_closing': finalCashClosing,
         'beverage_breakdown': beverageBreakdown?.toJson(),
+        'food_sales': foodSales,
+        'food_cash_sales': foodCashSales,
+        'food_qris_sales': foodQrisSales,
+        'food_breakdown': foodBreakdown?.toJson(),
       };
 
   int getCashSalesAsInt() {
@@ -667,6 +801,78 @@ class DailyBreakdown {
     }
     if (finalCashClosing is num) {
       return finalCashClosing.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodSalesAsInt() {
+    if (foodSales == null) return 0;
+    if (foodSales is int) return foodSales as int;
+    if (foodSales is String) {
+      if (foodSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodSales is double) {
+      return foodSales.toInt();
+    }
+    if (foodSales is num) {
+      return foodSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodCashSalesAsInt() {
+    if (foodCashSales == null) return 0;
+    if (foodCashSales is int) return foodCashSales as int;
+    if (foodCashSales is String) {
+      if (foodCashSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodCashSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodCashSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodCashSales is double) {
+      return foodCashSales.toInt();
+    }
+    if (foodCashSales is num) {
+      return foodCashSales.toInt();
+    }
+    return 0;
+  }
+
+  int getFoodQrisSalesAsInt() {
+    if (foodQrisSales == null) return 0;
+    if (foodQrisSales is int) return foodQrisSales as int;
+    if (foodQrisSales is String) {
+      if (foodQrisSales.toString().isEmpty) return 0;
+      try {
+        return int.parse(foodQrisSales as String);
+      } catch (e) {
+        try {
+          return double.parse(foodQrisSales as String).toInt();
+        } catch (e) {
+          return 0;
+        }
+      }
+    }
+    if (foodQrisSales is double) {
+      return foodQrisSales.toInt();
+    }
+    if (foodQrisSales is num) {
+      return foodQrisSales.toInt();
     }
     return 0;
   }

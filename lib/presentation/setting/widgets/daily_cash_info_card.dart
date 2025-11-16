@@ -30,6 +30,35 @@ class DailyCashInfoCard extends StatelessWidget {
     return 'Rp 0';
   }
 
+  // Helper method to format QRIS sales value safely
+  String _formatQrisSales() {
+    final qrisSales = dailyCash.getQrisSalesAsInt();
+    if (qrisSales == null || qrisSales == 0) {
+      return 'Rp 0';
+    }
+    return qrisSales.currencyFormatRp;
+  }
+
+  // Helper method to format final cash closing value safely
+  String _formatFinalCashClosing() {
+    final finalCashClosing = dailyCash.getFinalCashClosingAsInt();
+    if (finalCashClosing == null) {
+      return 'Belum dihitung';
+    }
+    return finalCashClosing.currencyFormatRp;
+  }
+
+  // Helper method to format effective expenses
+  String _formatEffectiveExpenses() {
+    if (dailyCash.effectiveExpenses == null) {
+      // Calculate if not provided: opening_balance + expenses
+      final opening = dailyCash.openingBalance ?? 0;
+      final expenses = dailyCash.expenses ?? 0;
+      return (opening + expenses).currencyFormatRp;
+    }
+    return dailyCash.effectiveExpenses!.currencyFormatRp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,6 +105,18 @@ class DailyCashInfoCard extends StatelessWidget {
             textColor: Colors.green,
           ),
           const SpaceHeight(8),
+          _buildInfoRow(
+            'Penjualan QRIS:',
+            _formatQrisSales(),
+            textColor: Colors.blue,
+          ),
+          const SpaceHeight(8),
+          _buildInfoRow(
+            'Total Pengeluaran Efektif:',
+            _formatEffectiveExpenses(),
+            textColor: Colors.orange,
+          ),
+          const SpaceHeight(8),
           const Divider(),
           const SpaceHeight(8),
           _buildInfoRow(
@@ -83,6 +124,14 @@ class DailyCashInfoCard extends StatelessWidget {
             dailyCash.closingBalance?.currencyFormatRp ?? 'Belum dihitung',
             isBold: true,
             fontSize: 18,
+          ),
+          const SpaceHeight(8),
+          _buildInfoRow(
+            'Final Cash Closing:',
+            _formatFinalCashClosing(),
+            textColor: Colors.green,
+            isBold: true,
+            fontSize: 16,
           ),
           if (dailyCash.expensesNote != null &&
               dailyCash.expensesNote!.isNotEmpty) ...[

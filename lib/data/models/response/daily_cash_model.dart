@@ -10,7 +10,11 @@ class DailyCashModel {
   final int? expenses;
   final String? expensesNote;
   final dynamic cashSales;
+  final dynamic qrisSales;
+  final int? qrisFee;
+  final int? effectiveExpenses;
   final int? closingBalance;
+  final dynamic finalCashClosing;
   final String? createdAt; // Ensure this field is properly defined
   final String? updatedAt;
 
@@ -23,7 +27,11 @@ class DailyCashModel {
     this.expenses,
     this.expensesNote,
     this.cashSales,
+    this.qrisSales,
+    this.qrisFee,
+    this.effectiveExpenses,
     this.closingBalance,
+    this.finalCashClosing,
     this.createdAt, // Include in constructor
     this.updatedAt,
   });
@@ -45,7 +53,11 @@ class DailyCashModel {
       expenses: map['expenses'],
       expensesNote: map['expenses_note'],
       cashSales: map['cash_sales'],
+      qrisSales: map['qris_sales'],
+      qrisFee: map['qris_fee'],
+      effectiveExpenses: map['effective_expenses'],
       closingBalance: map['closing_balance'],
+      finalCashClosing: map['final_cash_closing'],
       createdAt: map['created_at'], // Extract from map
       updatedAt: map['updated_at'],
     );
@@ -61,7 +73,11 @@ class DailyCashModel {
       'expenses': expenses,
       'expenses_note': expensesNote,
       'cash_sales': cashSales,
+      'qris_sales': qrisSales,
+      'qris_fee': qrisFee,
+      'effective_expenses': effectiveExpenses,
       'closing_balance': closingBalance,
+      'final_cash_closing': finalCashClosing,
       'created_at': createdAt, // Include in map
       'updated_at': updatedAt,
     };
@@ -83,6 +99,46 @@ class DailyCashModel {
 
     if (cashSales is String) {
       return int.tryParse(cashSales as String) ?? 0;
+    }
+
+    return 0;
+  }
+
+  int? getQrisSalesAsInt() {
+    if (qrisSales == null) {
+      return null;
+    }
+
+    if (qrisSales is int) {
+      return qrisSales as int;
+    }
+
+    if (qrisSales is String) {
+      return int.tryParse(qrisSales as String) ?? 0;
+    }
+
+    if (qrisSales is double) {
+      return qrisSales.toInt();
+    }
+
+    return 0;
+  }
+
+  int? getFinalCashClosingAsInt() {
+    if (finalCashClosing == null) {
+      return null;
+    }
+
+    if (finalCashClosing is int) {
+      return finalCashClosing as int;
+    }
+
+    if (finalCashClosing is String) {
+      return int.tryParse(finalCashClosing as String) ?? 0;
+    }
+
+    if (finalCashClosing is double) {
+      return finalCashClosing.toInt();
     }
 
     return 0;

@@ -9,7 +9,7 @@ class UserModel {
   final String createdAt;
   final String updatedAt;
   final String role;
-  final int outletId;
+  final int? outletId;
 
   UserModel({
     required this.id,
@@ -22,7 +22,7 @@ class UserModel {
     required this.createdAt,
     required this.updatedAt,
     required this.role,
-    required this.outletId,
+    this.outletId,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -37,7 +37,7 @@ class UserModel {
       createdAt: json['created_at'] as String,
       updatedAt: json['updated_at'] as String,
       role: json['role'] as String,
-      outletId: json['outlet_id'] as int,
+      outletId: json['outlet_id'] as int?,
     );
   }
 
@@ -54,7 +54,7 @@ class UserModel {
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
       role: map['role'] as String,
-      outletId: map['outlet_id'] as int,
+      outletId: map['outlet_id'] as int?,
     );
   }
 

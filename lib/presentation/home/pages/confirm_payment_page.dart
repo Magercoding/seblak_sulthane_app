@@ -953,14 +953,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                           serviceCharge,
                                     );
 
-                                    final subTotal =
-                                        price - (discount / 100 * price);
-                                    final totalDiscount =
-                                        discount / 100 * price;
-                                    final finalTax = subTotal * (tax / 100);
-                                    final totalServiceCharge =
-                                        (serviceCharge / 100) * price;
-
                                     List<ProductQuantity> items =
                                         state.maybeWhen(
                                       orElse: () => [],
@@ -981,12 +973,104 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                           previousValue + element.quantity,
                                     );
 
+                                    final subTotal =
+                                        price - (discount / 100 * price);
+                                    final totalDiscount =
+                                        discount / 100 * price;
+                                    final finalTax = subTotal * (tax / 100);
+                                    final totalServiceCharge =
+                                        (serviceCharge / 100) * price;
+                                    final totalFinal = subTotal +
+                                        finalTax +
+                                        totalServiceCharge;
+
                                     return Flexible(
                                       child: Button.filled(
-                                        // 1. First, in your ConfirmPaymentPage, update the onPressed handler for the payment button:
-// Look for the final payment button logic and make sure after showing SuccessPaymentDialog, it updates the table status
-
                                         onPressed: () async {
+                                          // Show confirmation dialog before payment
+                                          final shouldProceed =
+                                              await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: const Text(
+                                                'Konfirmasi Pembayaran',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    'Apakah Anda yakin ingin melanjutkan pembayaran?',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                  const SpaceHeight(12.0),
+                                                  Text(
+                                                    'Total Pembayaran: ${totalFinal.ceil().currencyFormatRpV2}',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: AppColors.primary,
+                                                    ),
+                                                  ),
+                                                  const SpaceHeight(8.0),
+                                                  Text(
+                                                    'Metode Pembayaran: ${isCash ? 'Cash' : 'QRIS'}',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  const SpaceHeight(16.0),
+                                                  const Text(
+                                                    'Setelah pembayaran dikonfirmasi, order akan tersimpan dan tidak dapat dibatalkan.',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Button.outlined(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, false),
+                                                        label: 'Batal',
+                                                      ),
+                                                    ),
+                                                    const SpaceWidth(8.0),
+                                                    Expanded(
+                                                      child: Button.filled(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, true),
+                                                        label: 'Bayar',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          if (shouldProceed != true) {
+                                            return; // User cancelled
+                                          }
                                           if (widget.isTable) {
                                             // For table orders - show SuccessPaymentDialog
                                             log("discountAmountValue: $totalDiscount");
@@ -1007,7 +1091,8 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType: 'dine_in',
-                                                    notes: notesController.text));
+                                                    notes:
+                                                        notesController.text));
 
                                             // Update table status to 'closed' after payment
                                             final newTableStatus = TableModel(
@@ -1066,9 +1151,9 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     'paid',
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
-                                                    orderType:
-                                                        widget.orderType,
-                                                    notes: notesController.text));
+                                                    orderType: widget.orderType,
+                                                    notes:
+                                                        notesController.text));
                                             await showDialog(
                                               context: context,
                                               barrierDismissible: false,

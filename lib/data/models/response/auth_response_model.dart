@@ -41,6 +41,7 @@ class User {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? role;
+  final int? outletId;
 
   User({
     this.id,
@@ -53,6 +54,7 @@ class User {
     this.createdAt,
     this.updatedAt,
     this.role,
+    this.outletId,
   });
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
@@ -76,6 +78,7 @@ class User {
             ? null
             : DateTime.parse(json["updated_at"]),
         role: json["role"],
+        outletId: json["outlet_id"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -89,5 +92,6 @@ class User {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "role": role,
+        "outlet_id": outletId,
       };
 }

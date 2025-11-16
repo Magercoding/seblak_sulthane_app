@@ -168,4 +168,29 @@ class OrderRemoteDatasource {
       return Left(e.toString());
     }
   }
+
+  Future<Either<String, Map<String, dynamic>>> getOrderById(int orderId) async {
+    final authData = await AuthLocalDataSource().getAuthData();
+    final token = authData.token ?? '';
+
+    final url = '$baseUrl/api/orders/show/$orderId';
+    final headers = {'Authorization': 'Bearer $token'};
+
+    try {
+      log('Url: $url');
+      final response = await http.get(Uri.parse(url), headers: headers);
+      log('Response: ${response.statusCode}');
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return Right(responseData['data'] as Map<String, dynamic>);
+      } else {
+        final responseData = jsonDecode(response.body);
+        return Left(responseData['message'] ?? 'Failed to fetch order details');
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }

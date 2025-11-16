@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/components/custom_date_picker.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
@@ -16,6 +15,7 @@ import 'package:seblak_sulthane_app/presentation/report/widgets/report_title.dar
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/presentation/report/widgets/summary_report_widget.dart';
 import 'package:seblak_sulthane_app/presentation/report/widgets/transaction_report_widget.dart';
+import 'package:seblak_sulthane_app/presentation/report/widgets/order_detail_widget.dart';
 
 import '../../../core/components/spaces.dart';
 
@@ -34,6 +34,7 @@ class _ReportPageState extends State<ReportPage> {
   int? outletId;
   bool isLoading = true;
   String errorMessage = '';
+  int? selectedOrderId; // Store selected order ID for detail view
 
   @override
   void initState() {
@@ -222,11 +223,31 @@ class _ReportPageState extends State<ReportPage> {
                             return Text(message);
                           },
                           loaded: (transactionReport) {
+                            if (selectedOrderId != null) {
+                              final selectedOrder =
+                                  transactionReport.firstWhere(
+                                (order) => order.id == selectedOrderId,
+                                orElse: () => transactionReport.first,
+                              );
+                              return OrderDetailWidget(
+                                order: selectedOrder,
+                                onClose: () {
+                                  setState(() {
+                                    selectedOrderId = null;
+                                  });
+                                },
+                              );
+                            }
                             return TransactionReportWidget(
                               transactionReport: transactionReport,
                               title: title,
                               searchDateFormatted: searchDateFormatted,
                               headerWidgets: _getTitleReportPageWidget(),
+                              onOrderSelected: (order) {
+                                setState(() {
+                                  selectedOrderId = order.id;
+                                });
+                              },
                             );
                           },
                         );

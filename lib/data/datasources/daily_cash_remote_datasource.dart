@@ -20,6 +20,13 @@ class DailyCashRemoteDatasource {
     try {
       final authData = await AuthLocalDataSource().getAuthData();
       final token = authData.token ?? '';
+      final user = authData.user;
+
+      // Check if user has outlet_id
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat mengatur saldo awal.');
+      }
 
       final url = '$baseUrl/api/daily-cash/opening';
       final headers = {
@@ -62,7 +69,15 @@ class DailyCashRemoteDatasource {
           return Left('Gagal memproses respons: $parseError');
         }
       } else {
-        return Left('Gagal menyimpan saldo awal: ${response.body}');
+        // Handle error response from backend
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal menyimpan saldo awal';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal menyimpan saldo awal: ${response.body}');
+        }
       }
     } catch (e) {
       log('Error setting opening balance: $e');
@@ -78,6 +93,13 @@ class DailyCashRemoteDatasource {
     try {
       final authData = await AuthLocalDataSource().getAuthData();
       final token = authData.token ?? '';
+      final user = authData.user;
+
+      // Check if user has outlet_id
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat menambahkan pengeluaran.');
+      }
 
       final url = '$baseUrl/api/daily-cash/expense';
       final headers = {
@@ -113,7 +135,15 @@ class DailyCashRemoteDatasource {
           return Left('Gagal memproses respons: $parseError');
         }
       } else {
-        return Left('Gagal menambahkan pengeluaran: ${response.body}');
+        // Handle error response from backend
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal menambahkan pengeluaran';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal menambahkan pengeluaran: ${response.body}');
+        }
       }
     } catch (e) {
       log('Error adding expense: $e');
@@ -125,6 +155,13 @@ class DailyCashRemoteDatasource {
     try {
       final authData = await AuthLocalDataSource().getAuthData();
       final token = authData.token ?? '';
+      final user = authData.user;
+
+      // Check if user has outlet_id
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat melihat data kas harian.');
+      }
 
       final url = '$baseUrl/api/daily-cash/$date';
       final headers = {
@@ -174,8 +211,16 @@ class DailyCashRemoteDatasource {
           return Left(errorMessage);
         }
       } else {
-        if (response.statusCode == 404) {
-          return Left('Data kas untuk tanggal ini tidak ditemukan');
+        // Handle error response from backend
+        if (response.statusCode == 403 || response.statusCode == 404) {
+          try {
+            final errorData = jsonDecode(response.body);
+            final errorMessage = errorData['message'] ??
+                'Akses ditolak atau data tidak ditemukan';
+            return Left(errorMessage);
+          } catch (_) {
+            return Left('Akses ditolak atau data tidak ditemukan');
+          }
         }
         return Left('Gagal mengambil data kas: ${response.body}');
       }

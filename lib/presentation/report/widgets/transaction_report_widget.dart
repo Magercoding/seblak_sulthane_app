@@ -17,6 +17,7 @@ class TransactionReportWidget extends StatelessWidget {
   final String searchDateFormatted;
   final List<ItemOrder> transactionReport;
   final List<Widget>? headerWidgets;
+  final Function(ItemOrder)? onOrderSelected;
 
   const TransactionReportWidget({
     super.key,
@@ -24,6 +25,7 @@ class TransactionReportWidget extends StatelessWidget {
     required this.title,
     required this.searchDateFormatted,
     required this.headerWidgets,
+    this.onOrderSelected,
   });
 
   Future<void> _handleExport(BuildContext context, bool isPdf) async {
@@ -176,108 +178,119 @@ class TransactionReportWidget extends StatelessWidget {
                     );
                   },
                   rightSideItemBuilder: (context, index) {
-                    return Row(
-                      children: <Widget>[
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                              child: Text(
-                            transactionReport[index].total!.currencyFormatRp,
-                          )),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                              child: Text(
-                            transactionReport[index].subTotal!.currencyFormatRp,
-                          )),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                              child: Text(
-                            transactionReport[index].tax!.currencyFormatRp,
-                          )),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
-                              int.parse(transactionReport[index]
-                                      .discountAmount!
-                                      .replaceAll('.00', ''))
-                                  .currencyFormatRp,
-                            ),
+                    return InkWell(
+                      onTap: () {
+                        if (onOrderSelected != null) {
+                          onOrderSelected!(transactionReport[index]);
+                        }
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text(
+                              transactionReport[index].total!.currencyFormatRp,
+                            )),
                           ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text(
                               transactionReport[index]
-                                  .serviceCharge!
+                                  .subTotal!
                                   .currencyFormatRp,
+                            )),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                                child: Text(
+                              transactionReport[index].tax!.currencyFormatRp,
+                            )),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(
+                                int.parse(transactionReport[index]
+                                        .discountAmount!
+                                        .replaceAll('.00', ''))
+                                    .currencyFormatRp,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
-                                transactionReport[index].totalItem.toString()),
-                          ),
-                        ),
-                        // Kolom Metode Pembayaran
-                        Container(
-                          width: 120,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(
-                              transactionReport[index].paymentMethod ?? 'Tunai',
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(
+                                transactionReport[index]
+                                    .serviceCharge!
+                                    .currencyFormatRp,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 190,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(transactionReport[index].namaKasir!),
+                          Container(
+                            width: 100,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(transactionReport[index]
+                                  .totalItem
+                                  .toString()),
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: 200,
-                          height: 52,
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Center(
-                            child: Text(transactionReport[index]
-                                .transactionTime!
-                                .toFormattedDate()),
+                          // Kolom Metode Pembayaran
+                          Container(
+                            width: 120,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(
+                                transactionReport[index].paymentMethod ??
+                                    'Tunai',
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            width: 190,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(transactionReport[index].namaKasir!),
+                            ),
+                          ),
+                          Container(
+                            width: 200,
+                            height: 52,
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Center(
+                              child: Text(transactionReport[index]
+                                  .transactionTime!
+                                  .toFormattedDate()),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                   itemCount: transactionReport.length,

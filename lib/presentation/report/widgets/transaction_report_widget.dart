@@ -28,15 +28,16 @@ class TransactionReportWidget extends StatelessWidget {
     this.onOrderSelected,
   });
 
-  Future<void> _handleExport(BuildContext context, bool isPdf) async {
+  Future<void> _handleExport(
+      BuildContext context, bool isPdf, List<ItemOrder> data) async {
     final status = await PermessionHelper().checkPermission();
     if (status) {
       try {
         final file = isPdf
             ? await TransactionSalesInvoice.generatePdf(
-                transactionReport, searchDateFormatted)
+                data, searchDateFormatted)
             : await TransactionSalesInvoice.generateExcel(
-                transactionReport, searchDateFormatted);
+                data, searchDateFormatted);
 
         log("File yang dihasilkan: $file");
         await FileOpenerService.openFile(file, context);
@@ -86,8 +87,23 @@ class TransactionReportWidget extends StatelessWidget {
     }
   }
 
+  List<ItemOrder> _getSortedTransactions() {
+    final sorted = List<ItemOrder>.from(transactionReport);
+    sorted.sort((a, b) =>
+        _getOrderDate(b).compareTo(_getOrderDate(a)));
+    return sorted;
+  }
+
+  DateTime _getOrderDate(ItemOrder order) {
+    return order.transactionTime ??
+        order.createdAt ??
+        DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final sortedTransactions = _getSortedTransactions();
+
     return Card(
       color: const Color.fromARGB(255, 255, 255, 255),
       child: Column(
@@ -113,7 +129,8 @@ class TransactionReportWidget extends StatelessWidget {
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: () => _handleExport(context, false),
+                      onTap: () =>
+                          _handleExport(context, false, sortedTransactions),
                       child: const Row(
                         children: [
                           Text(
@@ -133,7 +150,8 @@ class TransactionReportWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     GestureDetector(
-                      onTap: () => _handleExport(context, true),
+                      onTap: () =>
+                          _handleExport(context, true, sortedTransactions),
                       child: const Row(
                         children: [
                           Text(
@@ -174,14 +192,14 @@ class TransactionReportWidget extends StatelessWidget {
                       height: 52,
                       alignment: Alignment.centerLeft,
                       child: Center(
-                          child: Text(transactionReport[index].id.toString())),
+                          child: Text(sortedTransactions[index].id.toString())),
                     );
                   },
                   rightSideItemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
                         if (onOrderSelected != null) {
-                          onOrderSelected!(transactionReport[index]);
+                          onOrderSelected!(sortedTransactions[index]);
                         }
                       },
                       child: Row(
@@ -193,7 +211,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                                 child: Text(
-                              transactionReport[index].total!.currencyFormatRp,
+                              sortedTransactions[index].total!.currencyFormatRp,
                             )),
                           ),
                           Container(
@@ -203,7 +221,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                                 child: Text(
-                              transactionReport[index]
+                              sortedTransactions[index]
                                   .subTotal!
                                   .currencyFormatRp,
                             )),
@@ -215,7 +233,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                                 child: Text(
-                              transactionReport[index].tax!.currencyFormatRp,
+                              sortedTransactions[index].tax!.currencyFormatRp,
                             )),
                           ),
                           Container(
@@ -225,7 +243,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                               child: Text(
-                                int.parse(transactionReport[index]
+                                int.parse(sortedTransactions[index]
                                         .discountAmount!
                                         .replaceAll('.00', ''))
                                     .currencyFormatRp,
@@ -239,7 +257,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                               child: Text(
-                                transactionReport[index]
+                                sortedTransactions[index]
                                     .serviceCharge!
                                     .currencyFormatRp,
                               ),
@@ -251,7 +269,7 @@ class TransactionReportWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                             alignment: Alignment.centerLeft,
                             child: Center(
-                              child: Text(transactionReport[index]
+                              child: Text(sortedTransactions[index]
                                   .totalItem
                                   .toString()),
                             ),
@@ -264,7 +282,7 @@ class TransactionReportWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Center(
                               child: Text(
-                                transactionReport[index].paymentMethod ??
+                                sortedTransactions[index].paymentMethod ??
                                     'Tunai',
                               ),
                             ),
@@ -275,7 +293,7 @@ class TransactionReportWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                             alignment: Alignment.centerLeft,
                             child: Center(
-                              child: Text(transactionReport[index].namaKasir!),
+                              child: Text(sortedTransactions[index].namaKasir!),
                             ),
                           ),
                           Container(
@@ -284,7 +302,7 @@ class TransactionReportWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                             alignment: Alignment.centerLeft,
                             child: Center(
-                              child: Text(transactionReport[index]
+                              child: Text(sortedTransactions[index]
                                   .transactionTime!
                                   .toFormattedDate()),
                             ),
@@ -293,7 +311,7 @@ class TransactionReportWidget extends StatelessWidget {
                       ),
                     );
                   },
-                  itemCount: transactionReport.length,
+                  itemCount: sortedTransactions.length,
                   rowSeparatorWidget: const Divider(
                     color: Colors.black38,
                     height: 1.0,

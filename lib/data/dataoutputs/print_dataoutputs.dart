@@ -973,6 +973,21 @@ class PrintDataoutputs {
       ),
     ]);
 
+    // Penjualan Makanan
+    double foodSales = summary.getFoodSalesAsInt().toDouble();
+    bytes += generator.row([
+      PosColumn(
+        text: 'Penjualan Makanan',
+        width: 5,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: 'Rp ${_formatCurrency(foodSales)}',
+        width: 7,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
     // Penjualan Minuman
     double beverageSales = summary.getBeverageSalesAsInt().toDouble();
     bytes += generator.row([
@@ -1018,6 +1033,77 @@ class PrintDataoutputs {
           styles: const PosStyles(align: PosAlign.right, bold: true),
         ),
       ]);
+    }
+
+    // Add Food Breakdown section if available
+    if (summary.foodBreakdown != null) {
+      bytes += generator.text(
+          paper == 80
+              ? '------------------------------------------------'
+              : '--------------------------------',
+          styles: const PosStyles(bold: false, align: PosAlign.center));
+
+      bytes += generator.text('RINCIAN MAKANAN',
+          styles: const PosStyles(align: PosAlign.center, bold: true));
+      bytes += generator.feed(1);
+
+      if (summary.foodBreakdown?.cash != null) {
+        double cashQuantity =
+            summary.foodBreakdown!.cash!.getQuantityAsInt().toDouble();
+        double cashAmount =
+            summary.foodBreakdown!.cash!.getAmountAsInt().toDouble();
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Tunai (${cashQuantity.toInt()} item)',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(cashAmount)}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+
+      if (summary.foodBreakdown?.qris != null) {
+        double qrisQuantity =
+            summary.foodBreakdown!.qris!.getQuantityAsInt().toDouble();
+        double qrisAmount =
+            summary.foodBreakdown!.qris!.getAmountAsInt().toDouble();
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'QRIS (${qrisQuantity.toInt()} item)',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(qrisAmount)}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+
+      if (summary.foodBreakdown?.total != null) {
+        int totalQuantity = summary.foodBreakdown!.total!.quantity;
+        double totalAmount = summary.foodBreakdown!.total!.amount.toDouble();
+
+        bytes += generator.row([
+          PosColumn(
+            text: 'Total (${totalQuantity} item)',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(totalAmount)}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
+      }
     }
 
     // Add Beverage Breakdown section if available
@@ -1184,128 +1270,72 @@ class PrintDataoutputs {
         bytes += generator.text('Tanggal: ${day.date}',
             styles: const PosStyles(align: PosAlign.left, bold: true));
 
-        // Saldo Awal
-        double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
-        bytes += generator.row([
-          PosColumn(
-            text: 'Saldo Awal:',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: 'Rp ${_formatCurrency(dayOpeningBalance)}',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+        // Rincian Makanan (dipindahkan ke atas)
+        if (day.foodBreakdown != null) {
+          bytes += generator.text('Rincian Makanan:',
+              styles: const PosStyles(align: PosAlign.left, bold: true));
 
-        // Pengeluaran
-        double dayExpenses = day.expenses?.toDouble() ?? 0.0;
-        bytes += generator.row([
-          PosColumn(
-            text: 'Pengeluaran:',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: '- Rp ${_formatCurrency(dayExpenses)}',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+          if (day.foodBreakdown!.cash != null) {
+            double dayFoodCashQty =
+                day.foodBreakdown!.cash!.getQuantityAsInt().toDouble();
+            double dayFoodCashAmount =
+                day.foodBreakdown!.cash!.getAmountAsInt().toDouble();
 
-        // Penjualan Tunai
-        double dayCashSales = day.getCashSalesAsInt().toDouble();
-        bytes += generator.row([
-          PosColumn(
-            text: 'Penjualan Tunai:',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: 'Rp ${_formatCurrency(dayCashSales)}',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+            bytes += generator.row([
+              PosColumn(
+                text: '- Tunai (${dayFoodCashQty.toInt()} item):',
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: 'Rp ${_formatCurrency(dayFoodCashAmount)}',
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
 
-        // Penjualan QRIS
-        double dayQrisSales = day.getQrisSalesAsInt().toDouble();
-        bytes += generator.row([
-          PosColumn(
-            text: 'Penjualan QRIS:',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: 'Rp ${_formatCurrency(dayQrisSales)}',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+          if (day.foodBreakdown!.qris != null) {
+            double dayFoodQrisQty =
+                day.foodBreakdown!.qris!.getQuantityAsInt().toDouble();
+            double dayFoodQrisAmount =
+                day.foodBreakdown!.qris!.getAmountAsInt().toDouble();
 
-        double dayQrisFee = _parseToDouble(day.qrisFee);
-        bytes += generator.row([
-          PosColumn(
-            text: 'Biaya QRIS:',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: '- Rp ${_formatCurrency(dayQrisFee)}',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+            bytes += generator.row([
+              PosColumn(
+                text: '- QRIS (${dayFoodQrisQty.toInt()} item):',
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: 'Rp ${_formatCurrency(dayFoodQrisAmount)}',
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
 
-        // Total Penjualan
-        double dayTotalSales = _parseToDouble(day.totalSales);
-        bytes += generator.row([
-          PosColumn(
-            text: 'Total Penjualan:',
-            width: 7,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: 'Rp ${_formatCurrency(dayTotalSales)}',
-            width: 5,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
+          if (day.foodBreakdown!.total != null) {
+            int dayFoodTotalQty = day.foodBreakdown!.total!.quantity;
+            double dayFoodTotalAmount =
+                day.foodBreakdown!.total!.amount.toDouble();
 
-        // Saldo Penutup
-        double dayClosingBalance = day.closingBalance?.toDouble() ?? 0.0;
-        bytes += generator.row([
-          PosColumn(
-            text: 'Saldo Penutup:',
-            width: 6,
-            styles: const PosStyles(align: PosAlign.left, bold: true),
-          ),
-          PosColumn(
-            text: 'Rp ${_formatCurrency(dayClosingBalance)}',
-            width: 6,
-            styles: const PosStyles(align: PosAlign.right, bold: true),
-          ),
-        ]);
-
-        // Final Cash Closing if available
-        if (day.finalCashClosing != null) {
-          double dayFinalCashClosing = _parseToDouble(day.finalCashClosing);
-          bytes += generator.row([
-            PosColumn(
-              text: 'Final Kas Akhir:',
-              width: 7,
-              styles: const PosStyles(align: PosAlign.left, bold: true),
-            ),
-            PosColumn(
-              text: 'Rp ${_formatCurrency(dayFinalCashClosing)}',
-              width: 5,
-              styles: const PosStyles(align: PosAlign.right, bold: true),
-            ),
-          ]);
+            bytes += generator.row([
+              PosColumn(
+                text: '- Total (${dayFoodTotalQty} item):',
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left, bold: true),
+              ),
+              PosColumn(
+                text: 'Rp ${_formatCurrency(dayFoodTotalAmount)}',
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right, bold: true),
+              ),
+            ]);
+          }
         }
 
-        // Add Beverage Breakdown if available
+        // Rincian Minuman (setelah Rincian Makanan)
         if (day.beverageBreakdown != null) {
           bytes += generator.text('Rincian Minuman:',
               styles: const PosStyles(align: PosAlign.left, bold: true));
@@ -1368,6 +1398,127 @@ class PrintDataoutputs {
               ),
             ]);
           }
+        }
+
+        // Saldo Awal (dipindahkan setelah rincian)
+        double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
+        bytes += generator.row([
+          PosColumn(
+            text: 'Saldo Awal:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(dayOpeningBalance)}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Penjualan Tunai
+        double dayCashSales = day.getCashSalesAsInt().toDouble();
+        bytes += generator.row([
+          PosColumn(
+            text: 'Penjualan Tunai:',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(dayCashSales)}',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Penjualan QRIS
+        double dayQrisSales = day.getQrisSalesAsInt().toDouble();
+        bytes += generator.row([
+          PosColumn(
+            text: 'Penjualan QRIS:',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(dayQrisSales)}',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Total Penjualan
+        double dayTotalSales = _parseToDouble(day.totalSales);
+        bytes += generator.row([
+          PosColumn(
+            text: 'Total Penjualan:',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(dayTotalSales)}',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Pengeluaran
+        double dayExpenses = day.expenses?.toDouble() ?? 0.0;
+        bytes += generator.row([
+          PosColumn(
+            text: 'Pengeluaran:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: '- Rp ${_formatCurrency(dayExpenses)}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        double dayQrisFee = _parseToDouble(day.qrisFee);
+        bytes += generator.row([
+          PosColumn(
+            text: 'Biaya QRIS:',
+            width: 5,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: '- Rp ${_formatCurrency(dayQrisFee)}',
+            width: 7,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+
+        // Saldo Penutup
+        double dayClosingBalance = day.closingBalance?.toDouble() ?? 0.0;
+        bytes += generator.row([
+          PosColumn(
+            text: 'Saldo Penutup:',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: 'Rp ${_formatCurrency(dayClosingBalance)}',
+            width: 6,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
+
+        // Final Cash Closing if available
+        if (day.finalCashClosing != null) {
+          double dayFinalCashClosing = _parseToDouble(day.finalCashClosing);
+          bytes += generator.row([
+            PosColumn(
+              text: 'Final Kas Akhir:',
+              width: 7,
+              styles: const PosStyles(align: PosAlign.left, bold: true),
+            ),
+            PosColumn(
+              text: 'Rp ${_formatCurrency(dayFinalCashClosing)}',
+              width: 5,
+              styles: const PosStyles(align: PosAlign.right, bold: true),
+            ),
+          ]);
         }
 
         if (i < summary.dailyBreakdown!.length - 1) {
@@ -1451,7 +1602,136 @@ class PrintDataoutputs {
       double totalCash = 0.0; // Untuk menghitung total cash
 
       for (var day in summary.dailyBreakdown!) {
-        // Saldo Awal (Opening Balance)
+        // Rincian Makanan (dipindahkan ke atas)
+        if (day.foodBreakdown != null) {
+          bytes += generator.text("Rincian Makanan:",
+              styles: const PosStyles(align: PosAlign.left, bold: true));
+
+          if (day.foodBreakdown!.cash != null) {
+            double cashQty =
+                day.foodBreakdown!.cash!.getQuantityAsInt().toDouble();
+            double cashAmount =
+                day.foodBreakdown!.cash!.getAmountAsInt().toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- Tunai (${cashQty.toInt()} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(cashAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
+
+          if (day.foodBreakdown!.qris != null) {
+            double qrisQty =
+                day.foodBreakdown!.qris!.getQuantityAsInt().toDouble();
+            double qrisAmount =
+                day.foodBreakdown!.qris!.getAmountAsInt().toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- QRIS (${qrisQty.toInt()} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(qrisAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
+
+          if (day.foodBreakdown!.total != null) {
+            int totalQty = day.foodBreakdown!.total!.quantity;
+            double totalAmount = day.foodBreakdown!.total!.amount.toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- Total (${totalQty} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left, bold: true),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(totalAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right, bold: true),
+              ),
+            ]);
+          }
+        }
+
+        // Rincian Minuman (setelah Rincian Makanan)
+        if (day.beverageBreakdown != null) {
+          bytes += generator.text("Rincian Minuman:",
+              styles: const PosStyles(align: PosAlign.left, bold: true));
+
+          if (day.beverageBreakdown!.cash != null) {
+            double cashQty =
+                day.beverageBreakdown!.cash!.getQuantityAsInt().toDouble();
+            double cashAmount =
+                day.beverageBreakdown!.cash!.getAmountAsInt().toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- Tunai (${cashQty.toInt()} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(cashAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
+
+          if (day.beverageBreakdown!.qris != null) {
+            double qrisQty =
+                day.beverageBreakdown!.qris!.getQuantityAsInt().toDouble();
+            double qrisAmount =
+                day.beverageBreakdown!.qris!.getAmountAsInt().toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- QRIS (${qrisQty.toInt()} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(qrisAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right),
+              ),
+            ]);
+          }
+
+          if (day.beverageBreakdown!.total != null) {
+            int totalQty = day.beverageBreakdown!.total!.quantity;
+            double totalAmount =
+                day.beverageBreakdown!.total!.amount.toDouble();
+
+            bytes += generator.row([
+              PosColumn(
+                text: "- Total (${totalQty} item)",
+                width: 7,
+                styles: const PosStyles(align: PosAlign.left, bold: true),
+              ),
+              PosColumn(
+                text: formatNumberWithoutDecimal(totalAmount),
+                width: 5,
+                styles: const PosStyles(align: PosAlign.right, bold: true),
+              ),
+            ]);
+          }
+        }
+
+        // Saldo Awal (Opening Balance) - dipindahkan setelah rincian
         double dayOpeningBalance = day.openingBalance?.toDouble() ?? 0.0;
         bytes += generator.row([
           PosColumn(
@@ -1541,71 +1821,6 @@ class PrintDataoutputs {
           ),
         ]);
 
-        // Penjualan Minuman dengan rincian (seperti pada rincian harian)
-        if (day.beverageBreakdown != null) {
-          bytes += generator.text("Rincian Minuman:",
-              styles: const PosStyles(align: PosAlign.left, bold: true));
-
-          if (day.beverageBreakdown!.cash != null) {
-            double cashQty =
-                day.beverageBreakdown!.cash!.getQuantityAsInt().toDouble();
-            double cashAmount =
-                day.beverageBreakdown!.cash!.getAmountAsInt().toDouble();
-
-            bytes += generator.row([
-              PosColumn(
-                text: "- Tunai (${cashQty.toInt()} item)",
-                width: 7,
-                styles: const PosStyles(align: PosAlign.left),
-              ),
-              PosColumn(
-                text: formatNumberWithoutDecimal(cashAmount),
-                width: 5,
-                styles: const PosStyles(align: PosAlign.right),
-              ),
-            ]);
-          }
-
-          if (day.beverageBreakdown!.qris != null) {
-            double qrisQty =
-                day.beverageBreakdown!.qris!.getQuantityAsInt().toDouble();
-            double qrisAmount =
-                day.beverageBreakdown!.qris!.getAmountAsInt().toDouble();
-
-            bytes += generator.row([
-              PosColumn(
-                text: "- QRIS (${qrisQty.toInt()} item)",
-                width: 7,
-                styles: const PosStyles(align: PosAlign.left),
-              ),
-              PosColumn(
-                text: formatNumberWithoutDecimal(qrisAmount),
-                width: 5,
-                styles: const PosStyles(align: PosAlign.right),
-              ),
-            ]);
-          }
-
-          if (day.beverageBreakdown!.total != null) {
-            int totalQty = day.beverageBreakdown!.total!.quantity;
-            double totalAmount =
-                day.beverageBreakdown!.total!.amount.toDouble();
-
-            bytes += generator.row([
-              PosColumn(
-                text: "- Total (${totalQty} item)",
-                width: 7,
-                styles: const PosStyles(align: PosAlign.left, bold: true),
-              ),
-              PosColumn(
-                text: formatNumberWithoutDecimal(totalAmount),
-                width: 5,
-                styles: const PosStyles(align: PosAlign.right, bold: true),
-              ),
-            ]);
-          }
-        }
-
         // Saldo Akhir (Ambil dari Saldo Penutup/Closing Balance)
         if (day.closingBalance != null) {
           double dayClosingBalance = day.closingBalance!.toDouble();
@@ -1639,9 +1854,10 @@ class PrintDataoutputs {
             ),
           ]);
         } else {
-          // Jika finalCashClosing tidak tersedia, gunakan perhitungan total cash
-          double dayTotalCash =
-              dayOpeningBalance + dayCashSales - dayExpenses - dayQrisFee;
+          // Jika finalCashClosing tidak tersedia, gunakan perhitungan sesuai rumus baru
+          // Final Cash Closing = (Cash + Opening) - (Expenses + Opening) = Cash - Expenses
+          double dayTotalCash = (dayCashSales + dayOpeningBalance) -
+              (dayExpenses + dayOpeningBalance);
           bytes += generator.row([
             PosColumn(
               text: "Final Kas Akhir",

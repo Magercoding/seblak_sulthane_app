@@ -144,17 +144,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Colors.transparent,
                     onTap: () => indexValue(6),
                   ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.all(12.0),
-                    leading: Icon(Icons.history, color: AppColors.primary),
-                    title: const Text('Riwayat Pesanan'),
-                    subtitle: const Text('Lihat seluruh riwayat transaksi'),
-                    textColor: AppColors.primary,
-                    tileColor: currentIndex == 7
-                        ? AppColors.blueLight
-                        : Colors.transparent,
-                    onTap: () => indexValue(7),
-                  ),
+                  // ListTile(
+                  //   contentPadding: const EdgeInsets.all(12.0),
+                  //   leading: Icon(Icons.history, color: AppColors.primary),
+                  //   title: const Text('Riwayat Pesanan'),
+                  //   subtitle: const Text('Lihat seluruh riwayat transaksi'),
+                  //   textColor: AppColors.primary,
+                  //   tileColor: currentIndex == 7
+                  //       ? AppColors.blueLight
+                  //       : Colors.transparent,
+                  //   onTap: () => indexValue(7),
+                  // ),
                   // const Divider(height: 32),
                   // ListTile(
                   //   contentPadding: const EdgeInsets.all(12.0),

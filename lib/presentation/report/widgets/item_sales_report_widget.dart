@@ -71,17 +71,29 @@ class _ItemSalesReportWidgetState extends State<ItemSalesReportWidget> {
       }).toList();
 
       setState(() {
-        itemSalesWithCategories = updatedSales;
+        itemSalesWithCategories = _sortSales(updatedSales);
         isLoading = false;
       });
     } catch (e) {
       log('Gagal mengambil kategori: $e');
       // Jika terjadi exception, lanjutkan dengan produk tanpa kategori
       setState(() {
-        itemSalesWithCategories = widget.itemSales;
+        itemSalesWithCategories = _sortSales(widget.itemSales);
         isLoading = false;
       });
     }
+  }
+
+  List<ItemSales> _sortSales(List<ItemSales> sales) {
+    final sorted = List<ItemSales>.from(sales);
+    sorted.sort((a, b) =>
+        _parseDate(b.createdAt).compareTo(_parseDate(a.createdAt)));
+    return sorted;
+  }
+
+  DateTime _parseDate(String? raw) {
+    if (raw == null) return DateTime.fromMillisecondsSinceEpoch(0);
+    return DateTime.tryParse(raw) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   Future<void> _handleExport(

@@ -438,7 +438,25 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
 
-            // Daily Cash Section
+            // Rincian Penjualan Makanan (dipindahkan ke atas)
+            if (summary.foodBreakdown != null) ...[
+              const SizedBox(height: 20),
+              _buildSalesBreakdownSection(
+                title: 'Rincian Penjualan Makanan',
+                breakdown: summary.foodBreakdown!,
+              ),
+            ],
+
+            // Rincian Penjualan Minuman (setelah Rincian Makanan)
+            if (summary.beverageBreakdown != null) ...[
+              const SizedBox(height: 20),
+              _buildSalesBreakdownSection(
+                title: 'Rincian Penjualan Minuman',
+                breakdown: summary.beverageBreakdown!,
+              ),
+            ],
+
+            // Daily Cash Section (dipindahkan setelah rincian)
             const SizedBox(height: 20),
             const Text(
               'Arus Kas Harian',
@@ -487,70 +505,66 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
+              label: 'Penjualan Makanan',
+              value:
+                  'Rp ${formatCurrency(summary.getFoodSalesAsInt().toDouble())}',
+              textColor: Colors.green,
+            ),
+            const Divider(),
+            SummaryItem(
               label: 'Penjualan Minuman',
               value:
                   'Rp ${formatCurrency(summary.getBeverageSalesAsInt().toDouble())}',
               textColor: Colors.green,
             ),
 
-            // Add Beverage Breakdown Section
-            if (summary.beverageBreakdown != null) ...[
+            if (_hasOverallBreakdown(summary)) ...[
               const SizedBox(height: 20),
               const Text(
-                'Rincian Penjualan Minuman',
+                'Rincian Keseluruhan',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
-              if (summary.beverageBreakdown!.cash != null) ...[
+              SummaryItem(
+                label: 'Tunai',
+                value:
+                    'Rp ${formatCurrency(summary.getCashSalesAsInt().toDouble())}',
+                textColor: Colors.green,
+              ),
+              const Divider(),
+              SummaryItem(
+                label: 'QRIS',
+                value:
+                    'Rp ${formatCurrency(summary.getQrisSalesAsInt().toDouble())}',
+                textColor: Colors.green,
+              ),
+              const Divider(),
+              SummaryItem(
+                label: 'Total Penjualan',
+                value:
+                    'Rp ${formatCurrency((summary.getCashSalesAsInt() + summary.getQrisSalesAsInt()).toDouble())}',
+                textColor: Colors.green,
+                isTotal: true,
+              ),
+              const Divider(),
+              SummaryItem(
+                label: 'Saldo Akhir',
+                value: summary.closingBalance != null
+                    ? 'Rp ${formatCurrency(summary.closingBalance!)}'
+                    : 'Rp 0.00',
+                isTotal: true,
+              ),
+              if (summary.finalCashClosing != null) ...[
                 SummaryItem(
-                  label:
-                      'Tunai (${summary.beverageBreakdown!.cash!.getQuantityAsInt()} item)',
+                  label: 'Final Kas Akhir',
                   value:
-                      'Rp ${formatCurrency(summary.beverageBreakdown!.cash!.getAmountAsInt().toDouble())}',
-                  textColor: Colors.green,
-                ),
-              ],
-              if (summary.beverageBreakdown!.qris != null) ...[
-                SummaryItem(
-                  label:
-                      'QRIS (${summary.beverageBreakdown!.qris!.getQuantityAsInt()} item)',
-                  value:
-                      'Rp ${formatCurrency(summary.beverageBreakdown!.qris!.getAmountAsInt().toDouble())}',
-                  textColor: Colors.green,
-                ),
-              ],
-              if (summary.beverageBreakdown!.total != null) ...[
-                SummaryItem(
-                  label:
-                      'Total (${summary.beverageBreakdown!.total!.quantity} item)',
-                  value:
-                      'Rp ${formatCurrency(summary.beverageBreakdown!.total!.amount.toDouble())}',
-                  textColor: Colors.green,
+                      'Rp ${formatCurrency(summary.getFinalCashClosingAsInt().toDouble())}',
                   isTotal: true,
                 ),
               ],
-            ],
-
-            const Divider(),
-            SummaryItem(
-              label: 'Saldo Akhir',
-              value: summary.closingBalance != null
-                  ? 'Rp ${formatCurrency(summary.closingBalance!)}'
-                  : 'Rp 0.00',
-              isTotal: true,
-            ),
-
-            // Add Final Cash Closing
-            if (summary.finalCashClosing != null) ...[
-              SummaryItem(
-                label: 'Final Kas Akhir',
-                value:
-                    'Rp ${formatCurrency(summary.getFinalCashClosingAsInt().toDouble())}',
-                isTotal: true,
-              ),
             ],
 
             // Payment Methods Section
@@ -650,6 +664,56 @@ class SummaryReportWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildSalesBreakdownSection({
+    required String title,
+    required BeverageBreakdown breakdown,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (breakdown.cash != null) ...[
+          SummaryItem(
+            label: 'Tunai (${breakdown.cash!.getQuantityAsInt()} item)',
+            value:
+                'Rp ${formatCurrency(breakdown.cash!.getAmountAsInt().toDouble())}',
+            textColor: Colors.green,
+          ),
+        ],
+        if (breakdown.qris != null) ...[
+          SummaryItem(
+            label: 'QRIS (${breakdown.qris!.getQuantityAsInt()} item)',
+            value:
+                'Rp ${formatCurrency(breakdown.qris!.getAmountAsInt().toDouble())}',
+            textColor: Colors.green,
+          ),
+        ],
+        if (breakdown.total != null) ...[
+          SummaryItem(
+            label: 'Total (${breakdown.total!.quantity} item)',
+            value: 'Rp ${formatCurrency(breakdown.total!.amount.toDouble())}',
+            textColor: Colors.green,
+            isTotal: true,
+          ),
+        ],
+      ],
+    );
+  }
+
+  bool _hasOverallBreakdown(EnhancedSummaryData summary) {
+    return summary.getCashSalesAsInt() > 0 ||
+        summary.getQrisSalesAsInt() > 0 ||
+        summary.closingBalance != null ||
+        summary.finalCashClosing != null;
+  }
+
   Widget _buildDailyBreakdownItem(DailyBreakdown day) {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -668,108 +732,63 @@ class SummaryReportWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Saldo Awal:'),
-              Text(
-                day.openingBalance != null
-                    ? 'Rp ${formatCurrency(day.openingBalance!)}'
-                    : 'Rp 0.00',
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Pengeluaran:'),
-              Text(
-                day.expenses != null
-                    ? 'Rp ${formatCurrency(day.expenses!)}'
-                    : 'Rp 0.00',
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Penjualan Tunai:'),
-              Text(
-                'Rp ${formatCurrency(day.getCashSalesAsInt().toDouble())}',
-                style: const TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Penjualan QRIS:'),
-              Text(
-                'Rp ${formatCurrency(day.getQrisSalesAsInt().toDouble())}',
-                style: const TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Biaya QRIS:'),
-              Text(
-                day.qrisFee != null
-                    ? 'Rp ${formatCurrency(parseNumericValue(day.qrisFee))}'
-                    : 'Rp 0.00',
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Total Penjualan:'),
-              Text(
-                day.totalSales != null
-                    ? 'Rp ${formatCurrency(parseNumericValue(day.totalSales))}'
-                    : 'Rp 0.00',
-                style: const TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Saldo Akhir:'),
-              Text(
-                day.closingBalance != null
-                    ? 'Rp ${formatCurrency(day.closingBalance!)}'
-                    : 'Rp 0.00',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
 
-          // Add Final Cash Closing
-          if (day.finalCashClosing != null) ...[
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Final Kas Akhir:'),
-                Text(
-                  'Rp ${formatCurrency(day.getFinalCashClosingAsInt().toDouble())}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+          // Rincian Makanan (dipindahkan ke atas)
+          if (day.foodBreakdown != null) ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Rincian Makanan:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            if (day.foodBreakdown!.cash != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '- Tunai (${day.foodBreakdown!.cash!.getQuantityAsInt()} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.foodBreakdown!.cash!.getAmountAsInt().toDouble())}',
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+            if (day.foodBreakdown!.qris != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '- QRIS (${day.foodBreakdown!.qris!.getQuantityAsInt()} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.foodBreakdown!.qris!.getAmountAsInt().toDouble())}',
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+            if (day.foodBreakdown!.total != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('- Total (${day.foodBreakdown!.total!.quantity} item):'),
+                  Text(
+                    'Rp ${formatCurrency(day.foodBreakdown!.total!.amount.toDouble())}',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
 
-          // Add Beverage Breakdown for Daily
+          // Rincian Minuman (setelah Rincian Makanan)
           if (day.beverageBreakdown != null) ...[
             const SizedBox(height: 8),
             const Text(
@@ -823,6 +842,109 @@ class SummaryReportWidget extends StatelessWidget {
                 ],
               ),
             ],
+          ],
+
+          // Saldo Awal (dipindahkan setelah rincian)
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Saldo Awal:'),
+              Text(
+                day.openingBalance != null
+                    ? 'Rp ${formatCurrency(day.openingBalance!)}'
+                    : 'Rp 0.00',
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Pengeluaran:'),
+              Text(
+                day.expenses != null
+                    ? 'Rp ${formatCurrency(day.expenses!)}'
+                    : 'Rp 0.00',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Penjualan Tunai:'),
+              Text(
+                'Rp ${formatCurrency(day.getCashSalesAsInt().toDouble())}',
+                style: const TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Penjualan QRIS:'),
+              Text(
+                'Rp ${formatCurrency(day.getQrisSalesAsInt().toDouble())}',
+                style: const TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Total Penjualan:'),
+              Text(
+                day.totalSales != null
+                    ? 'Rp ${formatCurrency(parseNumericValue(day.totalSales))}'
+                    : 'Rp 0.00',
+                style: const TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Biaya QRIS:'),
+              Text(
+                day.qrisFee != null
+                    ? 'Rp ${formatCurrency(parseNumericValue(day.qrisFee))}'
+                    : 'Rp 0.00',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Saldo Akhir:'),
+              Text(
+                day.closingBalance != null
+                    ? 'Rp ${formatCurrency(day.closingBalance!)}'
+                    : 'Rp 0.00',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+
+          // Add Final Cash Closing
+          if (day.finalCashClosing != null) ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Final Kas Akhir:'),
+                Text(
+                  'Rp ${formatCurrency(day.getFinalCashClosingAsInt().toDouble())}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ],
         ],
       ),

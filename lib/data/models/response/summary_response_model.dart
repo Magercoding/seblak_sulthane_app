@@ -44,6 +44,7 @@ class EnhancedSummaryData {
   final dynamic foodCashSales;
   final dynamic foodQrisSales;
   final BeverageBreakdown? foodBreakdown;
+  final BeverageBreakdown? levelBreakdown;
   final double? closingBalance;
   final dynamic finalCashClosing;
   final PaymentMethods? paymentMethods;
@@ -70,6 +71,7 @@ class EnhancedSummaryData {
     this.foodCashSales,
     this.foodQrisSales,
     this.foodBreakdown,
+    this.levelBreakdown,
     this.closingBalance,
     this.finalCashClosing,
     this.paymentMethods,
@@ -121,6 +123,17 @@ class EnhancedSummaryData {
       }
     }
 
+    // Parse level_breakdown
+    BeverageBreakdown? levelBreakdownObj;
+    if (json['level_breakdown'] != null) {
+      try {
+        levelBreakdownObj = BeverageBreakdown.fromJson(json['level_breakdown']);
+      } catch (e) {
+        log("Error parsing level_breakdown: $e");
+        levelBreakdownObj = null;
+      }
+    }
+
     return EnhancedSummaryData(
       totalOrders: json['total_orders'] ?? 0,
       totalItems: (json['total_items'] ?? 0).toString(),
@@ -141,6 +154,7 @@ class EnhancedSummaryData {
       foodCashSales: json['food_cash_sales'] ?? 0,
       foodQrisSales: json['food_qris_sales'] ?? 0,
       foodBreakdown: foodBreakdownObj,
+      levelBreakdown: levelBreakdownObj,
       closingBalance: _parseToDouble(json['closing_balance']),
       finalCashClosing: json['final_cash_closing'] ?? 0,
       paymentMethods: paymentMethodsObj,
@@ -188,6 +202,7 @@ class EnhancedSummaryData {
         'food_cash_sales': foodCashSales,
         'food_qris_sales': foodQrisSales,
         'food_breakdown': foodBreakdown?.toJson(),
+        'level_breakdown': levelBreakdown?.toJson(),
         'closing_balance': closingBalance,
         'final_cash_closing': finalCashClosing,
         'payment_methods': paymentMethods?.toJson(),
@@ -612,6 +627,7 @@ class DailyBreakdown {
   final dynamic foodCashSales;
   final dynamic foodQrisSales;
   final BeverageBreakdown? foodBreakdown;
+  final BeverageBreakdown? levelBreakdown;
 
   DailyBreakdown({
     required this.date,
@@ -631,6 +647,7 @@ class DailyBreakdown {
     this.foodCashSales,
     this.foodQrisSales,
     this.foodBreakdown,
+    this.levelBreakdown,
   });
 
   factory DailyBreakdown.fromJson(Map<String, dynamic> json) {
@@ -657,6 +674,17 @@ class DailyBreakdown {
       }
     }
 
+    // Parse level_breakdown
+    BeverageBreakdown? levelBreakdownObj;
+    if (json['level_breakdown'] != null) {
+      try {
+        levelBreakdownObj = BeverageBreakdown.fromJson(json['level_breakdown']);
+      } catch (e) {
+        log("Error parsing daily level_breakdown: $e");
+        levelBreakdownObj = null;
+      }
+    }
+
     return DailyBreakdown(
       date: json['date'] ?? '',
       orderCount: json['order_count'] ?? 0,
@@ -675,6 +703,7 @@ class DailyBreakdown {
       foodCashSales: json['food_cash_sales'] ?? 0,
       foodQrisSales: json['food_qris_sales'] ?? 0,
       foodBreakdown: foodBreakdownObj,
+      levelBreakdown: levelBreakdownObj,
     );
   }
 
@@ -711,6 +740,7 @@ class DailyBreakdown {
         'food_cash_sales': foodCashSales,
         'food_qris_sales': foodQrisSales,
         'food_breakdown': foodBreakdown?.toJson(),
+        'level_breakdown': levelBreakdown?.toJson(),
       };
 
   int getCashSalesAsInt() {

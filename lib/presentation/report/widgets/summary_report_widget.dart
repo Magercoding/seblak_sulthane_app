@@ -25,12 +25,14 @@ class SummaryReportWidget extends StatelessWidget {
   });
 
   Future<void> _handlePrint(BuildContext context, bool isEndShift) async {
+    BuildContext? dialogContext;
     try {
       // Show loading indicator
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
+          dialogContext = context;
           return AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -45,6 +47,24 @@ class SummaryReportWidget extends StatelessWidget {
         },
       );
 
+      // Check printer connection first
+      log('Checking printer connection...');
+      final bool isConnected = await PrintBluetoothThermal.connectionStatus;
+      log('Printer connection status: $isConnected');
+
+      if (!isConnected) {
+        // Close loading dialog
+        if (context.mounted && dialogContext != null) {
+          Navigator.pop(dialogContext!);
+        }
+        _showPrintStatusDialog(
+          context,
+          false,
+          'Printer tidak terhubung. Silakan hubungkan printer terlebih dahulu di menu Pengaturan > Kelola Printer.',
+        );
+        return;
+      }
+
       // Get receipt size from local storage
       final sizeReceipt = await AuthLocalDataSource().getSizeReceipt();
 
@@ -58,25 +78,41 @@ class SummaryReportWidget extends StatelessWidget {
       }
 
       // Generate bytes based on report type
-      final List<int> printBytes = isEndShift
-          ? await PrintDataoutputs.instance.printEndShift(
-              summary,
-              searchDateFormatted,
-              receiptSize,
-            )
-          : await PrintDataoutputs.instance.printSummaryReport(
-              summary,
-              searchDateFormatted,
-              receiptSize,
-            );
+      List<int> printBytes = [];
+      try {
+        log('Generating print bytes for ${isEndShift ? 'end shift' : 'summary report'}...');
+        printBytes = isEndShift
+            ? await PrintDataoutputs.instance.printEndShift(
+                summary,
+                searchDateFormatted,
+                receiptSize,
+              )
+            : await PrintDataoutputs.instance.printSummaryReport(
+                summary,
+                searchDateFormatted,
+                receiptSize,
+              );
 
-      // Close loading dialog
-      if (context.mounted) {
-        Navigator.pop(context);
+        log('Generated print bytes: ${printBytes.length} bytes');
+
+        if (printBytes.isEmpty) {
+          throw Exception('Print bytes is empty');
+        }
+      } catch (e, stackTrace) {
+        log("Error generating print bytes: $e");
+        log("Stack trace: $stackTrace");
+        throw e;
+      }
+
+      // Close loading dialog before printing
+      if (context.mounted && dialogContext != null) {
+        Navigator.pop(dialogContext!);
       }
 
       // Print the report
+      log('Sending ${printBytes.length} bytes to printer...');
       final result = await PrintBluetoothThermal.writeBytes(printBytes);
+      log('Print result: $result');
 
       // Show result dialog
       if (context.mounted) {
@@ -88,13 +124,23 @@ class SummaryReportWidget extends StatelessWidget {
               'Gagal mencetak ${isEndShift ? 'laporan akhir shift' : 'laporan ringkasan'}. Periksa apakah printer terhubung dan diatur dengan benar.');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       log("Error printing report: $e");
+      log("Stack trace: $stackTrace");
 
       // Close loading dialog if still showing
+      if (context.mounted && dialogContext != null) {
+        Navigator.pop(dialogContext!);
+      }
+
       if (context.mounted) {
-        Navigator.pop(context);
-        _showPrintStatusDialog(context, false, 'Error: ${e.toString()}');
+        String errorMessage = 'Error: ${e.toString()}';
+        if (e.toString().contains('connection') ||
+            e.toString().contains('bluetooth')) {
+          errorMessage =
+              'Gagal mencetak. Pastikan printer terhubung dan Bluetooth aktif.';
+        }
+        _showPrintStatusDialog(context, false, errorMessage);
       }
     }
   }
@@ -559,7 +605,7 @@ class SummaryReportWidget extends StatelessWidget {
               ),
               if (summary.finalCashClosing != null) ...[
                 SummaryItem(
-                  label: 'Final Kas Akhir',
+                  label: 'Final Kas Tunai',
                   value:
                       'Rp ${formatCurrency(summary.getFinalCashClosingAsInt().toDouble())}',
                   isTotal: true,
@@ -938,7 +984,7 @@ class SummaryReportWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Final Kas Akhir:'),
+                const Text('Final Kas Tunai:'),
                 Text(
                   'Rp ${formatCurrency(day.getFinalCashClosingAsInt().toDouble())}',
                   style: const TextStyle(fontWeight: FontWeight.bold),

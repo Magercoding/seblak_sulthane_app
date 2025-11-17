@@ -426,7 +426,7 @@ class RevenueInvoice {
         // Add Final Cash Closing
         if (summary.finalCashClosing != null) ...[
           buildText(
-            title: 'Final Kas Akhir',
+            title: 'Final Kas Tunai',
             titleStyle: pw.TextStyle(
               fontSize: 14,
               fontWeight: pw.FontWeight.bold,
@@ -606,6 +606,8 @@ class RevenueInvoice {
 
     final List<pw.Widget> breakdownWidgets = [];
 
+    // Add spacing before title (like Arus Kas Harian)
+    breakdownWidgets.add(pw.SizedBox(height: 0.5 * PdfPageFormat.cm));
     breakdownWidgets.add(
       pw.Text('Rincian Harian',
           style: pw.TextStyle(
@@ -621,159 +623,216 @@ class RevenueInvoice {
       List<pw.Widget> dayWidgets = [
         pw.Text('Tanggal: ${day.date}',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        pw.SizedBox(height: 4),
       ];
+
+      // Add divider after date
+      dayWidgets.add(pw.Divider());
 
       // Rincian Makanan (dipindahkan ke atas)
       if (day.foodBreakdown != null) {
-        dayWidgets.add(pw.SizedBox(height: 4));
-        dayWidgets.add(
-          pw.Text('Rincian Makanan:',
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        );
-
         if (day.foodBreakdown!.cash != null) {
           dayWidgets.add(
-            buildSimpleText(
+            buildText(
               title:
-                  '- Tunai (${day.foodBreakdown!.cash!.getQuantityAsInt()} item):',
+                  '- Tunai (${day.foodBreakdown!.cash!.getQuantityAsInt()} item)',
               value: safeGetCurrencyFormat(
                   day.foodBreakdown!.cash!.getAmountAsInt()),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
 
         if (day.foodBreakdown!.qris != null) {
           dayWidgets.add(
-            buildSimpleText(
+            buildText(
               title:
-                  '- QRIS (${day.foodBreakdown!.qris!.getQuantityAsInt()} item):',
+                  '- QRIS (${day.foodBreakdown!.qris!.getQuantityAsInt()} item)',
               value: safeGetCurrencyFormat(
                   day.foodBreakdown!.qris!.getAmountAsInt()),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
 
         if (day.foodBreakdown!.total != null) {
           dayWidgets.add(
-            buildSimpleText(
-              title: '- Total (${day.foodBreakdown!.total!.quantity} item):',
+            buildText(
+              title: '- Total (${day.foodBreakdown!.total!.quantity} item)',
               value: safeGetCurrencyFormat(day.foodBreakdown!.total!.amount),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
+
+        // Add divider after rincian makanan
+        dayWidgets.add(pw.Divider());
       }
 
       // Rincian Minuman (setelah Rincian Makanan)
       if (day.beverageBreakdown != null) {
-        dayWidgets.add(pw.SizedBox(height: 4));
-        dayWidgets.add(
-          pw.Text('Rincian Minuman:',
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        );
-
         if (day.beverageBreakdown!.cash != null) {
           dayWidgets.add(
-            buildSimpleText(
+            buildText(
               title:
-                  '- Tunai (${day.beverageBreakdown!.cash!.getQuantityAsInt()} item):',
+                  '- Tunai (${day.beverageBreakdown!.cash!.getQuantityAsInt()} item)',
               value: safeGetCurrencyFormat(
                   day.beverageBreakdown!.cash!.getAmountAsInt()),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
 
         if (day.beverageBreakdown!.qris != null) {
           dayWidgets.add(
-            buildSimpleText(
+            buildText(
               title:
-                  '- QRIS (${day.beverageBreakdown!.qris!.getQuantityAsInt()} item):',
+                  '- QRIS (${day.beverageBreakdown!.qris!.getQuantityAsInt()} item)',
               value: safeGetCurrencyFormat(
                   day.beverageBreakdown!.qris!.getAmountAsInt()),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
 
         if (day.beverageBreakdown!.total != null) {
           dayWidgets.add(
-            buildSimpleText(
-              title:
-                  '- Total (${day.beverageBreakdown!.total!.quantity} item):',
+            buildText(
+              title: '- Total (${day.beverageBreakdown!.total!.quantity} item)',
               value:
                   safeGetCurrencyFormat(day.beverageBreakdown!.total!.amount),
+              titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+              textStyle: pw.TextStyle(
+                color: PdfColor.fromHex('#008000'),
+              ),
+              unite: true,
             ),
           );
         }
+
+        // Add divider after rincian minuman
+        dayWidgets.add(pw.Divider());
       }
 
       // Saldo Awal (dipindahkan setelah rincian)
-      dayWidgets.add(pw.SizedBox(height: 4));
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Saldo Awal:',
+        buildText(
+          title: 'Saldo Awal',
           value: safeGetCurrencyFormat(day.openingBalance),
+          unite: true,
         ),
       );
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Pengeluaran:',
+        buildText(
+          title: 'Pengeluaran',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: "- ${safeGetCurrencyFormat(day.expenses)}",
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+          ),
+          unite: true,
         ),
       );
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Penjualan Tunai:',
+        buildText(
+          title: 'Penjualan Tunai',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: day.getCashSalesAsInt().toString().currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
         ),
       );
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Penjualan QRIS:',
+        buildText(
+          title: 'Penjualan QRIS',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: day.getQrisSalesAsInt().toString().currencyFormatRp,
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
         ),
       );
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Total Penjualan:',
+        buildText(
+          title: 'Total Penjualan',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: safeGetCurrencyFormat(day.totalSales),
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#008000'),
+          ),
+          unite: true,
         ),
       );
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Biaya QRIS:',
+        buildText(
+          title: 'Biaya QRIS',
+          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: day.qrisFee != null
               ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
               : "- Rp 0,00",
+          textStyle: pw.TextStyle(
+            color: PdfColor.fromHex('#FF0000'),
+          ),
+          unite: true,
         ),
       );
+
+      // Add divider between Biaya QRIS and Saldo Akhir
+      dayWidgets.add(pw.Divider());
+
       dayWidgets.add(
-        buildSimpleText(
-          title: 'Saldo Akhir:',
+        buildText(
+          title: 'Saldo Akhir',
+          titleStyle: pw.TextStyle(
+            fontSize: 14,
+            fontWeight: pw.FontWeight.bold,
+          ),
           value: safeGetCurrencyFormat(day.closingBalance),
+          unite: true,
         ),
       );
 
       // Add Final Cash Closing if available
       if (day.finalCashClosing != null) {
         dayWidgets.add(
-          buildSimpleText(
-            title: 'Final Kas Akhir:',
+          buildText(
+            title: 'Final Kas Tunai',
+            titleStyle: pw.TextStyle(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.bold,
+            ),
             value: safeGetCurrencyFormat(day.finalCashClosing),
+            unite: true,
           ),
         );
       }
 
       breakdownWidgets.add(
-        pw.Container(
-          padding: const pw.EdgeInsets.all(8),
-          decoration: pw.BoxDecoration(
-            border: pw.Border.all(color: PdfColors.grey300),
-            borderRadius: pw.BorderRadius.circular(5),
-          ),
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: dayWidgets,
-          ),
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: dayWidgets,
         ),
       );
 
@@ -1236,7 +1295,7 @@ class RevenueInvoice {
     // Final Cash Closing if available
     if (summaryModel.finalCashClosing != null) {
       final finalCashCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-      finalCashCell.value = TextCellValue('Final Kas Akhir');
+      finalCashCell.value = TextCellValue('Final Kas Tunai');
       finalCashCell.cellStyle = CellStyle(
         bold: true,
         fontSize: 12,
@@ -1547,7 +1606,7 @@ class RevenueInvoice {
         if (day.finalCashClosing != null) {
           final dayFinalCashCell =
               sheet.cell(CellIndex.indexByString("A$currentRow"));
-          dayFinalCashCell.value = TextCellValue('Final Kas Akhir:');
+          dayFinalCashCell.value = TextCellValue('Final Kas Tunai:');
 
           final dayFinalCashValueCell =
               sheet.cell(CellIndex.indexByString("B$currentRow"));

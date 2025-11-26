@@ -39,6 +39,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
+  final customerController = TextEditingController();
+  final notesController = TextEditingController();
   bool isTakeaway = true;
   String searchQuery = '';
   final int _selectedIndex = 0;
@@ -63,6 +65,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       searchQuery = value.toLowerCase();
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    customerController.dispose();
+    notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -218,6 +228,50 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           const SpaceHeight(16.0),
+                          const Text(
+                            'Customer',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SpaceHeight(12.0),
+                          TextFormField(
+                            controller: customerController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              hintText: 'Nama Customer',
+                            ),
+                            textCapitalization: TextCapitalization.words,
+                          ),
+                          const SpaceHeight(12.0),
+                          const Divider(),
+                          const SpaceHeight(12.0),
+                          const Text(
+                            'Catatan',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SpaceHeight(12.0),
+                          TextFormField(
+                            controller: notesController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              hintText: 'Tuliskan Catatan Pesanan',
+                            ),
+                            textCapitalization: TextCapitalization.sentences,
+                          ),
+                          const SpaceHeight(12.0),
+                          const Divider(),
+                          const SpaceHeight(8.0),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -547,6 +601,8 @@ class _HomePageState extends State<HomePage> {
                                 orderType: widget.isTable
                                     ? 'dine_in'
                                     : (isTakeaway ? 'take_away' : 'dine_in'),
+                                customerName: customerController.text,
+                                notes: notesController.text,
                               ));
                             },
                             label: 'Lanjutkan Pembayaran',

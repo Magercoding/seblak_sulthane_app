@@ -23,12 +23,16 @@ class ConfirmPaymentPage extends StatefulWidget {
   final bool isTable;
   final TableModel? table;
   final String orderType; // Add this parameter
+  final String customerName;
+  final String notes;
 
   const ConfirmPaymentPage({
     super.key,
     required this.isTable,
     this.table,
     required this.orderType, // Add this parameter
+    required this.customerName,
+    required this.notes,
   });
 
   @override
@@ -37,8 +41,6 @@ class ConfirmPaymentPage extends StatefulWidget {
 
 class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   final totalPriceController = TextEditingController();
-  final customerController = TextEditingController();
-  final notesController = TextEditingController();
   bool isCash = true;
   TableModel? selectTable;
   int discountAmount = 0;
@@ -84,8 +86,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
   @override
   void dispose() {
     totalPriceController.dispose();
-    customerController.dispose();
-    notesController.dispose();
     super.dispose();
   }
 
@@ -427,7 +427,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
 
                               final subTotal = price - (discount / 100 * price);
                               final finalTax = subTotal * (tax / 100);
-                              final finalDiscount = discount / 100 * subTotal;
 
                               return Text(
                                 '$tax % (${finalTax.toInt().currencyFormatRp})',
@@ -666,51 +665,6 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                             ),
                             const SpaceHeight(16.0),
                           ],
-                          const SpaceHeight(8.0),
-                          const Divider(),
-                          const SpaceHeight(8.0),
-                          const Text(
-                            'Customer',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SpaceHeight(12.0),
-                          TextFormField(
-                            controller: customerController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Nama Customer',
-                            ),
-                            textCapitalization: TextCapitalization.words,
-                          ),
-                          const SpaceHeight(12.0),
-                          const Divider(),
-                          //Notes
-                          const SpaceHeight(12.0),
-                          const Text(
-                            'Catatan',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SpaceHeight(12.0),
-                          TextFormField(
-                            controller: notesController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Tuliskan Catatan Pesanan',
-                            ),
-                            textCapitalization: TextCapitalization.sentences,
-                          ),
                           const SpaceHeight(8.0),
                           const Divider(),
                           const SpaceHeight(8.0),
@@ -1083,7 +1037,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     0,
                                                     totalPriceController
                                                         .text.toIntegerFromText,
-                                                    customerController.text,
+                                                    widget.customerName,
                                                     widget.table!
                                                         .id!, // Use table ID
                                                     'completed',
@@ -1091,8 +1045,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType: 'dine_in',
-                                                    notes:
-                                                        notesController.text));
+                                                    notes: widget.notes));
 
                                             // Update table status to 'closed' after payment
                                             final newTableStatus = TableModel(
@@ -1127,10 +1080,9 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                 normalPrice: price,
                                                 totalService:
                                                     totalServiceCharge.toInt(),
-                                                draftName:
-                                                    customerController.text,
+                                                draftName: widget.customerName,
                                                 orderType: 'dine_in',
-                                                notes: notesController.text,
+                                                notes: widget.notes,
                                               ),
                                             );
                                           } else {
@@ -1145,15 +1097,14 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     0,
                                                     totalPriceController
                                                         .text.toIntegerFromText,
-                                                    customerController.text,
+                                                    widget.customerName,
                                                     0,
                                                     'completed',
                                                     'paid',
                                                     isCash ? 'cash' : 'qris',
                                                     totalPriceFinal,
                                                     orderType: widget.orderType,
-                                                    notes:
-                                                        notesController.text));
+                                                    notes: widget.notes));
                                             await showDialog(
                                               context: context,
                                               barrierDismissible: false,
@@ -1169,10 +1120,9 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                 normalPrice: price,
                                                 totalService:
                                                     totalServiceCharge.toInt(),
-                                                draftName:
-                                                    customerController.text,
+                                                draftName: widget.customerName,
                                                 orderType: widget.orderType,
-                                                notes: notesController.text,
+                                                notes: widget.notes,
                                               ),
                                             );
                                           }

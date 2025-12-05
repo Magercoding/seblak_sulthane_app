@@ -496,7 +496,7 @@ class PrintDataoutputs {
 
   Future<List<int>> printChecker(List<ProductQuantity> products,
       int tableNumber, String draftName, String cashierName, int paper,
-      {int? outletId, String orderType = ''}) async {
+      {int? outletId, String orderType = '', String notes = ''}) async {
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load();
@@ -629,6 +629,18 @@ class PrintDataoutputs {
             ? '------------------------------------------------'
             : '--------------------------------',
         styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    // Print notes if available
+    final trimmedNotes = notes.trim();
+    if (trimmedNotes.isNotEmpty) {
+      bytes += generator.feed(1);
+      bytes += generator.text('Catatan',
+          styles: const PosStyles(bold: true, align: PosAlign.center));
+      bytes += generator.text(trimmedNotes,
+          styles: const PosStyles(bold: false, align: PosAlign.center));
+      bytes += generator.feed(1);
+    }
+
     bytes += generator.feed(3);
 
     bytes += generator.cut();

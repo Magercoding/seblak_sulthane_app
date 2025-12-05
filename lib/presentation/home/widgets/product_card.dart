@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/constants/variables.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/sound_feedback.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
 import '../../../core/assets/assets.gen.dart';
@@ -24,6 +25,8 @@ class ProductCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // Play sound feedback
+        SoundFeedback.playTapSound();
         context.read<CheckoutBloc>().add(CheckoutEvent.addItem(data));
       },
       child: Container(

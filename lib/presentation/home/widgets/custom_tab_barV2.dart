@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
+import 'package:seblak_sulthane_app/core/utils/sound_feedback.dart';
 import 'package:seblak_sulthane_app/data/models/response/category_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/local_product/local_product_bloc.dart';
 
@@ -46,6 +47,7 @@ class _CustomTabBarV2State extends State<CustomTabBarV2> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Tab Bar - FIXED (tidak scroll)
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -53,6 +55,9 @@ class _CustomTabBarV2State extends State<CustomTabBarV2> {
               allTabs.length,
               (index) => GestureDetector(
                 onTap: () {
+                  // Play sound feedback
+                  SoundFeedback.playSelectionSound();
+
                   setState(() {
                     _selectedIndex = index;
                   });
@@ -112,7 +117,12 @@ class _CustomTabBarV2State extends State<CustomTabBarV2> {
           ),
         ),
         const SizedBox(height: 18),
-        widget.tabViews[_selectedIndex],
+        // Tab Content - SCROLLABLE
+        Expanded(
+          child: SingleChildScrollView(
+            child: widget.tabViews[_selectedIndex],
+          ),
+        ),
       ],
     );
   }

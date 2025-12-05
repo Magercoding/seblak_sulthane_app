@@ -23,6 +23,7 @@ import '../widgets/column_button.dart';
 import '../widgets/home_title.dart';
 import '../widgets/order_menu.dart';
 import '../widgets/product_card.dart';
+import '../../../core/utils/sound_feedback.dart';
 
 class HomePage extends StatefulWidget {
   final bool isTable;
@@ -88,20 +89,23 @@ class _HomePageState extends State<HomePage> {
                 alignment: AlignmentDirectional.topStart,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        HomeTitle(
-                          controller: searchController,
-                          onChanged: onSearchChanged,
-                        ),
-                        const SizedBox(height: 24),
-                        BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                  child: Column(
+                    children: [
+                      // HomeTitle - FIXED (tidak scroll)
+                      HomeTitle(
+                        controller: searchController,
+                        onChanged: onSearchChanged,
+                      ),
+                      const SizedBox(height: 24),
+                      // Kategori Tab Bar dan Produk Grid - Expanded untuk scroll
+                      Expanded(
+                        child:
+                            BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
                           builder: (context, state) {
                             return state.maybeWhen(
                               orElse: () => const SizedBox.shrink(),
-                              loading: () => const CircularProgressIndicator(),
+                              loading: () => const Center(
+                                  child: CircularProgressIndicator()),
                               loaded: (categories) {
                                 final tabViews = [
                                   // "Semua" tab view
@@ -129,12 +133,13 @@ class _HomePageState extends State<HomePage> {
                                   tabViews: tabViews,
                                 );
                               },
-                              error: (message) => Text('Error: $message'),
+                              error: (message) =>
+                                  Center(child: Text('Error: $message')),
                             );
                           },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -595,6 +600,7 @@ class _HomePageState extends State<HomePage> {
                               horizontal: 24.0, vertical: 16.0),
                           child: Button.filled(
                             onPressed: () {
+                              SoundFeedback.playTapSound();
                               context.push(ConfirmPaymentPage(
                                 isTable: widget.isTable,
                                 table: widget.table,

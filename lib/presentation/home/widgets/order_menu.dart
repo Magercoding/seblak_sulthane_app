@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seblak_sulthane_app/core/constants/variables.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/sound_feedback.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 
@@ -50,6 +51,7 @@ class OrderMenu extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
+                  SoundFeedback.playTapSound();
                   context
                       .read<CheckoutBloc>()
                       .add(CheckoutEvent.removeItem(data.product));
@@ -74,6 +76,7 @@ class OrderMenu extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
+                  SoundFeedback.playTapSound();
                   context
                       .read<CheckoutBloc>()
                       .add(CheckoutEvent.addItem(data.product));

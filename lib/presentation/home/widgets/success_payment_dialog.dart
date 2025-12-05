@@ -9,6 +9,7 @@ import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/sound_feedback.dart';
 import 'package:seblak_sulthane_app/data/dataoutputs/print_dataoutputs.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 
@@ -34,7 +35,6 @@ class SuccessPaymentDialog extends StatefulWidget {
     required this.orderType, // Added required orderType parameter
     this.tableNumber = 0, // Add optional parameter with default value
     this.notes = '',
-
   });
   final List<ProductQuantity> data;
   final int totalQty;
@@ -48,7 +48,6 @@ class SuccessPaymentDialog extends StatefulWidget {
   final String orderType; // Order type field
   final int tableNumber; // New field to store table number
   final String notes;
-
 
   @override
   State<SuccessPaymentDialog> createState() => _SuccessPaymentDialogState();
@@ -359,6 +358,9 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                         onPressed: _isPrinting
                             ? () {} // Empty function instead of null
                             : () async {
+                                // Play sound feedback
+                                SoundFeedback.playTapSound();
+
                                 try {
                                   setState(() {
                                     _isPrinting = true;
@@ -436,6 +438,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
                                     receiptSize,
                                     orderType:
                                         orderTypeFromState, // Pass the order type
+                                    notes: widget.notes, // Pass the notes
                                   );
 
                                   // Print the checker

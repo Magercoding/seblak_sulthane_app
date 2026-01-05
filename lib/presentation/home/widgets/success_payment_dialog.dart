@@ -10,6 +10,7 @@ import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
 import 'package:seblak_sulthane_app/core/utils/sound_feedback.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/data/dataoutputs/print_dataoutputs.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
 
@@ -283,7 +284,7 @@ class _SuccessPaymentDialogState extends State<SuccessPaymentDialog> {
             const Text('WAKTU PEMBAYARAN'),
             const SpaceHeight(5.0),
             Text(
-              DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.now()),
+              DateFormat('dd MMMM yyyy, HH:mm').format(TimezoneHelper.nowWIB()),
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
               ),

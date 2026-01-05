@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
@@ -165,7 +166,7 @@ class TransactionSalesInvoice {
               "Data: $searchDateFormatted",
             ),
             Text(
-              'Dibuat Pada: ${DateTime.now().toFormattedDate3()}',
+              'Dibuat Pada: ${TimezoneHelper.nowWIB().toFormattedDate3WIB()}',
             ),
           ],
         ),
@@ -203,7 +204,7 @@ class TransactionSalesInvoice {
         item.totalItem.toString(),
         item.paymentMethod ?? 'Tunai',
         item.namaKasir ?? '',
-        item.transactionTime!.toFormattedDate(),
+        item.transactionTime!.toFormattedDateWIB(),
       ];
     }).toList();
 
@@ -324,7 +325,7 @@ class TransactionSalesInvoice {
     sheet.merge(CellIndex.indexByString("A3"), CellIndex.indexByString("J3"));
     final createdCell = sheet.cell(CellIndex.indexByString("A3"));
     createdCell.value =
-        TextCellValue('Dibuat Pada: ${DateTime.now().toFormattedDate3()}');
+        TextCellValue('Dibuat Pada: ${TimezoneHelper.nowWIB().toFormattedDate3WIB()}');
     createdCell.cellStyle = CellStyle(
       horizontalAlign: HorizontalAlign.Center,
     );

@@ -182,25 +182,13 @@ class DailyCashRemoteDatasource {
       if (response.statusCode == 200) {
         try {
           final responseData = jsonDecode(response.body);
-          final apiResponse = DailyCashResponse.fromMap(responseData);
-
-          // Inject the stored timestamp into the response if available
-          if (openingBalanceTimestamps.containsKey(date) &&
-              responseData['data'] != null) {
-            // Create a modified data object with the timestamp
-            Map<String, dynamic> modifiedData = Map.from(responseData['data']);
-            modifiedData['created_at'] = openingBalanceTimestamps[date];
-
-            // Replace the response data with the modified data
-            final modifiedResponse = {
-              'status': responseData['status'],
-              'message': responseData['message'],
-              'data': modifiedData
-            };
-
-            return Right(DailyCashResponse.fromMap(modifiedResponse));
+          
+          // Pastikan responseData adalah Map
+          if (responseData is! Map<String, dynamic>) {
+            return Left('Format response tidak valid dari server');
           }
-
+          
+          final apiResponse = DailyCashResponse.fromMap(responseData);
           return Right(apiResponse);
         } catch (parseError) {
           log('Error parsing daily cash response: $parseError');
@@ -238,5 +226,225 @@ class DailyCashRemoteDatasource {
   // Helper to get today's date in YYYY-MM-DD format
   String getTodayDate() {
     return formatDate(DateTime.now());
+  }
+
+  Future<Either<String, DailyCashResponse>> openShift(
+    String date,
+    int openingBalance, {
+    String? shiftName,
+  }) async {
+    try {
+      final authData = await AuthLocalDataSource().getAuthData();
+      final token = authData.token ?? '';
+      final user = authData.user;
+
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat membuka shift.');
+      }
+
+      final url = '$baseUrl/api/daily-cash/open';
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      };
+
+      final body = jsonEncode({
+        'date': date,
+        'opening_balance': openingBalance,
+        if (shiftName != null) 'shift_name': shiftName,
+      });
+
+      log('Opening shift: $url');
+      log('Body: $body');
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      log('Response: ${response.statusCode}');
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final responseData = jsonDecode(response.body);
+          return Right(DailyCashResponse.fromMap(responseData));
+        } catch (parseError) {
+          return Left('Gagal memproses respons: $parseError');
+        }
+      } else {
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal membuka shift';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal membuka shift: ${response.body}');
+        }
+      }
+    } catch (e) {
+      log('Error opening shift: $e');
+      return Left('Terjadi kesalahan: $e');
+    }
+  }
+
+  Future<Either<String, DailyCashResponse>> closeShift(int shiftId) async {
+    try {
+      final authData = await AuthLocalDataSource().getAuthData();
+      final token = authData.token ?? '';
+      final user = authData.user;
+
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat menutup shift.');
+      }
+
+      final url = '$baseUrl/api/daily-cash/close';
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      };
+
+      final body = jsonEncode({
+        'shift_id': shiftId,
+      });
+
+      log('Closing shift: $url');
+      log('Body: $body');
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      log('Response: ${response.statusCode}');
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final responseData = jsonDecode(response.body);
+          return Right(DailyCashResponse.fromMap(responseData));
+        } catch (parseError) {
+          return Left('Gagal memproses respons: $parseError');
+        }
+      } else {
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal menutup shift';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal menutup shift: ${response.body}');
+        }
+      }
+    } catch (e) {
+      log('Error closing shift: $e');
+      return Left('Terjadi kesalahan: $e');
+    }
+  }
+
+  Future<Either<String, DailyCashResponse>> getActiveShifts() async {
+    try {
+      final authData = await AuthLocalDataSource().getAuthData();
+      final token = authData.token ?? '';
+      final user = authData.user;
+
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat melihat shift aktif.');
+      }
+
+      final url = '$baseUrl/api/daily-cash/active';
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      };
+
+      log('Fetching active shifts: $url');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      log('Response: ${response.statusCode}');
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        try {
+          final responseData = jsonDecode(response.body);
+          return Right(DailyCashResponse.fromMap(responseData));
+        } catch (parseError) {
+          return Left('Gagal memproses respons: $parseError');
+        }
+      } else {
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal mengambil shift aktif';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal mengambil shift aktif: ${response.body}');
+        }
+      }
+    } catch (e) {
+      log('Error getting active shifts: $e');
+      return Left('Terjadi kesalahan: $e');
+    }
+  }
+
+  Future<Either<String, DailyCashResponse>> fetchShiftById(int shiftId) async {
+    try {
+      final authData = await AuthLocalDataSource().getAuthData();
+      final token = authData.token ?? '';
+      final user = authData.user;
+
+      if (user?.outletId == null) {
+        return Left(
+            'User tidak memiliki outlet. Hanya admin dan staff yang dapat melihat shift.');
+      }
+
+      final url = '$baseUrl/api/daily-cash?shift_id=$shiftId';
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      };
+
+      log('Fetching shift by ID: $url');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      log('Response: ${response.statusCode}');
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        try {
+          final responseData = jsonDecode(response.body);
+          return Right(DailyCashResponse.fromMap(responseData));
+        } catch (parseError) {
+          return Left('Gagal memproses respons: $parseError');
+        }
+      } else {
+        try {
+          final errorData = jsonDecode(response.body);
+          final errorMessage =
+              errorData['message'] ?? 'Gagal mengambil shift';
+          return Left(errorMessage);
+        } catch (_) {
+          return Left('Gagal mengambil shift: ${response.body}');
+        }
+      }
+    } catch (e) {
+      log('Error fetching shift by ID: $e');
+      return Left('Terjadi kesalahan: $e');
+    }
   }
 }

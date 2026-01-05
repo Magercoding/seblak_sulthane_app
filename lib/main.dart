@@ -50,12 +50,14 @@ import 'core/constants/colors.dart';
 import 'presentation/auth/bloc/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Import untuk initializeDateFormatting
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting(
       'id_ID', null); // Inisialisasi locale data untuk Indonesia
+  await TimezoneHelper.initialize(); // Initialize timezone
 
   runApp(const MyApp());
 }

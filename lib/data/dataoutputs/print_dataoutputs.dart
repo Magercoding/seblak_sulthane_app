@@ -14,6 +14,7 @@ import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.da
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
 import 'package:seblak_sulthane_app/core/utils/date_formatter.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 
 class PrintDataoutputs {
   PrintDataoutputs._init();
@@ -226,12 +227,12 @@ class PrintDataoutputs {
     // Print date and time
     bytes += generator.row([
       PosColumn(
-        text: DateFormat('dd MMM yyyy').format(DateTime.now()),
+        text: DateFormat('dd MMM yyyy').format(TimezoneHelper.nowWIB()),
         width: 6,
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: DateFormat('HH:mm').format(DateTime.now()),
+        text: DateFormat('HH:mm').format(TimezoneHelper.nowWIB()),
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
@@ -245,7 +246,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'RN-${DateFormat('yyyyMMddhhmm').format(DateTime.now())}',
+        text: 'RN-${DateFormat('yyyyMMddhhmm').format(TimezoneHelper.nowWIB())}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
@@ -556,7 +557,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+        text: DateFormat('dd-MM-yyyy HH:mm').format(TimezoneHelper.nowWIB()),
         width: 7,
         styles: const PosStyles(align: PosAlign.right),
       ),
@@ -569,7 +570,7 @@ class PrintDataoutputs {
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: 'SS-${DateFormat('yyyyMMddhhmm').format(DateTime.now())}',
+        text: 'SS-${DateFormat('yyyyMMddhhmm').format(TimezoneHelper.nowWIB())}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),
@@ -754,7 +755,7 @@ class PrintDataoutputs {
           styles: const PosStyles(align: PosAlign.left),
         ),
         PosColumn(
-          text: DateFormat('dd MMM yyyy HH:mm').format(DateTime.now()),
+          text: DateFormat('dd MMM yyyy HH:mm').format(TimezoneHelper.nowWIB()),
           width: 8,
           styles: const PosStyles(align: PosAlign.right),
         ),
@@ -1628,7 +1629,7 @@ class PrintDataoutputs {
     bytes += generator.text('Tanggal: $formattedDate',
         styles: const PosStyles(align: PosAlign.left, bold: true));
 
-    final DateTime now = DateTime.now();
+    final DateTime now = TimezoneHelper.nowWIB();
     final String endTime = DateFormat('dd/MM/yyyy HH:mm:ss').format(now);
 
     bytes += generator.text('Dicetak: $endTime',

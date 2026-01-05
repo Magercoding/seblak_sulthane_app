@@ -7,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:seblak_sulthane_app/core/core.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_excel_service.dart';
 import 'package:seblak_sulthane_app/core/utils/helper_pdf_service.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
@@ -241,7 +242,7 @@ class RevenueInvoice {
               "Data: $searchDateFormatted",
             ),
             pw.Text(
-              'Dibuat Pada: ${DateTime.now().toFormattedDate3()}',
+              'Dibuat Pada: ${TimezoneHelper.nowWIB().toFormattedDate3WIB()}',
             ),
             pw.SizedBox(height: 0.2 * PdfPageFormat.cm),
             pw.Text(

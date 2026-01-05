@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 
 import '../../../core/constants/colors.dart';
 
@@ -22,7 +23,7 @@ class ReportTitle extends StatelessWidget {
         ),
         const SpaceHeight(4.0),
         Text(
-          DateTime.now().toFormattedDate(),
+          TimezoneHelper.nowWIB().toFormattedDateWIB(),
           style: const TextStyle(
             color: AppColors.subtitle,
             fontSize: 16,

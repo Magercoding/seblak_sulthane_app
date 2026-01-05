@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,41 +9,168 @@ part of 'discount_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$DiscountEvent {
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is DiscountEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'DiscountEvent()';
+  }
+}
+
+/// @nodoc
+class $DiscountEventCopyWith<$Res> {
+  $DiscountEventCopyWith(DiscountEvent _, $Res Function(DiscountEvent) __);
+}
+
+/// Adds pattern-matching-related methods to [DiscountEvent].
+extension DiscountEventPatterns on DiscountEvent {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) =>
-      throw _privateConstructorUsedError;
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetDiscounts value)? getDiscounts,
+    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
+    TResult Function(_AddDiscount value)? addDiscount,
+    TResult Function(_UpdateDiscount value)? updateDiscount,
+    TResult Function(_DeleteDiscount value)? deleteDiscount,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started(_that);
+      case _GetDiscounts() when getDiscounts != null:
+        return getDiscounts(_that);
+      case _GetDiscountsByCategory() when getDiscountsByCategory != null:
+        return getDiscountsByCategory(_that);
+      case _AddDiscount() when addDiscount != null:
+        return addDiscount(_that);
+      case _UpdateDiscount() when updateDiscount != null:
+        return updateDiscount(_that);
+      case _DeleteDiscount() when deleteDiscount != null:
+        return deleteDiscount(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) =>
-      throw _privateConstructorUsedError;
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetDiscounts value) getDiscounts,
+    required TResult Function(_GetDiscountsByCategory value)
+        getDiscountsByCategory,
+    required TResult Function(_AddDiscount value) addDiscount,
+    required TResult Function(_UpdateDiscount value) updateDiscount,
+    required TResult Function(_DeleteDiscount value) deleteDiscount,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started():
+        return started(_that);
+      case _GetDiscounts():
+        return getDiscounts(_that);
+      case _GetDiscountsByCategory():
+        return getDiscountsByCategory(_that);
+      case _AddDiscount():
+        return addDiscount(_that);
+      case _UpdateDiscount():
+        return updateDiscount(_that);
+      case _DeleteDiscount():
+        return deleteDiscount(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_GetDiscounts value)? getDiscounts,
+    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
+    TResult? Function(_AddDiscount value)? addDiscount,
+    TResult? Function(_UpdateDiscount value)? updateDiscount,
+    TResult? Function(_DeleteDiscount value)? deleteDiscount,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started(_that);
+      case _GetDiscounts() when getDiscounts != null:
+        return getDiscounts(_that);
+      case _GetDiscountsByCategory() when getDiscountsByCategory != null:
+        return getDiscountsByCategory(_that);
+      case _AddDiscount() when addDiscount != null:
+        return addDiscount(_that);
+      case _UpdateDiscount() when updateDiscount != null:
+        return updateDiscount(_that);
+      case _DeleteDiscount() when deleteDiscount != null:
+        return deleteDiscount(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
@@ -57,400 +184,182 @@ mixin _$DiscountEvent {
         updateDiscount,
     TResult Function(int id)? deleteDiscount,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started();
+      case _GetDiscounts() when getDiscounts != null:
+        return getDiscounts();
+      case _GetDiscountsByCategory() when getDiscountsByCategory != null:
+        return getDiscountsByCategory(_that.category);
+      case _AddDiscount() when addDiscount != null:
+        return addDiscount(
+            _that.name, _that.description, _that.value, _that.category);
+      case _UpdateDiscount() when updateDiscount != null:
+        return updateDiscount(_that.id, _that.name, _that.description,
+            _that.value, _that.category);
+      case _DeleteDiscount() when deleteDiscount != null:
+        return deleteDiscount(_that.id);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
   @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) =>
-      throw _privateConstructorUsedError;
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getDiscounts,
+    required TResult Function(String category) getDiscountsByCategory,
+    required TResult Function(
+            String name, String description, double value, String category)
+        addDiscount,
+    required TResult Function(int id, String name, String description,
+            double value, String category)
+        updateDiscount,
+    required TResult Function(int id) deleteDiscount,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started():
+        return started();
+      case _GetDiscounts():
+        return getDiscounts();
+      case _GetDiscountsByCategory():
+        return getDiscountsByCategory(_that.category);
+      case _AddDiscount():
+        return addDiscount(
+            _that.name, _that.description, _that.value, _that.category);
+      case _UpdateDiscount():
+        return updateDiscount(_that.id, _that.name, _that.description,
+            _that.value, _that.category);
+      case _DeleteDiscount():
+        return deleteDiscount(_that.id);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DiscountEventCopyWith<$Res> {
-  factory $DiscountEventCopyWith(
-          DiscountEvent value, $Res Function(DiscountEvent) then) =
-      _$DiscountEventCopyWithImpl<$Res, DiscountEvent>;
-}
-
-/// @nodoc
-class _$DiscountEventCopyWithImpl<$Res, $Val extends DiscountEvent>
-    implements $DiscountEventCopyWith<$Res> {
-  _$DiscountEventCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-abstract class _$$StartedImplCopyWith<$Res> {
-  factory _$$StartedImplCopyWith(
-          _$StartedImpl value, $Res Function(_$StartedImpl) then) =
-      __$$StartedImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$StartedImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$StartedImpl>
-    implements _$$StartedImplCopyWith<$Res> {
-  __$$StartedImplCopyWithImpl(
-      _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? getDiscounts,
+    TResult? Function(String category)? getDiscountsByCategory,
+    TResult? Function(
+            String name, String description, double value, String category)?
+        addDiscount,
+    TResult? Function(int id, String name, String description, double value,
+            String category)?
+        updateDiscount,
+    TResult? Function(int id)? deleteDiscount,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started();
+      case _GetDiscounts() when getDiscounts != null:
+        return getDiscounts();
+      case _GetDiscountsByCategory() when getDiscountsByCategory != null:
+        return getDiscountsByCategory(_that.category);
+      case _AddDiscount() when addDiscount != null:
+        return addDiscount(
+            _that.name, _that.description, _that.value, _that.category);
+      case _UpdateDiscount() when updateDiscount != null:
+        return updateDiscount(_that.id, _that.name, _that.description,
+            _that.value, _that.category);
+      case _DeleteDiscount() when deleteDiscount != null:
+        return deleteDiscount(_that.id);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
 
-class _$StartedImpl implements _Started {
-  const _$StartedImpl();
+class _Started implements DiscountEvent {
+  const _Started();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Started);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
     return 'DiscountEvent.started()';
   }
+}
+
+/// @nodoc
+
+class _GetDiscounts implements DiscountEvent {
+  const _GetDiscounts();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$StartedImpl);
+        (other.runtimeType == runtimeType && other is _GetDiscounts);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return started();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return started?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return started(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return started?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Started implements DiscountEvent {
-  const factory _Started() = _$StartedImpl;
-}
-
-/// @nodoc
-abstract class _$$GetDiscountsImplCopyWith<$Res> {
-  factory _$$GetDiscountsImplCopyWith(
-          _$GetDiscountsImpl value, $Res Function(_$GetDiscountsImpl) then) =
-      __$$GetDiscountsImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$GetDiscountsImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$GetDiscountsImpl>
-    implements _$$GetDiscountsImplCopyWith<$Res> {
-  __$$GetDiscountsImplCopyWithImpl(
-      _$GetDiscountsImpl _value, $Res Function(_$GetDiscountsImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$GetDiscountsImpl implements _GetDiscounts {
-  const _$GetDiscountsImpl();
 
   @override
   String toString() {
     return 'DiscountEvent.getDiscounts()';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$GetDiscountsImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return getDiscounts();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return getDiscounts?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (getDiscounts != null) {
-      return getDiscounts();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return getDiscounts(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return getDiscounts?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (getDiscounts != null) {
-      return getDiscounts(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _GetDiscounts implements DiscountEvent {
-  const factory _GetDiscounts() = _$GetDiscountsImpl;
 }
 
 /// @nodoc
-abstract class _$$GetDiscountsByCategoryImplCopyWith<$Res> {
-  factory _$$GetDiscountsByCategoryImplCopyWith(
-          _$GetDiscountsByCategoryImpl value,
-          $Res Function(_$GetDiscountsByCategoryImpl) then) =
-      __$$GetDiscountsByCategoryImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String category});
-}
 
-/// @nodoc
-class __$$GetDiscountsByCategoryImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$GetDiscountsByCategoryImpl>
-    implements _$$GetDiscountsByCategoryImplCopyWith<$Res> {
-  __$$GetDiscountsByCategoryImplCopyWithImpl(
-      _$GetDiscountsByCategoryImpl _value,
-      $Res Function(_$GetDiscountsByCategoryImpl) _then)
-      : super(_value, _then);
+class _GetDiscountsByCategory implements DiscountEvent {
+  const _GetDiscountsByCategory(this.category);
+
+  final String category;
 
   /// Create a copy of DiscountEvent
   /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? category = null,
-  }) {
-    return _then(_$GetDiscountsByCategoryImpl(
-      null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$GetDiscountsByCategoryImpl implements _GetDiscountsByCategory {
-  const _$GetDiscountsByCategoryImpl(this.category);
-
-  @override
-  final String category;
-
-  @override
-  String toString() {
-    return 'DiscountEvent.getDiscountsByCategory(category: $category)';
-  }
+  _$GetDiscountsByCategoryCopyWith<_GetDiscountsByCategory> get copyWith =>
+      __$GetDiscountsByCategoryCopyWithImpl<_GetDiscountsByCategory>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$GetDiscountsByCategoryImpl &&
+            other is _GetDiscountsByCategory &&
             (identical(other.category, category) ||
                 other.category == category));
   }
@@ -458,170 +367,39 @@ class _$GetDiscountsByCategoryImpl implements _GetDiscountsByCategory {
   @override
   int get hashCode => Object.hash(runtimeType, category);
 
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$GetDiscountsByCategoryImplCopyWith<_$GetDiscountsByCategoryImpl>
-      get copyWith => __$$GetDiscountsByCategoryImplCopyWithImpl<
-          _$GetDiscountsByCategoryImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return getDiscountsByCategory(category);
+  String toString() {
+    return 'DiscountEvent.getDiscountsByCategory(category: $category)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return getDiscountsByCategory?.call(category);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (getDiscountsByCategory != null) {
-      return getDiscountsByCategory(category);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return getDiscountsByCategory(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return getDiscountsByCategory?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (getDiscountsByCategory != null) {
-      return getDiscountsByCategory(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _GetDiscountsByCategory implements DiscountEvent {
-  const factory _GetDiscountsByCategory(final String category) =
-      _$GetDiscountsByCategoryImpl;
-
-  String get category;
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$GetDiscountsByCategoryImplCopyWith<_$GetDiscountsByCategoryImpl>
-      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AddDiscountImplCopyWith<$Res> {
-  factory _$$AddDiscountImplCopyWith(
-          _$AddDiscountImpl value, $Res Function(_$AddDiscountImpl) then) =
-      __$$AddDiscountImplCopyWithImpl<$Res>;
+abstract mixin class _$GetDiscountsByCategoryCopyWith<$Res>
+    implements $DiscountEventCopyWith<$Res> {
+  factory _$GetDiscountsByCategoryCopyWith(_GetDiscountsByCategory value,
+          $Res Function(_GetDiscountsByCategory) _then) =
+      __$GetDiscountsByCategoryCopyWithImpl;
   @useResult
-  $Res call({String name, String description, double value, String category});
+  $Res call({String category});
 }
 
 /// @nodoc
-class __$$AddDiscountImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$AddDiscountImpl>
-    implements _$$AddDiscountImplCopyWith<$Res> {
-  __$$AddDiscountImplCopyWithImpl(
-      _$AddDiscountImpl _value, $Res Function(_$AddDiscountImpl) _then)
-      : super(_value, _then);
+class __$GetDiscountsByCategoryCopyWithImpl<$Res>
+    implements _$GetDiscountsByCategoryCopyWith<$Res> {
+  __$GetDiscountsByCategoryCopyWithImpl(this._self, this._then);
+
+  final _GetDiscountsByCategory _self;
+  final $Res Function(_GetDiscountsByCategory) _then;
 
   /// Create a copy of DiscountEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
-    Object? name = null,
-    Object? description = null,
-    Object? value = null,
     Object? category = null,
   }) {
-    return _then(_$AddDiscountImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double,
-      category: null == category
-          ? _value.category
+    return _then(_GetDiscountsByCategory(
+      null == category
+          ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -630,32 +408,30 @@ class __$$AddDiscountImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AddDiscountImpl implements _AddDiscount {
-  const _$AddDiscountImpl(
+class _AddDiscount implements DiscountEvent {
+  const _AddDiscount(
       {required this.name,
       required this.description,
       required this.value,
       required this.category});
 
-  @override
   final String name;
-  @override
   final String description;
-  @override
   final double value;
-  @override
   final String category;
 
-  @override
-  String toString() {
-    return 'DiscountEvent.addDiscount(name: $name, description: $description, value: $value, category: $category)';
-  }
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AddDiscountCopyWith<_AddDiscount> get copyWith =>
+      __$AddDiscountCopyWithImpl<_AddDiscount>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AddDiscountImpl &&
+            other is _AddDiscount &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -668,181 +444,53 @@ class _$AddDiscountImpl implements _AddDiscount {
   int get hashCode =>
       Object.hash(runtimeType, name, description, value, category);
 
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
-      __$$AddDiscountImplCopyWithImpl<_$AddDiscountImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return addDiscount(name, description, value, category);
+  String toString() {
+    return 'DiscountEvent.addDiscount(name: $name, description: $description, value: $value, category: $category)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return addDiscount?.call(name, description, value, category);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (addDiscount != null) {
-      return addDiscount(name, description, value, category);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return addDiscount(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return addDiscount?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (addDiscount != null) {
-      return addDiscount(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _AddDiscount implements DiscountEvent {
-  const factory _AddDiscount(
-      {required final String name,
-      required final String description,
-      required final double value,
-      required final String category}) = _$AddDiscountImpl;
-
-  String get name;
-  String get description;
-  double get value;
-  String get category;
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AddDiscountImplCopyWith<_$AddDiscountImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$UpdateDiscountImplCopyWith<$Res> {
-  factory _$$UpdateDiscountImplCopyWith(_$UpdateDiscountImpl value,
-          $Res Function(_$UpdateDiscountImpl) then) =
-      __$$UpdateDiscountImplCopyWithImpl<$Res>;
+abstract mixin class _$AddDiscountCopyWith<$Res>
+    implements $DiscountEventCopyWith<$Res> {
+  factory _$AddDiscountCopyWith(
+          _AddDiscount value, $Res Function(_AddDiscount) _then) =
+      __$AddDiscountCopyWithImpl;
   @useResult
-  $Res call(
-      {int id, String name, String description, double value, String category});
+  $Res call({String name, String description, double value, String category});
 }
 
 /// @nodoc
-class __$$UpdateDiscountImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$UpdateDiscountImpl>
-    implements _$$UpdateDiscountImplCopyWith<$Res> {
-  __$$UpdateDiscountImplCopyWithImpl(
-      _$UpdateDiscountImpl _value, $Res Function(_$UpdateDiscountImpl) _then)
-      : super(_value, _then);
+class __$AddDiscountCopyWithImpl<$Res> implements _$AddDiscountCopyWith<$Res> {
+  __$AddDiscountCopyWithImpl(this._self, this._then);
+
+  final _AddDiscount _self;
+  final $Res Function(_AddDiscount) _then;
 
   /// Create a copy of DiscountEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
-    Object? id = null,
     Object? name = null,
     Object? description = null,
     Object? value = null,
     Object? category = null,
   }) {
-    return _then(_$UpdateDiscountImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
+    return _then(_AddDiscount(
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       description: null == description
-          ? _value.description
+          ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
       value: null == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as double,
       category: null == category
-          ? _value.category
+          ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -851,35 +499,32 @@ class __$$UpdateDiscountImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UpdateDiscountImpl implements _UpdateDiscount {
-  const _$UpdateDiscountImpl(
+class _UpdateDiscount implements DiscountEvent {
+  const _UpdateDiscount(
       {required this.id,
       required this.name,
       required this.description,
       required this.value,
       required this.category});
 
-  @override
   final int id;
-  @override
   final String name;
-  @override
   final String description;
-  @override
   final double value;
-  @override
   final String category;
 
-  @override
-  String toString() {
-    return 'DiscountEvent.updateDiscount(id: $id, name: $name, description: $description, value: $value, category: $category)';
-  }
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateDiscountCopyWith<_UpdateDiscount> get copyWith =>
+      __$UpdateDiscountCopyWithImpl<_UpdateDiscount>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UpdateDiscountImpl &&
+            other is _UpdateDiscount &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
@@ -893,163 +538,124 @@ class _$UpdateDiscountImpl implements _UpdateDiscount {
   int get hashCode =>
       Object.hash(runtimeType, id, name, description, value, category);
 
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateDiscountImplCopyWith<_$UpdateDiscountImpl> get copyWith =>
-      __$$UpdateDiscountImplCopyWithImpl<_$UpdateDiscountImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return updateDiscount(id, name, description, value, category);
+  String toString() {
+    return 'DiscountEvent.updateDiscount(id: $id, name: $name, description: $description, value: $value, category: $category)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return updateDiscount?.call(id, name, description, value, category);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (updateDiscount != null) {
-      return updateDiscount(id, name, description, value, category);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return updateDiscount(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return updateDiscount?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (updateDiscount != null) {
-      return updateDiscount(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _UpdateDiscount implements DiscountEvent {
-  const factory _UpdateDiscount(
-      {required final int id,
-      required final String name,
-      required final String description,
-      required final double value,
-      required final String category}) = _$UpdateDiscountImpl;
-
-  int get id;
-  String get name;
-  String get description;
-  double get value;
-  String get category;
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateDiscountImplCopyWith<_$UpdateDiscountImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DeleteDiscountImplCopyWith<$Res> {
-  factory _$$DeleteDiscountImplCopyWith(_$DeleteDiscountImpl value,
-          $Res Function(_$DeleteDiscountImpl) then) =
-      __$$DeleteDiscountImplCopyWithImpl<$Res>;
+abstract mixin class _$UpdateDiscountCopyWith<$Res>
+    implements $DiscountEventCopyWith<$Res> {
+  factory _$UpdateDiscountCopyWith(
+          _UpdateDiscount value, $Res Function(_UpdateDiscount) _then) =
+      __$UpdateDiscountCopyWithImpl;
+  @useResult
+  $Res call(
+      {int id, String name, String description, double value, String category});
+}
+
+/// @nodoc
+class __$UpdateDiscountCopyWithImpl<$Res>
+    implements _$UpdateDiscountCopyWith<$Res> {
+  __$UpdateDiscountCopyWithImpl(this._self, this._then);
+
+  final _UpdateDiscount _self;
+  final $Res Function(_UpdateDiscount) _then;
+
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? description = null,
+    Object? value = null,
+    Object? category = null,
+  }) {
+    return _then(_UpdateDiscount(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as double,
+      category: null == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _DeleteDiscount implements DiscountEvent {
+  const _DeleteDiscount(this.id);
+
+  final int id;
+
+  /// Create a copy of DiscountEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$DeleteDiscountCopyWith<_DeleteDiscount> get copyWith =>
+      __$DeleteDiscountCopyWithImpl<_DeleteDiscount>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _DeleteDiscount &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id);
+
+  @override
+  String toString() {
+    return 'DiscountEvent.deleteDiscount(id: $id)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$DeleteDiscountCopyWith<$Res>
+    implements $DiscountEventCopyWith<$Res> {
+  factory _$DeleteDiscountCopyWith(
+          _DeleteDiscount value, $Res Function(_DeleteDiscount) _then) =
+      __$DeleteDiscountCopyWithImpl;
   @useResult
   $Res call({int id});
 }
 
 /// @nodoc
-class __$$DeleteDiscountImplCopyWithImpl<$Res>
-    extends _$DiscountEventCopyWithImpl<$Res, _$DeleteDiscountImpl>
-    implements _$$DeleteDiscountImplCopyWith<$Res> {
-  __$$DeleteDiscountImplCopyWithImpl(
-      _$DeleteDiscountImpl _value, $Res Function(_$DeleteDiscountImpl) _then)
-      : super(_value, _then);
+class __$DeleteDiscountCopyWithImpl<$Res>
+    implements _$DeleteDiscountCopyWith<$Res> {
+  __$DeleteDiscountCopyWithImpl(this._self, this._then);
+
+  final _DeleteDiscount _self;
+  final $Res Function(_DeleteDiscount) _then;
 
   /// Create a copy of DiscountEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? id = null,
   }) {
-    return _then(_$DeleteDiscountImpl(
+    return _then(_DeleteDiscount(
       null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
     ));
@@ -1057,198 +663,41 @@ class __$$DeleteDiscountImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
-class _$DeleteDiscountImpl implements _DeleteDiscount {
-  const _$DeleteDiscountImpl(this.id);
-
-  @override
-  final int id;
-
-  @override
-  String toString() {
-    return 'DiscountEvent.deleteDiscount(id: $id)';
-  }
-
+mixin _$DiscountState {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeleteDiscountImpl &&
-            (identical(other.id, id) || other.id == id));
+        (other.runtimeType == runtimeType && other is DiscountState);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeleteDiscountImplCopyWith<_$DeleteDiscountImpl> get copyWith =>
-      __$$DeleteDiscountImplCopyWithImpl<_$DeleteDiscountImpl>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function() getDiscounts,
-    required TResult Function(String category) getDiscountsByCategory,
-    required TResult Function(
-            String name, String description, double value, String category)
-        addDiscount,
-    required TResult Function(int id, String name, String description,
-            double value, String category)
-        updateDiscount,
-    required TResult Function(int id) deleteDiscount,
-  }) {
-    return deleteDiscount(id);
+  String toString() {
+    return 'DiscountState()';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function()? getDiscounts,
-    TResult? Function(String category)? getDiscountsByCategory,
-    TResult? Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult? Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult? Function(int id)? deleteDiscount,
-  }) {
-    return deleteDiscount?.call(id);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function()? getDiscounts,
-    TResult Function(String category)? getDiscountsByCategory,
-    TResult Function(
-            String name, String description, double value, String category)?
-        addDiscount,
-    TResult Function(int id, String name, String description, double value,
-            String category)?
-        updateDiscount,
-    TResult Function(int id)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (deleteDiscount != null) {
-      return deleteDiscount(id);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_GetDiscounts value) getDiscounts,
-    required TResult Function(_GetDiscountsByCategory value)
-        getDiscountsByCategory,
-    required TResult Function(_AddDiscount value) addDiscount,
-    required TResult Function(_UpdateDiscount value) updateDiscount,
-    required TResult Function(_DeleteDiscount value) deleteDiscount,
-  }) {
-    return deleteDiscount(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_GetDiscounts value)? getDiscounts,
-    TResult? Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult? Function(_AddDiscount value)? addDiscount,
-    TResult? Function(_UpdateDiscount value)? updateDiscount,
-    TResult? Function(_DeleteDiscount value)? deleteDiscount,
-  }) {
-    return deleteDiscount?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_GetDiscounts value)? getDiscounts,
-    TResult Function(_GetDiscountsByCategory value)? getDiscountsByCategory,
-    TResult Function(_AddDiscount value)? addDiscount,
-    TResult Function(_UpdateDiscount value)? updateDiscount,
-    TResult Function(_DeleteDiscount value)? deleteDiscount,
-    required TResult orElse(),
-  }) {
-    if (deleteDiscount != null) {
-      return deleteDiscount(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _DeleteDiscount implements DiscountEvent {
-  const factory _DeleteDiscount(final int id) = _$DeleteDiscountImpl;
-
-  int get id;
-
-  /// Create a copy of DiscountEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DeleteDiscountImplCopyWith<_$DeleteDiscountImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-mixin _$DiscountState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) =>
-      throw _privateConstructorUsedError;
+class $DiscountStateCopyWith<$Res> {
+  $DiscountStateCopyWith(DiscountState _, $Res Function(DiscountState) __);
+}
+
+/// Adds pattern-matching-related methods to [DiscountState].
+extension DiscountStatePatterns on DiscountState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -1257,333 +706,277 @@ mixin _$DiscountState {
     TResult Function(_Error value)? error,
     TResult Function(_Success value)? success,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial() when initial != null:
+        return initial(_that);
+      case _Loading() when loading != null:
+        return loading(_that);
+      case _Loaded() when loaded != null:
+        return loaded(_that);
+      case _Error() when error != null:
+        return error(_that);
+      case _Success() when success != null:
+        return success(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_Error value) error,
+    required TResult Function(_Success value) success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial():
+        return initial(_that);
+      case _Loading():
+        return loading(_that);
+      case _Loaded():
+        return loaded(_that);
+      case _Error():
+        return error(_that);
+      case _Success():
+        return success(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_Success value)? success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial() when initial != null:
+        return initial(_that);
+      case _Loading() when loading != null:
+        return loading(_that);
+      case _Loaded() when loaded != null:
+        return loaded(_that);
+      case _Error() when error != null:
+        return error(_that);
+      case _Success() when success != null:
+        return success(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<Discount> discounts)? loaded,
+    TResult Function(String message)? error,
+    TResult Function(String message)? success,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial() when initial != null:
+        return initial();
+      case _Loading() when loading != null:
+        return loading();
+      case _Loaded() when loaded != null:
+        return loaded(_that.discounts);
+      case _Error() when error != null:
+        return error(_that.message);
+      case _Success() when success != null:
+        return success(_that.message);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<Discount> discounts) loaded,
+    required TResult Function(String message) error,
+    required TResult Function(String message) success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial():
+        return initial();
+      case _Loading():
+        return loading();
+      case _Loaded():
+        return loaded(_that.discounts);
+      case _Error():
+        return error(_that.message);
+      case _Success():
+        return success(_that.message);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<Discount> discounts)? loaded,
+    TResult? Function(String message)? error,
+    TResult? Function(String message)? success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Initial() when initial != null:
+        return initial();
+      case _Loading() when loading != null:
+        return loading();
+      case _Loaded() when loaded != null:
+        return loaded(_that.discounts);
+      case _Error() when error != null:
+        return error(_that.message);
+      case _Success() when success != null:
+        return success(_that.message);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
-abstract class $DiscountStateCopyWith<$Res> {
-  factory $DiscountStateCopyWith(
-          DiscountState value, $Res Function(DiscountState) then) =
-      _$DiscountStateCopyWithImpl<$Res, DiscountState>;
-}
 
-/// @nodoc
-class _$DiscountStateCopyWithImpl<$Res, $Val extends DiscountState>
-    implements $DiscountStateCopyWith<$Res> {
-  _$DiscountStateCopyWithImpl(this._value, this._then);
+class _Initial implements DiscountState {
+  const _Initial();
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Initial);
+  }
 
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$DiscountStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
     return 'DiscountState.initial()';
   }
+}
+
+/// @nodoc
+
+class _Loading implements DiscountState {
+  const _Loading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
+        (other.runtimeType == runtimeType && other is _Loading);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements DiscountState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$DiscountStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
 
   @override
   String toString() {
     return 'DiscountState.loading()';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
-  }) {
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements DiscountState {
-  const factory _Loading() = _$LoadingImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({List<Discount> discounts});
-}
-
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$DiscountStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? discounts = null,
-  }) {
-    return _then(_$LoadedImpl(
-      null == discounts
-          ? _value._discounts
-          : discounts // ignore: cast_nullable_to_non_nullable
-              as List<Discount>,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(final List<Discount> discounts) : _discounts = discounts;
+class _Loaded implements DiscountState {
+  const _Loaded(final List<Discount> discounts) : _discounts = discounts;
 
   final List<Discount> _discounts;
-  @override
   List<Discount> get discounts {
     if (_discounts is EqualUnmodifiableListView) return _discounts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_discounts);
   }
 
-  @override
-  String toString() {
-    return 'DiscountState.loaded(discounts: $discounts)';
-  }
+  /// Create a copy of DiscountState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$LoadedCopyWith<_Loaded> get copyWith =>
+      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
+            other is _Loaded &&
             const DeepCollectionEquality()
                 .equals(other._discounts, _discounts));
   }
@@ -1592,292 +985,99 @@ class _$LoadedImpl implements _Loaded {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_discounts));
 
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
-  }) {
-    return loaded(discounts);
+  String toString() {
+    return 'DiscountState.loaded(discounts: $discounts)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) {
-    return loaded?.call(discounts);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(discounts);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loaded implements DiscountState {
-  const factory _Loaded(final List<Discount> discounts) = _$LoadedImpl;
-
-  List<Discount> get discounts;
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+abstract mixin class _$LoadedCopyWith<$Res>
+    implements $DiscountStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
+      __$LoadedCopyWithImpl;
   @useResult
-  $Res call({String message});
+  $Res call({List<Discount> discounts});
 }
 
 /// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$DiscountStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
 
   /// Create a copy of DiscountState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
-    Object? message = null,
+    Object? discounts = null,
   }) {
-    return _then(_$ErrorImpl(
-      null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
+    return _then(_Loaded(
+      null == discounts
+          ? _self._discounts
+          : discounts // ignore: cast_nullable_to_non_nullable
+              as List<Discount>,
     ));
   }
 }
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.message);
+class _Error implements DiscountState {
+  const _Error(this.message);
+
+  final String message;
+
+  /// Create a copy of DiscountState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ErrorCopyWith<_Error> get copyWith =>
+      __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
   @override
-  final String message;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Error &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
 
   @override
   String toString() {
     return 'DiscountState.error(message: $message)';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
-  }) {
-    return error(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) {
-    return error?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Error implements DiscountState {
-  const factory _Error(final String message) = _$ErrorImpl;
-
-  String get message;
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
+abstract mixin class _$ErrorCopyWith<$Res>
+    implements $DiscountStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
+      __$ErrorCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$DiscountStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
+class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
 
   /// Create a copy of DiscountState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$SuccessImpl(
+    return _then(_Error(
       null == message
-          ? _value.message
+          ? _self.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -1886,125 +1086,64 @@ class __$$SuccessImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl(this.message);
+class _Success implements DiscountState {
+  const _Success(this.message);
 
-  @override
   final String message;
 
-  @override
-  String toString() {
-    return 'DiscountState.success(message: $message)';
-  }
+  /// Create a copy of DiscountState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SuccessCopyWith<_Success> get copyWith =>
+      __$SuccessCopyWithImpl<_Success>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
+            other is _Success &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
+  @override
+  String toString() {
+    return 'DiscountState.success(message: $message)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$SuccessCopyWith<$Res>
+    implements $DiscountStateCopyWith<$Res> {
+  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
+      __$SuccessCopyWithImpl;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
+  __$SuccessCopyWithImpl(this._self, this._then);
+
+  final _Success _self;
+  final $Res Function(_Success) _then;
+
   /// Create a copy of DiscountState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
   @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(List<Discount> discounts) loaded,
-    required TResult Function(String message) error,
-    required TResult Function(String message) success,
+  $Res call({
+    Object? message = null,
   }) {
-    return success(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(List<Discount> discounts)? loaded,
-    TResult? Function(String message)? error,
-    TResult? Function(String message)? success,
-  }) {
-    return success?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<Discount> discounts)? loaded,
-    TResult Function(String message)? error,
-    TResult Function(String message)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-    required TResult Function(_Success value) success,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_Success value)? success,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    TResult Function(_Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
+    return _then(_Success(
+      null == message
+          ? _self.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
-abstract class _Success implements DiscountState {
-  const factory _Success(final String message) = _$SuccessImpl;
-
-  String get message;
-
-  /// Create a copy of DiscountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

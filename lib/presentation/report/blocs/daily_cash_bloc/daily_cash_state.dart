@@ -10,4 +10,15 @@ class DailyCashState with _$DailyCashState {
       _OpeningBalanceSet;
   const factory DailyCashState.expenseAdded(DailyCashModel dailyCash) =
       _ExpenseAdded;
+
+  const factory DailyCashState.shiftOpened(DailyCashModel dailyCash) =
+      _ShiftOpened;
+
+  const factory DailyCashState.shiftClosed(DailyCashModel dailyCash) =
+      _ShiftClosed;
+
+  const factory DailyCashState.shiftsLoaded(
+    List<DailyCashModel> shifts, {
+    int? activeShiftId,
+  }) = _ShiftsLoaded;
 }

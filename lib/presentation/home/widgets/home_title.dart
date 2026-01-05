@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 
 import '../../../core/components/search_input.dart';
 import '../../../core/constants/colors.dart';
@@ -32,7 +33,7 @@ class HomeTitle extends StatelessWidget {
             ),
             const SizedBox(height: 4.0),
             Text(
-              DateTime.now().toFormattedDate(),
+              TimezoneHelper.nowWIB().toFormattedDateWIB(),
               style: const TextStyle(
                 color: AppColors.subtitle,
                 fontSize: 16,

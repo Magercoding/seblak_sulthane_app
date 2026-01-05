@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:seblak_sulthane_app/core/components/spaces.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/int_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/order_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/widgets/success_payment_dialog.dart';
 
@@ -157,7 +158,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
                 ),
                 Text(
                   DateFormat('dd MMM yyyy, HH:mm').format(
-                    DateTime.parse(order.transactionTime),
+                    TimezoneHelper.toWIB(DateTime.parse(order.transactionTime)),
                   ),
                   style: TextStyle(
                     fontSize: 14,

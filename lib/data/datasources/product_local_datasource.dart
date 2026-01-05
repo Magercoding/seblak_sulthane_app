@@ -351,7 +351,7 @@ class ProductLocalDatasource {
         status: 'available',
         orderId: 0,
         paymentAmount: 0,
-        startTime: DateTime.now().toIso8601String(),
+        startTime: DateTime.now().toUtc().toIso8601String(),
       );
       await db.insert(
         tableManagement,

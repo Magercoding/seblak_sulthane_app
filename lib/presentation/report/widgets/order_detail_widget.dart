@@ -335,7 +335,7 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
                                         Text(
                                           widget.order.transactionTime != null
                                               ? widget.order.transactionTime!
-                                                  .toFormattedDate()
+                                                  .toFormattedDateWIB()
                                               : '-',
                                           style: const TextStyle(fontSize: 14),
                                         ),

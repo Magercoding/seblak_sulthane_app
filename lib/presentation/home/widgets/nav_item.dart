@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:seblak_sulthane_app/core/components/spaces.dart';
 
 import '../../../core/constants/colors.dart';
 
@@ -36,8 +37,8 @@ class NavItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: 25.0,
-                    height: 25.0,
+                    width: 24.0,
+                    height: 24.0,
                     child: SvgPicture.asset(
                       iconPath,
                       colorFilter: ColorFilter.mode(
@@ -46,6 +47,7 @@ class NavItem extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SpaceHeight(16)
                 ],
               ),
             ),

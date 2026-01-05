@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/daily_cash_page.dart';
+import 'package:seblak_sulthane_app/presentation/setting/pages/daily_cash_history_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/discount_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/profile_page.dart';
 import 'package:seblak_sulthane_app/presentation/setting/pages/manage_printer_page.dart';
@@ -68,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SpaceHeight(16.0),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.profile.svg(),
+                    leading: Assets.icons.profile.svg(height: 20, width: 20),
                     title: const Text('Profil Pengguna'),
                     subtitle: const Text('Lihat informasi akun '),
                     textColor: AppColors.primary,
@@ -79,7 +80,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaDiskon.svg(),
+                    leading:
+                        Assets.icons.kelolaDiskon.svg(height: 20, width: 20),
                     title: const Text('Kelola Diskon'),
                     subtitle: const Text('Kelola diskon pelanggan'),
                     textColor: AppColors.primary,
@@ -90,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.member2.svg(),
+                    leading: Assets.icons.member2.svg(height: 20, width: 20),
                     title: const Text('Kelola Member'),
                     subtitle: const Text('Kelola member pelanggan'),
                     textColor: AppColors.primary,
@@ -101,7 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPajak.svg(),
+                    leading:
+                        Assets.icons.kelolaPajak.svg(height: 20, width: 20),
                     title: const Text('Perhitungan Biaya'),
                     subtitle: const Text('Kelola biaya diluar biaya modal'),
                     textColor: AppColors.primary,
@@ -112,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPajak.svg(),
+                    leading: Assets.icons.cash.svg(height: 20, width: 20),
                     title: const Text('Kelola Uang Harian'),
                     subtitle: const Text('Kelola cash harian'),
                     textColor: AppColors.primary,
@@ -123,9 +126,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPrinter.svg(),
-                    title: const Text('Kelola Printer'),
-                    subtitle: const Text('Tambah atau hapus printer'),
+                    leading: Assets.icons.history
+                        .svg(color: AppColors.primary, height: 20, width: 20),
+                    title: const Text('Riwayat Uang Harian'),
+                    subtitle: const Text('Lihat riwayat cash harian'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 5
                         ? AppColors.blueLight
@@ -134,15 +138,28 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.all(12.0),
-                    leading: Assets.icons.kelolaPajak.svg(),
-                    title: const Text('Sync Data'),
-                    subtitle:
-                        const Text('Sinkronisasi data dari dan ke server'),
+                    leading:
+                        Assets.icons.kelolaPrinter.svg(height: 20, width: 20),
+                    title: const Text('Kelola Printer'),
+                    subtitle: const Text('Tambah atau hapus printer'),
                     textColor: AppColors.primary,
                     tileColor: currentIndex == 6
                         ? AppColors.blueLight
                         : Colors.transparent,
                     onTap: () => indexValue(6),
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(12.0),
+                    leading: Assets.icons.setting
+                        .svg(color: AppColors.primary, height: 20, width: 20),
+                    title: const Text('Sync Data'),
+                    subtitle:
+                        const Text('Sinkronisasi data dari dan ke server'),
+                    textColor: AppColors.primary,
+                    tileColor: currentIndex == 7
+                        ? AppColors.blueLight
+                        : Colors.transparent,
+                    onTap: () => indexValue(7),
                   ),
                   // ListTile(
                   //   contentPadding: const EdgeInsets.all(12.0),
@@ -188,6 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     MemberPage(),
                     TaxPage(),
                     DailyCashPage(),
+                    DailyCashHistoryPage(),
                     ManagePrinterPage(),
                     SyncDataPage(),
                     HistoryOrderPage(),

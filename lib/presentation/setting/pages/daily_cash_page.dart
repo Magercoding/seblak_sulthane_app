@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
+import 'package:seblak_sulthane_app/data/models/response/daily_cash_model.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/daily_cash_bloc/daily_cash_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/widgets/daily_cash_info_card.dart';
 import 'package:seblak_sulthane_app/presentation/setting/widgets/daily_cash_section_widget.dart';
@@ -93,6 +94,38 @@ class _DailyCashPageState extends State<DailyCashPage> {
                     DailyCashInfoCard(dailyCash: dailyCash),
                 expenseAdded: (dailyCash) =>
                     DailyCashInfoCard(dailyCash: dailyCash),
+                shiftOpened: (dailyCash) =>
+                    DailyCashInfoCard(dailyCash: dailyCash),
+                shiftClosed: (dailyCash) =>
+                    DailyCashInfoCard(dailyCash: dailyCash),
+                shiftsLoaded: (shifts, activeShiftId) {
+                  // Ambil shift aktif atau shift terakhir
+                  DailyCashModel? activeShift;
+                  if (activeShiftId != null) {
+                    try {
+                      activeShift = shifts.firstWhere(
+                        (s) => s.id == activeShiftId,
+                      );
+                    } catch (_) {
+                      activeShift = shifts.isNotEmpty ? shifts.last : null;
+                    }
+                  } else {
+                    activeShift = shifts.isNotEmpty ? shifts.last : null;
+                  }
+                  
+                  if (activeShift != null) {
+                    return DailyCashInfoCard(dailyCash: activeShift);
+                  }
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'Tidak ada data kas untuk tanggal ini',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  );
+                },
                 orElse: () => const Center(
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -107,6 +140,8 @@ class _DailyCashPageState extends State<DailyCashPage> {
               _buildOpeningBalanceSection(),
               const SpaceHeight(24),
               _buildExpenseSection(),
+              const SpaceHeight(24),
+              _buildCloseShiftSection(),
             ],
           );
         },
@@ -259,6 +294,113 @@ class _DailyCashPageState extends State<DailyCashPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCloseShiftSection() {
+    return BlocBuilder<DailyCashBloc, DailyCashState>(
+      builder: (context, state) {
+        // Cari shift aktif dari state
+        DailyCashModel? activeShift;
+        
+        state.maybeWhen(
+          loaded: (dailyCash) {
+            if (dailyCash.isClosed == false) {
+              activeShift = dailyCash;
+            }
+          },
+          openingBalanceSet: (dailyCash) {
+            if (dailyCash.isClosed == false) {
+              activeShift = dailyCash;
+            }
+          },
+          expenseAdded: (dailyCash) {
+            if (dailyCash.isClosed == false) {
+              activeShift = dailyCash;
+            }
+          },
+          shiftOpened: (dailyCash) {
+            if (dailyCash.isClosed == false) {
+              activeShift = dailyCash;
+            }
+          },
+          shiftsLoaded: (shifts, activeShiftId) {
+            if (activeShiftId != null) {
+              try {
+                activeShift = shifts.firstWhere((s) => s.id == activeShiftId);
+              } catch (_) {
+                activeShift = shifts.isNotEmpty && shifts.last.isClosed == false
+                    ? shifts.last
+                    : null;
+              }
+            } else {
+              activeShift = shifts.isNotEmpty && shifts.last.isClosed == false
+                  ? shifts.last
+                  : null;
+            }
+          },
+          orElse: () {},
+        );
+
+        // Jika tidak ada shift aktif, jangan tampilkan section
+        if (activeShift == null || activeShift?.id == null) {
+          return const SizedBox.shrink();
+        }
+
+        return DailyCashSection(
+          title: 'Tutup Shift',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Shift ID: ${activeShift!.id}',
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              if (activeShift!.shiftName != null) ...[
+                const SpaceHeight(4),
+                Text(
+                  'Nama Shift: ${activeShift!.shiftName}',
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+              ],
+              const SpaceHeight(16),
+              SizedBox(
+                width: double.infinity,
+                child: Button.filled(
+                  onPressed: () {
+                    // Konfirmasi sebelum tutup shift
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Tutup Shift'),
+                        content: const Text(
+                            'Apakah Anda yakin ingin menutup shift ini? Setelah ditutup, saldo akhir akan disimpan dan tidak dapat diubah.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Batal'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _dailyCashBloc.add(
+                                DailyCashEvent.closeShift(activeShift!.id!),
+                              );
+                            },
+                            child: const Text('Tutup Shift'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  label: 'Tutup Shift',
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

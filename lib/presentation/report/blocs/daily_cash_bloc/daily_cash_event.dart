@@ -18,4 +18,20 @@ class DailyCashEvent with _$DailyCashEvent {
     int amount,
     String note,
   ) = _AddExpense;
+
+  const factory DailyCashEvent.openShift(
+    String date,
+    int openingBalance, {
+    String? shiftName,
+  }) = _OpenShift;
+
+  const factory DailyCashEvent.closeShift(
+    int shiftId,
+  ) = _CloseShift;
+
+  const factory DailyCashEvent.fetchActiveShifts() = _FetchActiveShifts;
+
+  const factory DailyCashEvent.fetchShiftById(
+    int shiftId,
+  ) = _FetchShiftById;
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:seblak_sulthane_app/core/core.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/discount_response_model.dart';
 import 'package:seblak_sulthane_app/presentation/table/models/draft_order_item.dart';
@@ -228,7 +229,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         tableNumber: event.tableNumber,
         draftName: event.draftName,
         transactionTime:
-            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toUtc()),
       );
       log("draftOrder12: ${draftOrder.toMapForLocal()}");
       final orderDraftId =

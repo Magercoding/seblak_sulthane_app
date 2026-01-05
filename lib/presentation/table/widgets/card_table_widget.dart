@@ -6,6 +6,7 @@ import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/extensions/build_context_ext.dart';
 import 'package:seblak_sulthane_app/core/extensions/date_time_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/table_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/bloc/checkout/checkout_bloc.dart';
@@ -87,7 +88,7 @@ class _CardTableWidgetState extends State<CardTableWidget> {
           Text(
             widget.table.status == 'available'
                 ? 'tersedia'
-                : "${widget.table.status == 'occupied' ? 'terisi' : 'ditutup'} - ${DateTime.parse(widget.table.startTime).toFormattedTime()}",
+                : "${widget.table.status == 'occupied' ? 'terisi' : 'ditutup'} - ${TimezoneHelper.toWIB(DateTime.parse(widget.table.startTime)).toFormattedTimeWIB()}",
             style: TextStyle(
               color: AppColors.black,
               fontSize: 24,

@@ -65,7 +65,7 @@ class CloseTableConfirmationDialog extends StatelessWidget {
                   status: 'available',
                   paymentAmount: 0,
                   orderId: 0,
-                  startTime: DateTime.now().toIso8601String(),
+                  startTime: DateTime.now().toUtc().toIso8601String(),
                 );
 
                 context.read<StatusTableBloc>().add(

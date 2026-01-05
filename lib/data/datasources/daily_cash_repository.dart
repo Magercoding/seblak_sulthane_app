@@ -32,4 +32,25 @@ class DailyCashRepository {
   String getTodayDate() {
     return _remoteDatasource.getTodayDate();
   }
+
+  Future<Either<String, DailyCashResponse>> openShift(
+    String date,
+    int openingBalance, {
+    String? shiftName,
+  }) async {
+    return await _remoteDatasource.openShift(date, openingBalance,
+        shiftName: shiftName);
+  }
+
+  Future<Either<String, DailyCashResponse>> closeShift(int shiftId) async {
+    return await _remoteDatasource.closeShift(shiftId);
+  }
+
+  Future<Either<String, DailyCashResponse>> getActiveShifts() async {
+    return await _remoteDatasource.getActiveShifts();
+  }
+
+  Future<Either<String, DailyCashResponse>> fetchShiftById(int shiftId) async {
+    return await _remoteDatasource.fetchShiftById(shiftId);
+  }
 }

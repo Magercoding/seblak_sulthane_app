@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
+import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
 import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/product_local_datasource.dart';
@@ -63,7 +64,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         totalItem: totalItem,
         idKasir: userData.user?.id ?? 1,
         namaKasir: userData.user?.name ?? 'Kasir A',
-        transactionTime: DateTime.now().toIso8601String(),
+        transactionTime: DateTime.now().toUtc().toIso8601String(),
         customerName: event.customerName,
         tableNumber: event.tableNumber,
         status: event.status,
@@ -118,7 +119,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           totalItem: totalItem,
           idKasir: userData.user?.id ?? 1,
           namaKasir: userData.user?.name ?? 'Kasir A',
-          transactionTime: DateTime.now().toIso8601String(),
+          transactionTime: DateTime.now().toUtc().toIso8601String(),
           customerName: event.customerName,
           tableNumber: event.tableNumber,
           status: event.status,

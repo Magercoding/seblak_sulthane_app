@@ -19,8 +19,20 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          emit(_Loaded(response.data));
-                },
+          // Handle jika response adalah list (multiple shifts)
+          final listData = response.getListData();
+          if (listData != null) {
+            emit(_ShiftsLoaded(listData, activeShiftId: response.activeShift));
+          } else {
+            // Handle jika response adalah single data (backward compatibility)
+            final singleData = response.getSingleData();
+            if (singleData != null) {
+              emit(_Loaded(singleData));
+            } else {
+              emit(_Error('Data tidak ditemukan'));
+            }
+          }
+        },
       );
     });
 
@@ -35,8 +47,13 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          emit(_OpeningBalanceSet(response.data));
-                },
+          final data = response.getSingleData();
+          if (data != null) {
+            emit(_OpeningBalanceSet(data));
+          } else {
+            emit(_Error('Data tidak ditemukan'));
+          }
+        },
       );
     });
 
@@ -52,8 +69,89 @@ class DailyCashBloc extends Bloc<DailyCashEvent, DailyCashState> {
       result.fold(
         (error) => emit(_Error(error)),
         (response) {
-          emit(_ExpenseAdded(response.data));
-                },
+          final data = response.getSingleData();
+          if (data != null) {
+            emit(_ExpenseAdded(data));
+          } else {
+            emit(_Error('Data tidak ditemukan'));
+          }
+        },
+      );
+    });
+
+    on<_OpenShift>((event, emit) async {
+      emit(const _Loading());
+
+      final result = await datasource.openShift(
+        event.date,
+        event.openingBalance,
+        shiftName: event.shiftName,
+      );
+
+      result.fold(
+        (error) => emit(_Error(error)),
+        (response) {
+          final data = response.getSingleData();
+          if (data != null) {
+            emit(_ShiftOpened(data));
+          } else {
+            emit(_Error('Data tidak ditemukan'));
+          }
+        },
+      );
+    });
+
+    on<_CloseShift>((event, emit) async {
+      emit(const _Loading());
+
+      final result = await datasource.closeShift(event.shiftId);
+
+      result.fold(
+        (error) => emit(_Error(error)),
+        (response) {
+          final data = response.getSingleData();
+          if (data != null) {
+            emit(_ShiftClosed(data));
+          } else {
+            emit(_Error('Data tidak ditemukan'));
+          }
+        },
+      );
+    });
+
+    on<_FetchActiveShifts>((event, emit) async {
+      emit(const _Loading());
+
+      final result = await datasource.getActiveShifts();
+
+      result.fold(
+        (error) => emit(_Error(error)),
+        (response) {
+          final listData = response.getListData();
+          if (listData != null) {
+            emit(_ShiftsLoaded(listData));
+          } else {
+            emit(_ShiftsLoaded([]));
+          }
+        },
+      );
+    });
+
+    on<_FetchShiftById>((event, emit) async {
+      emit(const _Loading());
+
+      final result = await datasource.fetchShiftById(event.shiftId);
+
+      result.fold(
+        (error) => emit(_Error(error)),
+        (response) {
+          final data = response.getSingleData();
+          if (data != null) {
+            emit(_Loaded(data));
+          } else {
+            emit(_Error('Shift tidak ditemukan'));
+          }
+        },
       );
     });
   }

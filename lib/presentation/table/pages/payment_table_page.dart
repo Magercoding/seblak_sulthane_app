@@ -794,7 +794,7 @@ class _PaymentTablePageState extends State<PaymentTablePage> {
                                       orderId: 0,
                                       paymentAmount: 0,
                                       startTime:
-                                          DateTime.now().toIso8601String(),
+                                          DateTime.now().toUtc().toIso8601String(),
                                     );
                                     context.read<StatusTableBloc>().add(
                                           StatusTableEvent.statusTabel(

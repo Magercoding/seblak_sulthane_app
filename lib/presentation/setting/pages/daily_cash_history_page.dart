@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:seblak_sulthane_app/core/components/components.dart';
 import 'package:seblak_sulthane_app/core/constants/colors.dart';
 import 'package:seblak_sulthane_app/core/utils/timezone_helper.dart';
+import 'package:seblak_sulthane_app/data/dataoutputs/print_dataoutputs.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/daily_cash_model.dart';
 import 'package:seblak_sulthane_app/presentation/report/blocs/daily_cash_bloc/daily_cash_bloc.dart';
 import 'package:seblak_sulthane_app/presentation/setting/widgets/daily_cash_info_card.dart';
@@ -313,6 +318,30 @@ class _DailyCashHistoryPageState extends State<DailyCashHistoryPage> {
                 ],
                 // Info card untuk detail kas
                 DailyCashInfoCard(dailyCash: shift),
+                const SpaceHeight(16),
+                // Tombol Cetak Struk Laporan
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () =>
+                        _handlePrintShift(context, shift, shiftNumber),
+                    icon: const Icon(Icons.print, color: Colors.white),
+                    label: const Text(
+                      'Cetak Struk Laporan',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -329,6 +358,146 @@ class _DailyCashHistoryPageState extends State<DailyCashHistoryPage> {
     } catch (_) {
       return isoString;
     }
+  }
+
+  Future<void> _handlePrintShift(
+      BuildContext context, DailyCashModel shift, int shiftNumber) async {
+    BuildContext? dialogContext;
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext ctx) {
+          dialogContext = ctx;
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text('Mencetak laporan Shift $shiftNumber...'),
+              ],
+            ),
+          );
+        },
+      );
+
+      // Check printer connection
+      log('Checking printer connection...');
+      final bool isConnected = await PrintBluetoothThermal.connectionStatus;
+      log('Printer connection status: $isConnected');
+
+      if (!isConnected) {
+        if (context.mounted && dialogContext != null) {
+          Navigator.pop(dialogContext!);
+        }
+        _showPrintStatusDialog(
+          context,
+          false,
+          'Printer tidak terhubung. Silakan hubungkan printer terlebih dahulu di menu Pengaturan > Kelola Printer.',
+        );
+        return;
+      }
+
+      // Get receipt size
+      final sizeReceipt = await AuthLocalDataSource().getSizeReceipt();
+      int receiptSize;
+      try {
+        receiptSize = int.parse(sizeReceipt);
+      } catch (e) {
+        log('Error parsing receipt size: $sizeReceipt');
+        receiptSize = 80;
+      }
+
+      // Generate print bytes
+      log('Generating print bytes for shift $shiftNumber...');
+      final List<int> printBytes = await PrintDataoutputs.instance
+          .printDailyCashShift(shift, shiftNumber, receiptSize);
+
+      log('Generated print bytes: ${printBytes.length} bytes');
+
+      if (printBytes.isEmpty) {
+        throw Exception('Print bytes is empty');
+      }
+
+      // Close loading dialog
+      if (context.mounted && dialogContext != null) {
+        Navigator.pop(dialogContext!);
+      }
+
+      // Print
+      log('Sending ${printBytes.length} bytes to printer...');
+      final result = await PrintBluetoothThermal.writeBytes(printBytes);
+      log('Print result: $result');
+
+      if (context.mounted) {
+        if (result) {
+          _showPrintStatusDialog(
+              context, true, 'Laporan Shift $shiftNumber berhasil dicetak.');
+        } else {
+          _showPrintStatusDialog(context, false,
+              'Gagal mencetak laporan Shift $shiftNumber. Periksa apakah printer terhubung dan diatur dengan benar.');
+        }
+      }
+    } catch (e, stackTrace) {
+      log("Error printing shift report: $e");
+      log("Stack trace: $stackTrace");
+
+      if (context.mounted && dialogContext != null) {
+        Navigator.pop(dialogContext!);
+      }
+
+      if (context.mounted) {
+        String errorMessage = 'Error: ${e.toString()}';
+        if (e.toString().contains('connection') ||
+            e.toString().contains('bluetooth')) {
+          errorMessage =
+              'Gagal mencetak. Pastikan printer terhubung dan Bluetooth aktif.';
+        }
+        _showPrintStatusDialog(context, false, errorMessage);
+      }
+    }
+  }
+
+  void _showPrintStatusDialog(
+      BuildContext context, bool isSuccess, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: isSuccess
+                  ? const Icon(Icons.check_circle,
+                      color: Colors.green, size: 60)
+                  : const Icon(Icons.error_outline,
+                      color: Colors.red, size: 60),
+            ),
+            const SizedBox(height: 16.0),
+            Text(
+              isSuccess ? 'Cetak Berhasil' : 'Cetak Gagal',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   DailyCashModel _calculateTotalSummary(List<DailyCashModel> shifts) {

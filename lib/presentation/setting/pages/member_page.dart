@@ -78,59 +78,67 @@ class _MemberPageState extends State<MemberPage> {
                 builder: (context, state) {
                   return state.maybeWhen(
                     loaded: (members) {
-                      if (members.isEmpty) {
-                        return const Center(
-                          child: Text('Belum ada data member'),
-                        );
-                      }
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: members.length + 1,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.85,
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 30.0,
-                          mainAxisSpacing: 30.0,
-                        ),
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return AddData(
-                              title: 'Tambah Member Baru',
-                              onPressed: onAddDataTap,
-                            );
-                          }
-                          final item = members[index - 1];
-                          return ManageMemberCard(
-                            data: item,
-                            onEditTap: () => onEditTap(item),
-                            onDeleteTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Hapus Member'),
-                                  content: const Text(
-                                      'Apakah anda yakin ingin menghapus member ini?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Batal'),
+                      return Column(
+                        children: [
+                          GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: members.length + 1,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: 0.85,
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 30.0,
+                              mainAxisSpacing: 30.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return AddData(
+                                  title: 'Tambah Member Baru',
+                                  onPressed: onAddDataTap,
+                                );
+                              }
+                              final item = members[index - 1];
+                              return ManageMemberCard(
+                                data: item,
+                                onEditTap: () => onEditTap(item),
+                                onDeleteTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Hapus Member'),
+                                      content: const Text(
+                                          'Apakah anda yakin ingin menghapus member ini?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('Batal'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            context.read<MemberBloc>().add(
+                                                MemberEvent.deleteMember(
+                                                    item.id));
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Hapus'),
+                                        ),
+                                      ],
                                     ),
-                                    TextButton(
-                                      onPressed: () {
-                                        context.read<MemberBloc>().add(
-                                            MemberEvent.deleteMember(item.id));
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Hapus'),
-                                    ),
-                                  ],
-                                ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
+                          ),
+                          if (members.isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 24.0),
+                              child: Center(
+                                child: Text('Belum ada data member'),
+                              ),
+                            ),
+                        ],
                       );
                     },
                     loading: () => const Center(

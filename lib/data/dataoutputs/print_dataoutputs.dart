@@ -8,6 +8,7 @@ import 'package:seblak_sulthane_app/data/datasources/auth_local_datasource.dart'
 import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/outlet_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/outlet_model.dart';
+import 'package:seblak_sulthane_app/data/models/response/daily_cash_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/summary_response_model.dart';
 import 'package:seblak_sulthane_app/data/models/response/user_model.dart';
 import 'package:seblak_sulthane_app/presentation/home/models/product_quantity.dart';
@@ -1923,6 +1924,345 @@ class PrintDataoutputs {
     bytes += generator.cut();
 
     return bytes;
+  }
+
+  Future<List<int>> printDailyCashShift(
+      DailyCashModel shift, int shiftNumber, int paper,
+      {int? outletId}) async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load();
+    final generator =
+        Generator(paper == 58 ? PaperSize.mm58 : PaperSize.mm80, profile);
+
+    outletId ??= await PrintDataoutputs._fetchOutletIdFromProfile();
+    outletId ??= 1;
+
+    final String cashierName = await _getCashierNameFromProfile();
+    final OutletModel? outlet =
+        await PrintDataoutputs._getOutletInfo(outletId);
+    final String outletName = outlet?.name ?? 'Seblak Sulthane';
+    String outletAddress = 'OFFLINE';
+
+    if (outlet != null) {
+      if (outlet.address1 != null && outlet.address1!.isNotEmpty) {
+        outletAddress = outlet.address1!;
+        if (outlet.address2 != null && outlet.address2!.isNotEmpty) {
+          outletAddress += ', ${outlet.address2!}';
+        }
+      }
+    }
+
+    final String outletPhone = outlet?.phone ?? 'Seblak Sulthane';
+
+    try {
+      final ByteData data =
+          await rootBundle.load('assets/logo/seblak_sulthane.png');
+      final Uint8List bytesData = data.buffer.asUint8List();
+      final img.Image? originalImage = img.decodeImage(bytesData);
+
+      bytes += generator.reset();
+
+      if (originalImage != null) {
+        final img.Image grayscaleImage = img.grayscale(originalImage);
+        final img.Image resizedImage =
+            img.copyResize(grayscaleImage, width: 240);
+        bytes += generator.imageRaster(resizedImage, align: PosAlign.center);
+        bytes += generator.feed(2);
+      }
+    } catch (e) {
+      print("Error loading logo: $e");
+      bytes += generator.reset();
+    }
+
+    bytes += generator.text(outletName,
+        styles: const PosStyles(bold: true, align: PosAlign.center));
+    bytes += generator.text(outletAddress,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+    bytes += generator.text(outletPhone,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    final String separator = paper == 80
+        ? '------------------------------------------------'
+        : '--------------------------------';
+
+    bytes += generator.text(separator,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text('LAPORAN KAS HARIAN',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.text(
+        'Shift $shiftNumber${shift.shiftName != null ? ' - ${shift.shiftName}' : ''}',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.feed(1);
+
+    // Tanggal
+    if (shift.date != null) {
+      bytes += generator.row([
+        PosColumn(
+          text: 'Tanggal:',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left),
+        ),
+        PosColumn(
+          text: shift.date!,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.right),
+        ),
+      ]);
+    }
+
+    // Waktu buka
+    if (shift.openedAt != null) {
+      String openTime = _formatShiftDateTime(shift.openedAt!);
+      bytes += generator.row([
+        PosColumn(
+          text: 'Buka:',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left),
+        ),
+        PosColumn(
+          text: openTime,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.right),
+        ),
+      ]);
+    }
+
+    // Waktu tutup
+    if (shift.closedAt != null) {
+      String closeTime = _formatShiftDateTime(shift.closedAt!);
+      bytes += generator.row([
+        PosColumn(
+          text: 'Tutup:',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left),
+        ),
+        PosColumn(
+          text: closeTime,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.right),
+        ),
+      ]);
+    }
+
+    // Status
+    bytes += generator.row([
+      PosColumn(
+        text: 'Status:',
+        width: 4,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: shift.isClosed == true ? 'Ditutup' : 'Aktif',
+        width: 8,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Dicetak
+    bytes += generator.row([
+      PosColumn(
+        text: 'Dicetak:',
+        width: 4,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: DateFormat('dd MMM yyyy HH:mm').format(TimezoneHelper.nowWIB()),
+        width: 8,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Oleh:',
+        width: 4,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: cashierName,
+        width: 8,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.text(separator,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    bytes += generator.text('RINGKASAN KAS',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.feed(1);
+
+    // Saldo Awal
+    double openingBalance = (shift.openingBalance ?? 0).toDouble();
+    bytes += generator.row([
+      PosColumn(
+        text: 'Saldo Awal',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(openingBalance),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Pengeluaran
+    double expenses = (shift.expenses ?? 0).toDouble();
+    bytes += generator.row([
+      PosColumn(
+        text: 'Pengeluaran',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: '- ${formatNumberWithoutDecimal(expenses)}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Penjualan Tunai
+    double cashSales = (shift.getCashSalesAsInt() ?? 0).toDouble();
+    bytes += generator.row([
+      PosColumn(
+        text: 'Penjualan Tunai',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(cashSales),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Penjualan QRIS
+    double qrisSales = (shift.getQrisSalesAsInt() ?? 0).toDouble();
+    bytes += generator.row([
+      PosColumn(
+        text: 'Penjualan QRIS',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(qrisSales),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Total Penjualan
+    double totalSales = cashSales + qrisSales;
+    bytes += generator.row([
+      PosColumn(
+        text: 'Total Penjualan',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: formatNumberWithoutDecimal(totalSales),
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    // Biaya QRIS
+    double qrisFee = _parseToDouble(shift.qrisFee);
+    bytes += generator.row([
+      PosColumn(
+        text: 'Biaya QRIS',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: '- ${formatNumberWithoutDecimal(qrisFee)}',
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+
+    bytes += generator.text(separator,
+        styles: const PosStyles(bold: false, align: PosAlign.center));
+
+    // Saldo Akhir
+    if (shift.closingBalance != null) {
+      double closingBalance = shift.closingBalance!.toDouble();
+      bytes += generator.row([
+        PosColumn(
+          text: 'Saldo Akhir',
+          width: 6,
+          styles: const PosStyles(align: PosAlign.left, bold: true),
+        ),
+        PosColumn(
+          text: formatNumberWithoutDecimal(closingBalance),
+          width: 6,
+          styles: const PosStyles(align: PosAlign.right, bold: true),
+        ),
+      ]);
+    }
+
+    // Final Kas Tunai
+    final finalCashClosing = shift.getFinalCashClosingAsInt();
+    if (finalCashClosing != null) {
+      bytes += generator.row([
+        PosColumn(
+          text: 'Final Kas Tunai',
+          width: 6,
+          styles: const PosStyles(align: PosAlign.left, bold: true),
+        ),
+        PosColumn(
+          text: formatNumberWithoutDecimal(finalCashClosing.toDouble()),
+          width: 6,
+          styles: const PosStyles(align: PosAlign.right, bold: true),
+        ),
+      ]);
+    } else {
+      // Hitung: openingBalance + cashSales - expenses
+      double calculatedFinalCash = openingBalance + cashSales - expenses;
+      bytes += generator.row([
+        PosColumn(
+          text: 'Final Kas Tunai',
+          width: 6,
+          styles: const PosStyles(align: PosAlign.left, bold: true),
+        ),
+        PosColumn(
+          text: formatNumberWithoutDecimal(calculatedFinalCash),
+          width: 6,
+          styles: const PosStyles(align: PosAlign.right, bold: true),
+        ),
+      ]);
+    }
+
+    // Detail Pengeluaran
+    if (shift.expensesNote != null && shift.expensesNote!.isNotEmpty) {
+      bytes += generator.feed(1);
+      bytes += generator.text(separator,
+          styles: const PosStyles(bold: false, align: PosAlign.center));
+      bytes += generator.text('DETAIL PENGELUARAN',
+          styles: const PosStyles(align: PosAlign.center, bold: true));
+      bytes += generator.feed(1);
+      bytes += generator.text(shift.expensesNote!,
+          styles: const PosStyles(align: PosAlign.left));
+    }
+
+    bytes += generator.feed(3);
+    bytes += generator.cut();
+
+    return bytes;
+  }
+
+  String _formatShiftDateTime(String isoString) {
+    try {
+      final date = DateTime.parse(isoString);
+      final wibDate = TimezoneHelper.toWIB(date);
+      return DateFormat('dd MMM yyyy, HH:mm').format(wibDate);
+    } catch (_) {
+      return isoString;
+    }
   }
 
   String _formatCurrency(double value) {

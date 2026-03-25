@@ -9,7 +9,6 @@ part 'tax_event.dart';
 part 'tax_state.dart';
 
 class TaxBloc extends Bloc<TaxEvent, TaxState> {
-  final List<TaxModel> _taxes = [];
   final SettingsLocalDatasource _localDatasource = SettingsLocalDatasource();
 
   TaxBloc() : super(const TaxState.initial()) {
@@ -33,8 +32,6 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
       }
     });
 
-    add(const TaxEvent.started());
-
     on<_Add>((event, emit) async {
       try {
         if (event.tax.type.isLayanan) {
@@ -43,14 +40,8 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
           await _localDatasource.saveTax(event.tax);
         }
 
-        final index = _taxes.indexWhere((t) => t.type == event.tax.type);
-        if (index != -1) {
-          _taxes[index] = event.tax;
-        } else {
-          _taxes.add(event.tax);
-        }
-
-        emit(TaxState.loaded(List.from(_taxes)));
+        // Reload from source of truth
+        add(const TaxEvent.started());
       } catch (e) {
         emit(TaxState.error(e.toString()));
       }
@@ -64,11 +55,8 @@ class TaxBloc extends Bloc<TaxEvent, TaxState> {
           await _localDatasource.saveTax(event.tax);
         }
 
-        final index = _taxes.indexWhere((t) => t.type == event.tax.type);
-        if (index != -1) {
-          _taxes[index] = event.tax;
-          emit(TaxState.loaded(List.from(_taxes)));
-        }
+        // Reload from source of truth
+        add(const TaxEvent.started());
       } catch (e) {
         emit(TaxState.error(e.toString()));
       }

@@ -35,6 +35,7 @@ class _CustomTabBarState extends State<CustomTabBar>
     // Listen for tab changes and invoke callback
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
+        setState(() {});
         widget.onTap?.call(_tabController.index);
       }
     });

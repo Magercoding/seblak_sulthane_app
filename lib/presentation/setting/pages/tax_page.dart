@@ -125,9 +125,7 @@ class _TaxPageState extends State<TaxPage> {
         value: _taxBloc,
         child: FormTaxDialog(data: item),
       ),
-    ).then((_) {
-      _taxBloc.add(const TaxEvent.started());
-    });
+    );
   }
 
   @override

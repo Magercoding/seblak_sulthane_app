@@ -17,122 +17,91 @@ class FormTaxDialog extends StatefulWidget {
 }
 
 class _FormTaxDialogState extends State<FormTaxDialog> {
-  late final TextEditingController serviceFeeController;
-  late final TextEditingController taxFeeController;
+  late final TextEditingController valueController;
+
+  bool get isLayanan => widget.data?.type.isLayanan == true;
+  bool get isPajak => widget.data?.type.isPajak == true;
 
   @override
   void initState() {
     super.initState();
-
-    serviceFeeController = TextEditingController(
-      text: widget.data?.type.isLayanan == true
-          ? widget.data?.value.toString()
-          : '',
-    );
-    taxFeeController = TextEditingController(
-      text: widget.data?.type.isPajak == true
-          ? widget.data?.value.toString()
-          : '',
+    valueController = TextEditingController(
+      text: widget.data?.value.toString() ?? '',
     );
   }
 
   @override
   void dispose() {
-    serviceFeeController.dispose();
-    taxFeeController.dispose();
+    valueController.dispose();
     super.dispose();
   }
 
   void _handleSubmit(BuildContext context) {
-    final serviceValue = int.tryParse(serviceFeeController.text) ?? 0;
-    final taxValue = int.tryParse(taxFeeController.text) ?? 0;
+    final value = int.tryParse(valueController.text) ?? 0;
 
-    // Process service fee regardless of value (including zero)
-    final serviceTax = TaxModel(
-      name: 'Biaya Layanan',
-      type: TaxType.layanan,
-      value: serviceValue,
-    );
-
-    if (widget.data == null) {
-      context.read<TaxBloc>().add(TaxEvent.add(serviceTax));
-    } else if (widget.data?.type.isLayanan == true) {
-      context.read<TaxBloc>().add(TaxEvent.update(serviceTax));
+    if (isLayanan) {
+      final serviceTax = TaxModel(
+        name: 'Biaya Layanan',
+        type: TaxType.layanan,
+        value: value,
+      );
+      context.read<TaxBloc>().add(
+            widget.data == null
+                ? TaxEvent.add(serviceTax)
+                : TaxEvent.update(serviceTax),
+          );
+    } else if (isPajak) {
+      final taxFee = TaxModel(
+        name: 'Pajak',
+        type: TaxType.pajak,
+        value: value,
+      );
+      context.read<TaxBloc>().add(
+            widget.data == null
+                ? TaxEvent.add(taxFee)
+                : TaxEvent.update(taxFee),
+          );
     }
-
-    // Process tax fee regardless of value (including zero)
-    final taxFee = TaxModel(
-      name: 'Pajak',
-      type: TaxType.pajak,
-      value: taxValue,
-    );
-
-    if (widget.data == null) {
-      context.read<TaxBloc>().add(TaxEvent.add(taxFee));
-    } else if (widget.data?.type.isPajak == true) {
-      context.read<TaxBloc>().add(TaxEvent.update(taxFee));
-    }
-
-    context.read<TaxBloc>().add(const TaxEvent.started());
 
     context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TaxBloc, TaxState>(
-      listener: (context, state) {
-        state.whenOrNull(
-          error: (message) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error: $message')),
-            );
-          },
-          loaded: (taxes) {},
-        );
-      },
-      child: AlertDialog(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () => context.pop(),
-              icon: const Icon(Icons.close),
-            ),
-            Text(widget.data == null
-                ? 'Tambah Perhitungan Biaya'
-                : 'Edit Perhitungan Biaya'),
-            const Spacer(),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: SizedBox(
-            width: context.deviceWidth / 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
-                  controller: serviceFeeController,
-                  label: 'Biaya Layanan',
-                  onChanged: (value) => print('Service fee changed: $value'),
-                  keyboardType: TextInputType.number,
-                  suffixIcon: const Icon(Icons.percent),
-                ),
-                const SpaceHeight(24.0),
-                CustomTextField(
-                  controller: taxFeeController,
-                  label: 'Pajak',
-                  onChanged: (value) => print('Tax fee changed: $value'),
-                  keyboardType: TextInputType.number,
-                  suffixIcon: const Icon(Icons.percent),
-                ),
-                const SpaceHeight(24.0),
-                Button.filled(
-                  onPressed: () => _handleSubmit(context),
-                  label: widget.data == null ? 'Simpan' : 'Perbarui',
-                )
-              ],
-            ),
+    final label = isLayanan ? 'Biaya Layanan' : 'Pajak';
+
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(Icons.close),
+          ),
+          Text(widget.data == null
+              ? 'Tambah Perhitungan Biaya'
+              : 'Edit $label'),
+          const Spacer(),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: context.deviceWidth / 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                controller: valueController,
+                label: label,
+                keyboardType: TextInputType.number,
+                suffixIcon: const Icon(Icons.percent),
+              ),
+              const SpaceHeight(24.0),
+              Button.filled(
+                onPressed: () => _handleSubmit(context),
+                label: widget.data == null ? 'Simpan' : 'Perbarui',
+              )
+            ],
           ),
         ),
       ),

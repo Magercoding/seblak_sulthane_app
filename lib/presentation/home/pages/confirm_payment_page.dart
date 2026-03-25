@@ -1034,7 +1034,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     discount,
                                                     totalDiscount.toInt(),
                                                     finalTax.toInt(),
-                                                    0,
+                                                    totalServiceCharge.toInt(),
                                                     totalPriceController
                                                         .text.toIntegerFromText,
                                                     widget.customerName,
@@ -1094,7 +1094,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                                     discount,
                                                     totalDiscount.toInt(),
                                                     finalTax.toInt(),
-                                                    0,
+                                                    totalServiceCharge.toInt(),
                                                     totalPriceController
                                                         .text.toIntegerFromText,
                                                     widget.customerName,

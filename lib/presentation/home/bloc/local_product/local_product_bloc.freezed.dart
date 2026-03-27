@@ -55,6 +55,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     TResult Function(_GetLocalProduct value)? getLocalProduct,
     TResult Function(_FilterByPriceRange value)? filterByPriceRange,
     TResult Function(_FilterByCategory value)? filterByCategory,
+    TResult Function(_FilterByCategoryAndPriceRange value)?
+        filterByCategoryAndPriceRange,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -67,6 +69,9 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that);
       case _FilterByCategory() when filterByCategory != null:
         return filterByCategory(_that);
+      case _FilterByCategoryAndPriceRange()
+          when filterByCategoryAndPriceRange != null:
+        return filterByCategoryAndPriceRange(_that);
       case _:
         return orElse();
     }
@@ -91,6 +96,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     required TResult Function(_GetLocalProduct value) getLocalProduct,
     required TResult Function(_FilterByPriceRange value) filterByPriceRange,
     required TResult Function(_FilterByCategory value) filterByCategory,
+    required TResult Function(_FilterByCategoryAndPriceRange value)
+        filterByCategoryAndPriceRange,
   }) {
     final _that = this;
     switch (_that) {
@@ -102,6 +109,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that);
       case _FilterByCategory():
         return filterByCategory(_that);
+      case _FilterByCategoryAndPriceRange():
+        return filterByCategoryAndPriceRange(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -125,6 +134,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     TResult? Function(_GetLocalProduct value)? getLocalProduct,
     TResult? Function(_FilterByPriceRange value)? filterByPriceRange,
     TResult? Function(_FilterByCategory value)? filterByCategory,
+    TResult? Function(_FilterByCategoryAndPriceRange value)?
+        filterByCategoryAndPriceRange,
   }) {
     final _that = this;
     switch (_that) {
@@ -136,6 +147,9 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that);
       case _FilterByCategory() when filterByCategory != null:
         return filterByCategory(_that);
+      case _FilterByCategoryAndPriceRange()
+          when filterByCategoryAndPriceRange != null:
+        return filterByCategoryAndPriceRange(_that);
       case _:
         return null;
     }
@@ -159,6 +173,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     TResult Function()? getLocalProduct,
     TResult Function(String priceRange)? filterByPriceRange,
     TResult Function(int categoryId)? filterByCategory,
+    TResult Function(int categoryId, String priceRange)?
+        filterByCategoryAndPriceRange,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -171,6 +187,10 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that.priceRange);
       case _FilterByCategory() when filterByCategory != null:
         return filterByCategory(_that.categoryId);
+      case _FilterByCategoryAndPriceRange()
+          when filterByCategoryAndPriceRange != null:
+        return filterByCategoryAndPriceRange(
+            _that.categoryId, _that.priceRange);
       case _:
         return orElse();
     }
@@ -195,6 +215,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     required TResult Function() getLocalProduct,
     required TResult Function(String priceRange) filterByPriceRange,
     required TResult Function(int categoryId) filterByCategory,
+    required TResult Function(int categoryId, String priceRange)
+        filterByCategoryAndPriceRange,
   }) {
     final _that = this;
     switch (_that) {
@@ -206,6 +228,9 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that.priceRange);
       case _FilterByCategory():
         return filterByCategory(_that.categoryId);
+      case _FilterByCategoryAndPriceRange():
+        return filterByCategoryAndPriceRange(
+            _that.categoryId, _that.priceRange);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -229,6 +254,8 @@ extension LocalProductEventPatterns on LocalProductEvent {
     TResult? Function()? getLocalProduct,
     TResult? Function(String priceRange)? filterByPriceRange,
     TResult? Function(int categoryId)? filterByCategory,
+    TResult? Function(int categoryId, String priceRange)?
+        filterByCategoryAndPriceRange,
   }) {
     final _that = this;
     switch (_that) {
@@ -240,6 +267,10 @@ extension LocalProductEventPatterns on LocalProductEvent {
         return filterByPriceRange(_that.priceRange);
       case _FilterByCategory() when filterByCategory != null:
         return filterByCategory(_that.categoryId);
+      case _FilterByCategoryAndPriceRange()
+          when filterByCategoryAndPriceRange != null:
+        return filterByCategoryAndPriceRange(
+            _that.categoryId, _that.priceRange);
       case _:
         return null;
     }
@@ -412,6 +443,81 @@ class __$FilterByCategoryCopyWithImpl<$Res>
           ? _self.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _FilterByCategoryAndPriceRange implements LocalProductEvent {
+  const _FilterByCategoryAndPriceRange(this.categoryId, this.priceRange);
+
+  final int categoryId;
+  final String priceRange;
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$FilterByCategoryAndPriceRangeCopyWith<_FilterByCategoryAndPriceRange>
+      get copyWith => __$FilterByCategoryAndPriceRangeCopyWithImpl<
+          _FilterByCategoryAndPriceRange>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _FilterByCategoryAndPriceRange &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId) &&
+            (identical(other.priceRange, priceRange) ||
+                other.priceRange == priceRange));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, categoryId, priceRange);
+
+  @override
+  String toString() {
+    return 'LocalProductEvent.filterByCategoryAndPriceRange(categoryId: $categoryId, priceRange: $priceRange)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$FilterByCategoryAndPriceRangeCopyWith<$Res>
+    implements $LocalProductEventCopyWith<$Res> {
+  factory _$FilterByCategoryAndPriceRangeCopyWith(
+          _FilterByCategoryAndPriceRange value,
+          $Res Function(_FilterByCategoryAndPriceRange) _then) =
+      __$FilterByCategoryAndPriceRangeCopyWithImpl;
+  @useResult
+  $Res call({int categoryId, String priceRange});
+}
+
+/// @nodoc
+class __$FilterByCategoryAndPriceRangeCopyWithImpl<$Res>
+    implements _$FilterByCategoryAndPriceRangeCopyWith<$Res> {
+  __$FilterByCategoryAndPriceRangeCopyWithImpl(this._self, this._then);
+
+  final _FilterByCategoryAndPriceRange _self;
+  final $Res Function(_FilterByCategoryAndPriceRange) _then;
+
+  /// Create a copy of LocalProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? categoryId = null,
+    Object? priceRange = null,
+  }) {
+    return _then(_FilterByCategoryAndPriceRange(
+      null == categoryId
+          ? _self.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == priceRange
+          ? _self.priceRange
+          : priceRange // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

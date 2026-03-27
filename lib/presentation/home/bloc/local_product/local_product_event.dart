@@ -8,4 +8,6 @@ class LocalProductEvent with _$LocalProductEvent {
       _FilterByPriceRange;
   const factory LocalProductEvent.filterByCategory(int categoryId) =
       _FilterByCategory;
+  const factory LocalProductEvent.filterByCategoryAndPriceRange(
+      int categoryId, String priceRange) = _FilterByCategoryAndPriceRange;
 }

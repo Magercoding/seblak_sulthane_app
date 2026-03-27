@@ -28,6 +28,16 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
       emit(_Loaded(filteredProducts));
     });
 
+    on<_FilterByCategoryAndPriceRange>((event, emit) async {
+      emit(const _Loading());
+      final allProducts = await productLocalDatasource.getProducts();
+      final byCategory =
+          _filterProductsByCategory(allProducts, event.categoryId);
+      final filtered =
+          _filterProductsByPriceRange(byCategory, event.priceRange);
+      emit(_Loaded(filtered));
+    });
+
     on<_Started>((event, emit) {});
 
     on<_GetLocalProduct>((event, emit) async {

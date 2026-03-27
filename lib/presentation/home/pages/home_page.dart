@@ -107,30 +107,12 @@ class _HomePageState extends State<HomePage> {
                               loading: () => const Center(
                                   child: CircularProgressIndicator()),
                               loaded: (categories) {
-                                final tabViews = [
-                                  // "Semua" tab view
-                                  _buildProductGrid(searchQuery),
-                                  // Price filter tab views
-                                  _buildProductGrid(searchQuery,
-                                      priceRange: "500"),
-                                  _buildProductGrid(searchQuery,
-                                      priceRange: "1000"),
-                                  _buildProductGrid(searchQuery,
-                                      priceRange: "1500-2000"),
-                                  _buildProductGrid(searchQuery,
-                                      priceRange: "2500"),
-                                  _buildProductGrid(searchQuery,
-                                      priceRange: "3000-9000"),
-                                  // Category tab views
-                                  ...categories.data.map((category) =>
-                                      _buildProductGrid(searchQuery,
-                                          categoryId: category.id)),
-                                ];
-
                                 return CustomTabBarV2(
                                   categories: categories.data,
                                   initialTabIndex: _selectedIndex,
-                                  tabViews: tabViews,
+                                  tabViews: [
+                                    _buildProductGrid(searchQuery),
+                                  ],
                                 );
                               },
                               error: (message) =>

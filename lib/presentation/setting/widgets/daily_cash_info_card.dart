@@ -14,20 +14,11 @@ class DailyCashInfoCard extends StatelessWidget {
 
   // Helper method to format the cash sales value safely
   String _formatCashSales() {
-    if (dailyCash.cashSales == null) {
+    final cashSales = dailyCash.getCashSalesAsInt();
+    if (cashSales == null || cashSales == 0) {
       return 'Rp 0';
     }
-
-    if (dailyCash.cashSales is int) {
-      return (dailyCash.cashSales as int).currencyFormatRp;
-    }
-
-    if (dailyCash.cashSales is String) {
-      final value = int.tryParse(dailyCash.cashSales as String) ?? 0;
-      return value.currencyFormatRp;
-    }
-
-    return 'Rp 0';
+    return cashSales.currencyFormatRp;
   }
 
   // Helper method to format QRIS sales value safely

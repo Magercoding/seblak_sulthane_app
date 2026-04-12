@@ -24,6 +24,22 @@ class _DiscountDialogState extends State<DiscountDialog> {
     super.initState();
     _checkConnectivity();
     context.read<DiscountBloc>().add(const DiscountEvent.getDiscounts());
+
+    // Inisialisasi state dari diskon yang sudah dipilih di CheckoutBloc
+    final checkoutState = context.read<CheckoutBloc>().state;
+    checkoutState.maybeWhen(
+      loaded: (items, discounts, discount, discountAmount, tax, serviceCharge,
+          totalQuantity, totalPrice, draftName) {
+        for (var d in discounts) {
+          if (d.category == 'member') {
+            selectedMemberDiscountId = d.id;
+          } else if (d.category == 'event') {
+            selectedEventDiscountId = d.id;
+          }
+        }
+      },
+      orElse: () {},
+    );
   }
 
   Future<void> _checkConnectivity() async {

@@ -121,8 +121,12 @@ class DailyCashModel {
       return cashSales as int;
     }
 
+    if (cashSales is double) {
+      return (cashSales as double).toInt();
+    }
+
     if (cashSales is String) {
-      return int.tryParse(cashSales as String) ?? 0;
+      return double.tryParse(cashSales as String)?.toInt() ?? 0;
     }
 
     return 0;
@@ -137,12 +141,12 @@ class DailyCashModel {
       return qrisSales as int;
     }
 
-    if (qrisSales is String) {
-      return int.tryParse(qrisSales as String) ?? 0;
+    if (qrisSales is double) {
+      return (qrisSales as double).toInt();
     }
 
-    if (qrisSales is double) {
-      return qrisSales.toInt();
+    if (qrisSales is String) {
+      return double.tryParse(qrisSales as String)?.toInt() ?? 0;
     }
 
     return 0;

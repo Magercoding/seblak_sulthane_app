@@ -30,131 +30,142 @@ class ProductCard extends StatelessWidget {
         context.read<CheckoutBloc>().add(CheckoutEvent.addItem(data));
       },
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
             side: const BorderSide(width: 1, color: AppColors.card),
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        child: Stack(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+            AspectRatio(
+              aspectRatio: 1,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
                     color: AppColors.disabled.withOpacity(0.4),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(40.0)),
                     child: _buildProductImage(),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: Text(
-                    data.name ?? '',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(9.0)),
+                        border: Border.all(color: AppColors.primary),
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: BlocBuilder<CheckoutBloc, CheckoutState>(
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          orElse: () => const SizedBox(),
+                          loaded: (products,
+                              discountModel,
+                              discount,
+                              discountAmount,
+                              tax,
+                              serviceCharge,
+                              totalQuantity,
+                              totalPrice,
+                              draftName) {
+                            final inCart = products
+                                .any((element) => element.product == data);
+                            final quantity = inCart
+                                ? products
+                                    .firstWhere(
+                                        (element) => element.product == data)
+                                    .quantity
+                                : 0;
+
+                            return Container(
+                              width: quantity > 0 ? 40 : 36,
+                              height: quantity > 0 ? 40 : 36,
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(9.0)),
+                                color: AppColors.primary,
+                              ),
+                              child: quantity > 0
+                                  ? Center(
+                                      child: Text(
+                                        quantity.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  : Assets.icons.shoppingBasket.svg(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: 1,
                       child: Text(
-                        data.category?.name ?? '-',
+                        data.name ?? '',
                         style: const TextStyle(
-                          color: AppColors.grey,
-                          fontSize: 12,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
                         ),
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: _buildProductPrice(),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            data.category?.name ?? '-',
+                            style: const TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: _buildProductPrice(),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
-            ),
-            BlocBuilder<CheckoutBloc, CheckoutState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const SizedBox(),
-                  loaded: (products,
-                      discountModel,
-                      discount,
-                      discountAmount,
-                      tax,
-                      serviceCharge,
-                      totalQuantity,
-                      totalPrice,
-                      draftName) {
-                    final inCart =
-                        products.any((element) => element.product == data);
-                    final quantity = inCart
-                        ? products
-                            .firstWhere((element) => element.product == data)
-                            .quantity
-                        : 0;
-
-                    return Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        width: quantity > 0 ? 40 : 36,
-                        height: quantity > 0 ? 40 : 36,
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(9.0)),
-                          color: AppColors.primary,
-                        ),
-                        child: quantity > 0
-                            ? Center(
-                                child: Text(
-                                  quantity.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )
-                            : Assets.icons.shoppingBasket.svg(),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                width: 36,
-                height: 36,
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                  border: Border.all(color: AppColors.primary),
-                ),
-                child: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: AppColors.primary,
-                  size: 20,
                 ),
               ),
             ),
@@ -166,28 +177,22 @@ class ProductCard extends StatelessWidget {
 
   // Safely build product image widget
   Widget _buildProductImage() {
-    // Check if image is null or empty
     if (data.image == null || data.image!.isEmpty) {
       return Container(
-        width: 60,
-        height: 60,
         color: Colors.grey[300],
         child: const Icon(Icons.image_not_supported),
       );
     }
 
-    // Build image with proper URL handling
     return Image.network(
       data.image!.contains('http')
           ? data.image!
           : '${Variables.baseUrl}/${data.image}',
-      width: 60,
-      height: 60,
+      width: double.infinity,
+      height: double.infinity,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         return Container(
-          width: 60,
-          height: 60,
           color: Colors.grey[300],
           child: const Icon(Icons.image_not_supported),
         );

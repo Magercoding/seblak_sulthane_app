@@ -42,6 +42,24 @@ class _DailyCashPageState extends State<DailyCashPage> {
     super.dispose();
   }
 
+  void _formatAmountField(TextEditingController controller, String value) {
+    final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) {
+      if (controller.text.isNotEmpty) {
+        controller.value = const TextEditingValue(text: '');
+      }
+      return;
+    }
+    final formatted =
+        NumberFormat('#,##0', 'id_ID').format(int.parse(digits));
+    if (formatted != controller.text) {
+      controller.value = TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,6 +235,7 @@ class _DailyCashPageState extends State<DailyCashPage> {
               prefixText: 'Rp ',
             ),
             keyboardType: TextInputType.number,
+            onChanged: (value) => _formatAmountField(_openingBalanceController, value),
           ),
           const SpaceHeight(16),
           SizedBox(
@@ -258,6 +277,7 @@ class _DailyCashPageState extends State<DailyCashPage> {
               prefixText: 'Rp ',
             ),
             keyboardType: TextInputType.number,
+            onChanged: (value) => _formatAmountField(_expenseAmountController, value),
           ),
           const SpaceHeight(16),
           TextFormField(

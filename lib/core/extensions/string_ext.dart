@@ -17,14 +17,13 @@ extension StringExt on String {
   }
 
   String get currencyFormatRpV3 {
+    final formatter = NumberFormat('#,##0', 'id_ID');
     try {
-      final value = int.parse(this);
-      return 'Rp ${value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
-    } catch (e) {
+      return 'Rp ${formatter.format(int.parse(this))}';
+    } catch (_) {
       try {
-        final value = double.parse(this);
-        return 'Rp ${value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
-      } catch (e) {
+        return 'Rp ${formatter.format(double.parse(this).round())}';
+      } catch (_) {
         return this;
       }
     }

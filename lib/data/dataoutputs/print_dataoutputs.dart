@@ -639,7 +639,12 @@ class PrintDataoutputs {
       bytes += generator.text('Catatan',
           styles: const PosStyles(bold: true, align: PosAlign.center));
       bytes += generator.text(trimmedNotes,
-          styles: const PosStyles(bold: false, align: PosAlign.center));
+          styles: const PosStyles(
+            bold: true,
+            align: PosAlign.center,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          ));
       bytes += generator.feed(1);
     }
 
@@ -2266,8 +2271,7 @@ class PrintDataoutputs {
   }
 
   String _formatCurrency(double value) {
-    return value.toStringAsFixed(2).replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    return NumberFormat('#,##0', 'id_ID').format(value.round());
   }
 
   String formatNumberWithoutDecimal(double value) {

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:seblak_sulthane_app/core/extensions/string_ext.dart';
 import 'package:seblak_sulthane_app/data/models/response/product_response_model.dart';
 
 import '../../../core/components/buttons.dart';
@@ -136,7 +137,9 @@ class MenuProductItem extends StatelessWidget {
                                   ),
                                   const SpaceHeight(10.0),
                                   Text(
-                                    data.price.toString(),
+                                    (data.price ?? '0')
+                                        .toString()
+                                        .currencyFormatRp,
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,

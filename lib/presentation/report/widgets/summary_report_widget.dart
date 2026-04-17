@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:seblak_sulthane_app/core/components/spaces.dart';
@@ -998,8 +999,7 @@ class SummaryReportWidget extends StatelessWidget {
   }
 
   String formatCurrency(double value) {
-    return value.toStringAsFixed(2).replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    return NumberFormat('#,##0', 'id_ID').format(value.round());
   }
 }
 

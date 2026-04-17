@@ -670,7 +670,7 @@ Widget _buildProductGrid(String searchQuery,
               itemCount: filteredProducts.length,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 0.85,
+                childAspectRatio: 0.68,
                 crossAxisCount: 3,
                 crossAxisSpacing: 30.0,
                 mainAxisSpacing: 30.0,

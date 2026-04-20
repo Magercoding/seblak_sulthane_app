@@ -71,7 +71,7 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
               const SpaceHeight(24.0),
               CustomTextField(
                 controller: descriptionController,
-                label: 'Deskripsi (Opsional)',
+                label: 'Deskripsi',
                 onChanged: (value) {},
               ),
               const SpaceHeight(24.0),
@@ -152,11 +152,12 @@ class _FormDiscountDialogState extends State<FormDiscountDialog> {
                       return Button.filled(
                         onPressed: () {
                           if (nameController.text.isEmpty ||
+                              descriptionController.text.trim().isEmpty ||
                               discountController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content:
-                                    Text('Nama dan nilai diskon harus diisi'),
+                                content: Text(
+                                    'Nama, deskripsi, dan nilai diskon harus diisi'),
                                 backgroundColor: Colors.red,
                               ),
                             );

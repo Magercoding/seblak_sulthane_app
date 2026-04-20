@@ -516,19 +516,19 @@ class _DailyCashHistoryPageState extends State<DailyCashHistoryPage> {
       
       final cashSales = shift.getCashSalesAsInt() ?? 0;
       final qrisSales = shift.getQrisSalesAsInt() ?? 0;
-      final qrisFee = shift.qrisFee ?? 0;
-      
+      const qrisFee = 0; // QRIS fee dinonaktifkan
+
       totalCashSales += cashSales;
       totalQrisSales += qrisSales;
       totalQrisFee += qrisFee;
-      
+
       // Untuk closing balance, jika null (shift masih aktif), hitung dari data yang ada
       if (shift.closingBalance != null) {
         totalClosingBalance += shift.closingBalance!;
       } else {
         // Hitung closing balance untuk shift aktif
-        final calculatedClosing = (shift.openingBalance ?? 0) + 
-            cashSales + qrisSales - (shift.expenses ?? 0) - qrisFee;
+        final calculatedClosing = (shift.openingBalance ?? 0) +
+            cashSales + qrisSales - (shift.expenses ?? 0);
         totalClosingBalance += calculatedClosing;
       }
       

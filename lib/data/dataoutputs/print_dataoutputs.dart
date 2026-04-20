@@ -980,20 +980,6 @@ class PrintDataoutputs {
         ),
       ]);
 
-      double qrisFee = _parseToDouble(summary.qrisFee);
-      bytes += generator.row([
-        PosColumn(
-          text: 'Biaya QRIS',
-          width: 6,
-          styles: const PosStyles(align: PosAlign.left),
-        ),
-        PosColumn(
-          text: '- Rp ${_formatCurrency(qrisFee)}',
-          width: 6,
-          styles: const PosStyles(align: PosAlign.right),
-        ),
-      ]);
-
       // Penjualan Makanan
       double foodSales = summary.getFoodSalesAsInt().toDouble();
       bytes += generator.row([
@@ -1225,21 +1211,6 @@ class PrintDataoutputs {
             ),
           ]);
 
-          // Biaya QRIS Tunai
-          double cashQrisFees =
-              _parseToDouble(summary.paymentMethods!.cash!.qrisFees);
-          bytes += generator.row([
-            PosColumn(
-              text: 'Biaya QRIS Tunai',
-              width: 7,
-              styles: const PosStyles(align: PosAlign.left),
-            ),
-            PosColumn(
-              text: '- Rp ${_formatCurrency(cashQrisFees)}',
-              width: 5,
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-          ]);
         }
 
         if (summary.paymentMethods?.qris != null) {
@@ -1257,20 +1228,6 @@ class PrintDataoutputs {
             ),
           ]);
 
-          double qrisFees =
-              _parseToDouble(summary.paymentMethods!.qris!.qrisFees);
-          bytes += generator.row([
-            PosColumn(
-              text: 'Biaya QRIS',
-              width: 6,
-              styles: const PosStyles(align: PosAlign.left),
-            ),
-            PosColumn(
-              text: '- Rp ${_formatCurrency(qrisFees)}',
-              width: 6,
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-          ]);
         }
 
         bytes += generator.text(
@@ -1492,20 +1449,6 @@ class PrintDataoutputs {
             ),
             PosColumn(
               text: '- Rp ${_formatCurrency(dayExpenses)}',
-              width: 7,
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-          ]);
-
-          double dayQrisFee = _parseToDouble(day.qrisFee);
-          bytes += generator.row([
-            PosColumn(
-              text: 'Biaya QRIS:',
-              width: 5,
-              styles: const PosStyles(align: PosAlign.left),
-            ),
-            PosColumn(
-              text: '- Rp ${_formatCurrency(dayQrisFee)}',
               width: 7,
               styles: const PosStyles(align: PosAlign.right),
             ),
@@ -1858,20 +1801,6 @@ class PrintDataoutputs {
           ),
         ]);
 
-        double dayQrisFee = _parseToDouble(day.qrisFee);
-        bytes += generator.row([
-          PosColumn(
-            text: "Biaya QRIS",
-            width: 6,
-            styles: const PosStyles(align: PosAlign.left),
-          ),
-          PosColumn(
-            text: "- " + formatNumberWithoutDecimal(dayQrisFee),
-            width: 6,
-            styles: const PosStyles(align: PosAlign.right),
-          ),
-        ]);
-
         // Saldo Akhir (Ambil dari Saldo Penutup/Closing Balance)
         if (day.closingBalance != null) {
           double dayClosingBalance = day.closingBalance!.toDouble();
@@ -2170,21 +2099,6 @@ class PrintDataoutputs {
       ),
       PosColumn(
         text: formatNumberWithoutDecimal(totalSales),
-        width: 6,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-    ]);
-
-    // Biaya QRIS
-    double qrisFee = _parseToDouble(shift.qrisFee);
-    bytes += generator.row([
-      PosColumn(
-        text: 'Biaya QRIS',
-        width: 6,
-        styles: const PosStyles(align: PosAlign.left),
-      ),
-      PosColumn(
-        text: '- ${formatNumberWithoutDecimal(qrisFee)}',
         width: 6,
         styles: const PosStyles(align: PosAlign.right),
       ),

@@ -147,7 +147,7 @@ class EnhancedSummaryData {
       effectiveExpenses: _parseToDouble(json['effective_expenses']),
       cashSales: json['cash_sales'] ?? 0,
       qrisSales: json['qris_sales'] ?? 0,
-      qrisFee: json['qris_fee'] ?? '0.00',
+      qrisFee: 0, // QRIS fee dinonaktifkan
       beverageSales: json['beverage_sales'] ?? 0,
       beverageBreakdown: beverageBreakdownObj,
       foodSales: json['food_sales'] ?? 0,
@@ -574,7 +574,7 @@ class PaymentMethodDetail {
     return PaymentMethodDetail(
       count: json['count'] ?? 0,
       total: json['total'] ?? 0,
-      qrisFees: json['qris_fees'] ?? 0,
+      qrisFees: 0, // QRIS fee dinonaktifkan
     );
   }
 
@@ -694,7 +694,7 @@ class DailyBreakdown {
       effectiveExpenses: _parseToDouble(json['effective_expenses']),
       cashSales: json['cash_sales'] ?? 0,
       qrisSales: json['qris_sales'] ?? 0,
-      qrisFee: json['qris_fee'] ?? '0.00',
+      qrisFee: 0, // QRIS fee dinonaktifkan
       totalSales: json['total_sales'] ?? 0,
       closingBalance: _parseToDouble(json['closing_balance']),
       finalCashClosing: json['final_cash_closing'] ?? 0,

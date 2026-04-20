@@ -386,17 +386,6 @@ class RevenueInvoice {
           unite: true,
         ),
         buildText(
-          title: 'Biaya QRIS',
-          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
-          value: summary.qrisFee != null
-              ? "- ${safeGetCurrencyFormat(summary.qrisFee)}"
-              : "- Rp 0,00",
-          textStyle: pw.TextStyle(
-            color: PdfColor.fromHex('#FF0000'),
-          ),
-          unite: true,
-        ),
-        buildText(
           title: 'Penjualan Makanan',
           titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
           value: summary.getFoodSalesAsInt().toString().currencyFormatRp,
@@ -564,16 +553,6 @@ class RevenueInvoice {
                 .currencyFormatRp,
             unite: true,
           ),
-          buildText(
-            title: 'Biaya QRIS Tunai',
-            value: paymentMethods.cash!.qrisFees != null
-                ? "- ${safeGetCurrencyFormat(paymentMethods.cash!.qrisFees)}"
-                : "- Rp 0,00",
-            unite: true,
-            textStyle: pw.TextStyle(
-              color: PdfColor.fromHex('#FF0000'),
-            ),
-          ),
         ],
         if (paymentMethods.cash != null && paymentMethods.qris != null)
           pw.Divider(),
@@ -585,16 +564,6 @@ class RevenueInvoice {
                 .toString()
                 .currencyFormatRp,
             unite: true,
-          ),
-          buildText(
-            title: 'Biaya QRIS',
-            value: paymentMethods.qris!.qrisFees != null
-                ? "- ${safeGetCurrencyFormat(paymentMethods.qris!.qrisFees)}"
-                : "- Rp 0,00",
-            unite: true,
-            textStyle: pw.TextStyle(
-              color: PdfColor.fromHex('#FF0000'),
-            ),
           ),
         ],
       ],
@@ -786,21 +755,6 @@ class RevenueInvoice {
           unite: true,
         ),
       );
-      dayWidgets.add(
-        buildText(
-          title: 'Biaya QRIS',
-          titleStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
-          value: day.qrisFee != null
-              ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
-              : "- Rp 0,00",
-          textStyle: pw.TextStyle(
-            color: PdfColor.fromHex('#FF0000'),
-          ),
-          unite: true,
-        ),
-      );
-
-      // Add divider between Biaya QRIS and Saldo Akhir
       dayWidgets.add(pw.Divider());
 
       dayWidgets.add(
@@ -1236,19 +1190,6 @@ class RevenueInvoice {
     qrisSalesValueCell.cellStyle = CellStyle();
     currentRow++;
 
-    // QRIS Fee
-    final qrisFeeCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-    qrisFeeCell.value = TextCellValue('Biaya QRIS');
-    qrisFeeCell.cellStyle = CellStyle();
-
-    final qrisFeeValueCell =
-        sheet.cell(CellIndex.indexByString("B$currentRow"));
-    qrisFeeValueCell.value = TextCellValue(summaryModel.qrisFee != null
-        ? "- ${safeGetCurrencyFormat(summaryModel.qrisFee)}"
-        : "- Rp 0,00");
-    qrisFeeValueCell.cellStyle = CellStyle();
-    currentRow++;
-
     // Food Sales
     final foodSalesCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
     foodSalesCell.value = TextCellValue('Penjualan Makanan');
@@ -1347,20 +1288,6 @@ class RevenueInvoice {
             .currencyFormatRp);
         currentRow++;
 
-        // Cash QRIS Fees
-        final cashQrisFeeCell =
-            sheet.cell(CellIndex.indexByString("A$currentRow"));
-        cashQrisFeeCell.value = TextCellValue('Biaya QRIS Tunai');
-
-        final cashQrisFeeValueCell =
-            sheet.cell(CellIndex.indexByString("B$currentRow"));
-        cashQrisFeeValueCell.value = TextCellValue(summaryModel
-                    .paymentMethods!.cash!.qrisFees !=
-                null
-            ? "- ${safeGetCurrencyFormat(summaryModel.paymentMethods!.cash!.qrisFees)}"
-            : "- Rp 0,00");
-        cashQrisFeeValueCell.cellStyle = CellStyle();
-        currentRow++;
       }
 
       if (summaryModel.paymentMethods?.qris != null) {
@@ -1379,19 +1306,6 @@ class RevenueInvoice {
             .currencyFormatRp);
         currentRow++;
 
-        // QRIS Fees
-        final qrisFeeCell = sheet.cell(CellIndex.indexByString("A$currentRow"));
-        qrisFeeCell.value = TextCellValue('Biaya QRIS');
-
-        final qrisFeeValueCell =
-            sheet.cell(CellIndex.indexByString("B$currentRow"));
-        qrisFeeValueCell.value = TextCellValue(summaryModel
-                    .paymentMethods!.qris!.qrisFees !=
-                null
-            ? "- ${safeGetCurrencyFormat(summaryModel.paymentMethods!.qris!.qrisFees)}"
-            : "- Rp 0,00");
-        qrisFeeValueCell.cellStyle = CellStyle();
-        currentRow++;
       }
 
       currentRow++;
@@ -1577,19 +1491,6 @@ class RevenueInvoice {
             sheet.cell(CellIndex.indexByString("B$currentRow"));
         dayTotalSalesValueCell.value =
             TextCellValue(safeGetCurrencyFormat(day.totalSales));
-        currentRow++;
-
-        // QRIS Fee
-        final dayQrisFeeCell =
-            sheet.cell(CellIndex.indexByString("A$currentRow"));
-        dayQrisFeeCell.value = TextCellValue('Biaya QRIS:');
-
-        final dayQrisFeeValueCell =
-            sheet.cell(CellIndex.indexByString("B$currentRow"));
-        dayQrisFeeValueCell.value = TextCellValue(day.qrisFee != null
-            ? "- ${safeGetCurrencyFormat(day.qrisFee)}"
-            : "- Rp 0,00");
-        dayQrisFeeValueCell.cellStyle = CellStyle();
         currentRow++;
 
         // Closing Balance

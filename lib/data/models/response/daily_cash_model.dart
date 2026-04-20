@@ -73,7 +73,7 @@ class DailyCashModel {
       expensesNote: map['expenses_note']?.toString(),
       cashSales: map['cash_sales'],
       qrisSales: map['qris_sales'],
-      qrisFee: map['qris_fee'] is int ? map['qris_fee'] : (map['qris_fee'] != null ? int.tryParse(map['qris_fee'].toString()) : null),
+      qrisFee: 0, // QRIS fee dinonaktifkan
       effectiveExpenses: map['effective_expenses'] is int ? map['effective_expenses'] : (map['effective_expenses'] != null ? int.tryParse(map['effective_expenses'].toString()) : null),
       closingBalance: map['closing_balance'] is int ? map['closing_balance'] : (map['closing_balance'] != null ? int.tryParse(map['closing_balance'].toString()) : null),
       finalCashClosing: map['final_cash_closing'],

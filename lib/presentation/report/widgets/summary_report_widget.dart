@@ -544,14 +544,6 @@ class SummaryReportWidget extends StatelessWidget {
             ),
             const Divider(),
             SummaryItem(
-              label: 'Biaya QRIS',
-              value: summary.qrisFee != null
-                  ? 'Rp ${formatCurrency(parseNumericValue(summary.qrisFee))}'
-                  : 'Rp 0.00',
-              textColor: Colors.red,
-            ),
-            const Divider(),
-            SummaryItem(
               label: 'Penjualan Makanan',
               value:
                   'Rp ${formatCurrency(summary.getFoodSalesAsInt().toDouble())}',
@@ -632,14 +624,6 @@ class SummaryReportWidget extends StatelessWidget {
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.cash!.getTotalAsInt().toDouble())}',
                 ),
-                // Add Cash QRIS Fees (usually 0)
-                SummaryItem(
-                  label: 'Biaya QRIS Tunai',
-                  value: summary.paymentMethods!.cash!.qrisFees != null
-                      ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.cash!.qrisFees))}'
-                      : 'Rp 0.00',
-                  textColor: Colors.red,
-                ),
               ] else ...[
                 // Show no cash transactions if cash is null
                 const SummaryItem(
@@ -654,14 +638,6 @@ class SummaryReportWidget extends StatelessWidget {
                       'QRIS (${summary.paymentMethods!.qris!.count} transaksi)',
                   value:
                       'Rp ${formatCurrency(summary.paymentMethods!.qris!.getTotalAsInt().toDouble())}',
-                ),
-                // Add QRIS Fees
-                SummaryItem(
-                  label: 'Biaya QRIS',
-                  value: summary.paymentMethods!.qris!.qrisFees != null
-                      ? 'Rp ${formatCurrency(parseNumericValue(summary.paymentMethods!.qris!.qrisFees))}'
-                      : 'Rp 0.00',
-                  textColor: Colors.red,
                 ),
               ] else ...[
                 // Show no QRIS transactions if qris is null
@@ -949,19 +925,6 @@ class SummaryReportWidget extends StatelessWidget {
                     ? 'Rp ${formatCurrency(parseNumericValue(day.totalSales))}'
                     : 'Rp 0.00',
                 style: const TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Biaya QRIS:'),
-              Text(
-                day.qrisFee != null
-                    ? 'Rp ${formatCurrency(parseNumericValue(day.qrisFee))}'
-                    : 'Rp 0.00',
-                style: const TextStyle(color: Colors.red),
               ),
             ],
           ),

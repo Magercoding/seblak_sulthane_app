@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seblak_sulthane_app/data/datasources/auth_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/datasources/order_remote_datasource.dart';
 import 'package:seblak_sulthane_app/data/models/response/order_response_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,14 +22,37 @@ class TransactionReportBloc
         event.outletId,
       );
 
-      result.fold(
-        (l) => emit(_Error(l)),
-        (r) {
-          if (r.data != null && r.data!.isNotEmpty) {
-            emit(_Loaded(r.data!));
-          } else {
+      await result.fold<Future<void>>(
+        (l) async => emit(_Error(l)),
+        (r) async {
+          if (r.data == null || r.data!.isEmpty) {
             emit(const _Error("No transaction data for this outlet"));
+            return;
           }
+
+          final profileResult = await AuthRemoteDatasource().getProfile();
+
+          profileResult.fold(
+            (error) => emit(_Error(error)),
+            (user) {
+              final cashierOrders = r.data!
+                  .where(
+                    (order) =>
+                        order.idKasir == user.id ||
+                        (order.namaKasir?.toLowerCase() ==
+                            user.name.toLowerCase()),
+                  )
+                  .toList();
+
+              if (cashierOrders.isEmpty) {
+                emit(const _Error(
+                    "No transaction data for the logged-in cashier"));
+                return;
+              }
+
+              emit(_Loaded(cashierOrders));
+            },
+          );
         },
       );
     });
